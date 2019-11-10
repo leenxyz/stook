@@ -1,52 +1,13 @@
 {
-  "name": "stook",
-  "version": "0.0.0",
-  "license": "MIT",
-  "author": "forsigner",
-  "main": "dist/index.js",
-  "module": "dist/stook.esm.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "name": "stook-project",
   "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test --env=jsdom",
-    "test:watch": "tsdx test --watch",
-    "test:cov": "tsdx test --coverage",
-    "lint": "tsdx lint",
-    "release": "standard-version"
-  },
-  "peerDependencies": {
-    "react": ">=16"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "es5"
+    "build": "lerna run --parallel --stream build",
+    "build:watch": "lerna run --parallel --stream build:watch",
+    "format": "prettier --write \"packages/**/src/**/*.{ts,tsx}\"",
+    "test": "lerna run --parallel --stream test",
+    "test:watch": "lerna run --parallel --stream test:watch"
   },
   "devDependencies": {
-    "@testing-library/react-hooks": "^3.2.1",
-    "@types/jest": "^24.0.22",
-    "@types/react": "^16.9.11",
-    "@types/react-dom": "^16.9.4",
-    "husky": "^3.0.9",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
-    "react-test-renderer": "^16.11.0",
-    "standard-version": "^7.0.0",
-    "tsdx": "^0.11.0",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.2"
-  },
-  "dependencies": {
-    "immer": "^5.0.0"
+    "lerna": "^3.18.4"
   }
 }

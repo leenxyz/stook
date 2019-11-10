@@ -1,0 +1,15 @@
+{
+  "packages": ["packages/*"],
+  "npmClient": "npm",
+  "command": {
+    "publish": {
+      "ignoreChanges": ["ignored-file", "*.md"],
+      "message": "chore(release): publish",
+      "registry": "http://registry.npmjs.org"
+    },
+    "bootstrap": {
+      "npmClientArgs": ["--registry", "https://registry.npm.taobao.org"]
+    }
+  },
+  "version": "independent"
+}
