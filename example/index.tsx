@@ -1,7 +1,6 @@
-import 'react-app-polyfill/ie11';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useStore } from '../.';
+import { useStore, mutate } from '../.';
 
 const Counter = () => {
   const [count, setCount] = useStore('COUNTER', 2);
@@ -19,6 +18,7 @@ const App = () => {
   return (
     <div>
       <div>{count}</div>
+      <button onClick={() => mutate('COUNTER', count + 2)}>mutate</button>
       <Counter></Counter>
     </div>
   );
