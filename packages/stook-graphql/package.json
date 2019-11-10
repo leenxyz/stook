@@ -4,7 +4,7 @@
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
-  "module": "dist/stook.esm.js",
+  "module": "dist/stook-graphql.esm.js",
   "typings": "dist/index.d.ts",
   "files": [
     "dist"
@@ -50,7 +50,6 @@
     "gql-tag": "^1.0.1",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
-    "immer": "^5.0.0",
     "stook": "^0.0.0",
     "subscriptions-transport-ws": "^0.9.16"
   }
