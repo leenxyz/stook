@@ -1,6 +1,6 @@
 {
   "name": "stook-rest",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -47,6 +47,6 @@
   },
   "dependencies": {
     "@peajs/request": "^0.1.0",
-    "stook": "^0.0.0"
+    "stook": "^0.0.1"
   }
 }
