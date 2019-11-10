@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react'
 import { produce } from 'immer'
 
-export class KeyStore<S = any> {
+export class Store<S = any> {
   state: S
   setters: Dispatch<SetStateAction<S>>[] = []
   constructor(value: any) {

@@ -1,6 +1,6 @@
-import { GlobalStore } from './GlobalStore';
+import { Storage } from './Storage';
 
 export function mutate<S>(key: string, value?: S) {
-  const keyStore = GlobalStore.get(key);
-  keyStore.setState(value);
+  const store = Storage.get(key);
+  store.setState(value);
 }

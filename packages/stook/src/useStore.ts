@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { GlobalStore } from './GlobalStore';
-import { KeyStore } from './KeyStore';
+import { Storage } from './Storage';
+import { Store } from './Store';
 import { Trigger, Action } from './types';
 
 export function useStore<S>(
@@ -13,11 +13,11 @@ export function useStore<S = undefined>(
 ): [S | undefined, Trigger<Action<S>>];
 
 export function useStore<S>(key: string, value?: S) {
-  GlobalStore.set(key, new KeyStore<S>(value));
+  Storage.set(key, new Store<S>(value));
 
-  const keyStore = GlobalStore.get(key);
-  const [state, set] = useState<S>(keyStore.state);
-  const { setters } = keyStore;
+  const store = Storage.get(key);
+  const [state, set] = useState<S>(store.state);
+  const { setters } = store;
 
   useEffect(() => {
     setters.push(set);
@@ -26,5 +26,5 @@ export function useStore<S>(key: string, value?: S) {
     };
   }, []);
 
-  return [state, keyStore.setState];
+  return [state, store.setState];
 }
