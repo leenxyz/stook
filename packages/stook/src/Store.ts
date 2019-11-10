@@ -1,6 +1,9 @@
 import { Dispatch, SetStateAction } from 'react'
 import { produce } from 'immer'
 
+/**
+ * on store
+ */
 export class Store<S = any> {
   state: S
   setters: Dispatch<SetStateAction<S>>[] = []

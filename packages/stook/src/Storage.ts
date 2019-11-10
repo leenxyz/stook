@@ -8,14 +8,14 @@ interface Stores {
  * Storage for anything
  */
 export class Storage {
-  private static stores: Stores = {}
+  static stores: Stores = {}
   static set(key: string, value: Store) {
     if (!Storage.stores[key]) {
       Storage.stores[key] = value
     }
   }
 
-  static get(key: string) {
+  static get<S = any>(key: string): Store<S> {
     return Storage.stores[key]
   }
 }
