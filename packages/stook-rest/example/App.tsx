@@ -53,8 +53,10 @@ const UseFetchApp = () => {
     // deps: [store.id],
   })
 
+  console.log('data:', data)
+
   const handleClick = async () => {
-    const r = await refetch<Todo>({ param: { id: 2 } })
+    const r = await refetch<Todo>({ params: { id: 2 } })
     console.log('r:', r)
   }
 
@@ -65,7 +67,7 @@ const UseFetchApp = () => {
     <div className="App">
       <h2>useFetch</h2>
       <button onClick={handleClick}>refetch</button>
-      <button onClick={() => fetcher[Api.GetTodo].refetch({ params: { id: 3 } })}>
+      <button onClick={() => fetcher.get(Api.GetTodo).refetch({ params: { id: 3 } })}>
         refetch with fetcher
       </button>
       <pre>{JSON.stringify(data, null, 2)}</pre>

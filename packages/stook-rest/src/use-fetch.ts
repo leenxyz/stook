@@ -1,7 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
+import { useStore, Storage } from 'stook'
 import { fetch } from './fetch'
-import fetcher from './fetcher'
-import { FetchResult, Refetch, Options, HooksResult, Deps, Params } from './types'
+import { fetcher } from './fetcher'
+import { FetchResult, Refetch, Options, HooksResult, Deps, Params, FetcherItem } from './types'
+
+console.log('Storage:', Storage.stores)
 
 function last<T>(arr: T[]): T {
   return arr[arr.length - 1]
@@ -37,45 +40,55 @@ function getMethod(url: string, options: Options = {}) {
 }
 
 function getFetcherName(url: string, options: Options = {}) {
-  if (options.name) return options.name
+  if (options.key) return options.key
   const method = getMethod(url, options)
   url = last(url.split(/\s+/))
   return `${method} ${url}`
 }
 
-export function useFetch<T extends any>(url: string, options?: Options) {
+export function useFetch<T extends any>(url: string, options: Options<T> = {}) {
   let reqUrl: string = url
   let unmounted = false
-  const initialState = { loading: true } as FetchResult<T>
-  const [result, setState] = useState(initialState)
+  const { initialData: data, onUpdate } = options
+  const initialState = { loading: true, data } as FetchResult<T>
   const deps = getDeps(options)
+  const fetcherName = getFetcherName(url, options)
+  const [result, setState] = useStore(fetcherName, initialState)
 
-  const fetchData = async (opt?: Options) => {
-    setState(prev => ({ ...prev, loading: true }))
+  function update(updatedState: Partial<FetchResult<T>>) {
+    const newState = { ...result, ...updatedState }
+    setState(newState)
+    onUpdate && onUpdate(newState)
+  }
+
+  const doFetch = async (opt?: Options) => {
     const fetchOptions = getOptions(opt)
     if (fetchOptions.params) reqUrl = setUrlParam(url, fetchOptions.params)
     try {
       const data: T = await fetch(reqUrl, fetchOptions || {})
-      if (!unmounted) setState(prev => ({ ...prev, loading: false, data }))
+      if (!unmounted) {
+        update({ loading: false, data })
+      }
       return data
     } catch (error) {
-      if (!unmounted) setState(prev => ({ ...prev, loading: false, error }))
+      if (!unmounted) {
+        update({ loading: false, error })
+      }
       throw error
     }
   }
 
   const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
-    const refetchedData: any = await fetchData(opt)
+    const refetchedData: any = await doFetch(opt)
     return refetchedData as P
   }
 
   useEffect(() => {
     const fetchOptions = getOptions(options)
-    fetchData(fetchOptions)
+    doFetch(fetchOptions)
 
     // store refetch fn to fetcher
-    const name = getFetcherName(url, fetchOptions)
-    fetcher[name] = { refetch }
+    fetcher.set(fetcherName, { refetch } as FetcherItem<T>)
 
     return () => {
       unmounted = true
