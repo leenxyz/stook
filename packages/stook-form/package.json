@@ -1,6 +1,6 @@
 {
   "name": "stook-form",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "description": "stook form",
   "files": [
@@ -59,6 +59,6 @@
     "lodash.set": "^4.3.2",
     "react-fast-compare": "^2.0.4",
     "reflect-metadata": "^0.1.13",
-    "stook": "^0.1.0"
+    "stook": "^0.1.1"
   }
 }
