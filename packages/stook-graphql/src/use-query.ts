@@ -11,8 +11,8 @@ function getDeps(options?: Options): Deps {
 }
 
 export function useQuery<T = any>(input: string, options: Options<T> = {}) {
-  const { data, onChange } = options
-  const fetcherName = options.name || input
+  const { initialData: data, onUpdate } = options
+  const fetcherName = options.key || input
   let unmounted = false
   const initialState = { loading: true, data } as QueryResult<T>
   const deps = getDeps(options)
@@ -21,7 +21,7 @@ export function useQuery<T = any>(input: string, options: Options<T> = {}) {
   function update(updatedState: Partial<QueryResult<T>>) {
     const newState = { ...result, ...updatedState }
     setState(newState)
-    onChange && onChange(newState)
+    onUpdate && onUpdate(newState)
   }
 
   const doFetch = async (opt: Options = {}) => {

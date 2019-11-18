@@ -11,7 +11,7 @@ export class fetcher {
     if (!fetcher.store[name]) {
       fetcher.store[name] = {
         refetch() {
-          const error = new Error(`[@peajs/graphql]: In fetcher, can not get ${name}`)
+          const error = new Error(`[stook-graphql]: In fetcher, can not get ${name}`)
           console.warn(error)
         },
       } as FetcherItem

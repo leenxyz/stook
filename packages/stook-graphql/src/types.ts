@@ -7,12 +7,15 @@ export type Refetch = <T>(options?: Options) => Promise<T>
 export type Deps = ReadonlyArray<any>
 
 export interface Options<T = any> {
-  name?: string
+  key?: string
   variables?: Variables
   deps?: Deps
   headers?: HeadersInit
-  data?: T
-  onChange?(result: Result<T>): any
+  initialData?: T
+  onUpdate?(result: Result<T>): any
+  // retryOn: any
+  // retryDelay: any
+  // retryOnError: false
 }
 
 export type Mutate = (variables: Variables, options?: Options) => any

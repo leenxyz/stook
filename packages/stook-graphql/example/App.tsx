@@ -3,7 +3,7 @@ import gql from 'gql-tag'
 
 import { config, query, useQuery, useMutate, fetcher, useSubscribe, fromSubscription } from '../src'
 
-import { GlobalStore } from 'stook'
+import { Storage } from 'stook'
 
 export const GET_USER = gql`
   query GetUser($login: String!) {
@@ -164,7 +164,7 @@ const UseQueryById = () => {
     data: {} as Project,
     variables: { slug: 'forsigner' },
     deps: [],
-    onChange({ data }) {
+    onUpdate({ data }) {
       // console.log('---------:', data)
     },
   })
@@ -175,7 +175,7 @@ const UseQueryById = () => {
   if (loading) return <div>loading....</div>
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>
 
-  console.log('---', GlobalStore.get(GET_PROJECT))
+  console.log('---', Storage.get(GET_PROJECT))
 
   return (
     <div className="App">
