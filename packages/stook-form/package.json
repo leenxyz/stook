@@ -1,0 +1,64 @@
+{
+  "name": "stook-form",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "description": "stook form",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsnl dev",
+    "build": "tsnl build",
+    "test": "tsdx test --env=jsdom",
+    "lint": "tsdx lint"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "eslintConfig": {
+    "extends": "tie-app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/forsinger/stook.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/forsigner/stook/issues"
+  },
+  "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-form",
+  "devDependencies": {
+    "@types/is-promise": "^2.1.0",
+    "@types/jest": "^24.0.23",
+    "@types/lodash.get": "^4.4.6",
+    "@types/lodash.set": "^4.3.6",
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.9.4",
+    "@types/scheduler": "^0.16.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "tsdx": "^0.11.0",
+    "tslib": "^1.10.0",
+    "tsnl": "^1.2.1",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.11.0",
+    "deepmerge": "^4.2.2",
+    "immer": "^5.0.0",
+    "is-promise": "^2.1.0",
+    "lodash.get": "^4.4.2",
+    "lodash.set": "^4.3.2",
+    "react-fast-compare": "^2.0.4",
+    "reflect-metadata": "^0.1.13",
+    "stook": "^0.1.0"
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "name": "examples",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "pea dev",
+    "build": "pea build"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@material-ui/core": "^4.5.1",
+    "@peajs/core": "^0.1.0",
+    "@peajs/form": "^0.2.3",
+    "@peajs/form-antd": "0.0.1",
+    "@peajs/router": "^0.1.0",
+    "@types/react-select": "^3.0.5",
+    "antd": "^3.19.8",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.10.2",
+    "final-form": "^4.18.5",
+    "fooks": "^1.2.1",
+    "immer": "^4.0.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-fast-compare": "^2.0.4",
+    "react-final-form": "^6.3.0",
+    "react-hook-form": "^3.24.0",
+    "react-select": "^3.0.8",
+    "reflect-metadata": "^0.1.13",
+    "scheduler": "^0.16.2",
+    "stook": "^0.1.0",
+    "styled-components": "^4.4.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "@types/node": "^12.0.10",
+    "@types/react": "^16.8.22",
+    "@types/react-dom": "^16.8.4",
+    "@types/scheduler": "^0.16.1",
+    "node-sass": "^4.12.0",
+    "pea-cli": "^0.1.1",
+    "pea-plugin-antd": "^0.1.1",
+    "pea-plugin-less": "^0.1.1",
+    "pea-plugin-rest": "^0.1.1",
+    "pea-plugin-router": "^0.1.1",
+    "typescript": "^3.4.5"
+  }
+}
