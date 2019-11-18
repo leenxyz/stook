@@ -8,7 +8,13 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "react-app-polyfill": "^1.0.0"
+    "gql-tag": "^1.0.1",
+    "react-app-polyfill": "^1.0.0",
+    "react-json-tree": "^0.11.2",
+    "stook": "^0.1.0",
+    "stook-graphql": "^0.1.0",
+    "stook-rest": "^0.1.0",
+    "styled-components": "^4.4.1"
   },
   "alias": {
     "react": "../node_modules/react",
@@ -18,6 +24,8 @@
   "devDependencies": {
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
+    "@types/react-json-tree": "^0.6.11",
+    "@types/styled-components": "^4.4.0",
     "parcel": "^1.12.3",
     "typescript": "^3.4.5"
   }
