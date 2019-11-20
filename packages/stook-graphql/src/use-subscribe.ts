@@ -21,7 +21,7 @@ export function useSubscribe<T = any>(input: string, options: SubscriptionOption
 
     setState(prev => ({ ...prev, loading: true }))
     try {
-      let data = await query<T>(initialQuery.query, initialQuery.variables || {})
+      let data = await query<T>(initialQuery.query, { variables: initialQuery.variables || {} })
 
       if (interceptor.responses) {
         interceptor.responses.forEach(item => {
