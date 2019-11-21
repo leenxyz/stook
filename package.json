@@ -7,8 +7,14 @@
     "test": "lerna run --parallel --stream test",
     "test:watch": "lerna run --parallel --stream test:watch"
   },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
   "devDependencies": {
     "lerna": "^3.18.4"
   }
 }
-

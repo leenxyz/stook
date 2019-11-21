@@ -1,61 +1,61 @@
-import Header from "../components/Header";
+import Header from '../components/Header'
 
 <Header />
 
 ## 简介
 
-Stook，也许，这是世界上最简单的 React 状态管理库，它会彻底颠覆你写 React 代码的方式。
-
-## 核心
-
-```jsx
-const [state, setter] = useStore(key, initialState);
-```
+<span className="name">
+  stook
+</span>，也许，这是世界上最简单的 React 状态管理库，它会彻底颠覆你写 React 代码的方式。
 
 ## 基本用法
 
-下面是一个经典的 Counter 组件，展示了 `Stook` 的最基本用法:
+下面是一个经典的 Counter 组件，展示了 `stook` 的最基本用法:
 
 ```jsx
-import React from "react";
-import { useStore } from "stook";
+import React from 'react'
+import { useStore } from 'stook'
 
 function Counter() {
-  const [count, setCount] = useStore("COUNTER", 0);
+  const [count, setCount] = useStore('COUNTER', 0)
   return (
     <div>
       <p>You clicked {count} times</p>
       <button onClick={() => setCount(count + 1)}>Click me</button>
     </div>
-  );
+  )
 }
 ```
 
-`Stook` 最核心的 Api 就是 `useStore`，也许你发现了，它和 `useState` 非常像，事实上，除了 `useStore` 多了一个参数以外，其他用法一模一样。
+`stook` 最核心的 Api 就是 `useStore`，也许你发现了，它和 `useState` 非常像，实际上，`useStore` 除了多了一个参数以外，其他用法一模一样。
 
-## 跨组件通信
+## 跨组件共享状态
+
+对于状态管理，最核心的功能就是状态的跨组件通信。useState 用于管理单一组件内的状态，useStore 则可以跨组件管理整个应用的状态。
+
+下面展示了如何多个组件如何共享状态：
 
 ```jsx
-import React from "react";
-import { useStore } from "stook";
+import React from 'react'
+import { useStore } from 'stook'
 
 function Counter() {
-  const [count, setCount] = useStore("COUNTER", 0);
+  const [count, setCount] = useStore('COUNTER', 0)
   return (
     <div>
       <p>You clicked {count} times</p>
       <button onClick={() => setCount(count + 1)}>Click me</button>
     </div>
-  );
+  )
 }
 
 function Display() {
-  const [count] = useStore("COUNTER");
+  const [count] = useStore('COUNTER')
   return (
     <div>
       <p>{count}</p>
     </div>
-  );
+  )
 }
 
 function App() {
@@ -64,36 +64,42 @@ function App() {
       <Counter />
       <Display />
     </div>
-  );
+  )
 }
 ```
 
+在这个例子中，我们可以看到，要共享状态，只需使用 useStore 订阅已 key 即可，非常简单。可以说，只要你学会了 useState，也就学会了 useStore，只要你学会了 useStore，你就学会了 React 的状态管理。
+
 ## 自定 Hooks
 
+为了能使组件和状态管理逻辑分离，强烈建议使用自定义 hooks 管理状态，比如说你要管理 Counter 的状态，那就是自定义一个叫 `useCounter` 的 hooks，然后在各组件中使用 `useCounter()` 而不是直接使用 `useStore('Counter')`。
+
+示例：
+
 ```jsx
-import React from "react";
-import { useStore } from "stook";
+import React from 'react'
+import { useStore } from 'stook'
 
 function useCounter() {
-  const [count, setCount] = useStore("COUNTER", 0);
-  const decrease = () => setCount(count - 1);
-  const increase = () => setCount(count + 1);
-  return { count, increase, decrease };
+  const [count, setCount] = useStore('COUNTER', 0)
+  const decrease = () => setCount(count - 1)
+  const increase = () => setCount(count + 1)
+  return { count, increase, decrease }
 }
 
 function Display() {
-  const { count } = useCounter();
-  return <div>{count}</div>;
+  const { count } = useCounter()
+  return <div>{count}</div>
 }
 
 function Increase() {
-  const { increase } = useCounter();
-  return <buttun onClick={increase}>+</buttun>;
+  const { increase } = useCounter()
+  return <buttun onClick={increase}>+</buttun>
 }
 
 function Decrease() {
-  const { decrease } = useCounter();
-  return <buttun onClick={decrease}>-</buttun>;
+  const { decrease } = useCounter()
+  return <buttun onClick={decrease}>-</buttun>
 }
 
 export default function App() {
@@ -103,12 +109,148 @@ export default function App() {
       <Display />
       <Increase />
     </div>
-  );
+  )
 }
 ```
 
 上面三个子组件，都用到了 useCounter，它们实现了状态共享。
 
+## useStore
+
+`const [state, setState] = useStore(key, initialState)`
+
+`useStore` 是 stook 的核心 Api，上面的例子展示它的基本用法。实际上，和 `useState` 相比， `useStore` 除了多了一个参数以外，其他用法一模一样，不同的是他们实现的效果：`useState` 的状态是局部的，`useStore` 的状态全局的。
+
+还一个不同的是，`useStore` 内置了 immer，所以你可以有以下的用法：
+
+```jsx
+const [user, setUser] = useStore('USER', { id: 1, name: 'foo' })
+
+setUser(state => {
+  state.name = 'bar'
+})
+```
+
+还一个指得注意的是，如果你对同一个 key 进行了 initialState 的初始化，stook 只会使用第一个 initialState。
+
+在某个组件初始化了 USER:
+
+```jsx
+// component A
+const [user, setUser] = useStore('USER', { id: 1, name: 'foo' })
+```
+
+后续，如果又初始化了 USER 是无效的，因为这个 USER store 已经初始化过了，所以这时你不用再传 initialState 参数。
+
+```jsx
+// component B
+const [user, setUser] = useStore('USER', { id: 1, name: 'bar' }) // bad
+
+const [user, setUser] = useStore('USER') // good，直接读取 store
+```
+
+如果你提前使用 mutate 初始化过一个 store，后续 `useStore` 一样不用再传 initialState 参数。
+
 ## mutate
 
+`mutate` 用来改变一个 store 的 state，它的用法类似 `[state setState] = useStore(key)` 中的 setState，但需要传入某个 store 的 key，强大地方是它可以在任何地方使用。
+
+```js
+mutate('USER', { id: 1, name: 'foo' })
+
+//or
+
+mutate('USER', state => ({
+  ...state,
+  name: 'foo',
+}))
+
+//or
+
+mutate('USER', state => {
+  state.name = 'foo'
+})
+```
+
+mutate 你可以初始化一个不存在的 store，这是一个特殊的使用场景。
+
+举个例子，你可以用 mutate 初始化一个用户的 store:
+
+```jsx
+const user = localStorage.getItem('USER') // { id: 1, name: 'foo' }
+mutate('USER', user)
+```
+
+然后在组件使用 (不需要再初始化):
+
+```jsx
+const Profile = () => {
+  const [user, updateUser] = useStore('USER')
+  return (
+    <div>
+      <span>{user.name}</span>
+      <button onClick={() => updateUser({ name: 'bar' })}>update user</button>
+    </div>
+  )
+}
+```
+
 ## getState
+
+在某些创景，你可能需要更灵活的读取 state，比如在组件外读取 state，或者在组件内却不订阅 state 的更新，这时你可以使用 `getState`:
+
+```jsx
+const user = getState('USER')
+```
+
+## 测试
+
+测试 stook 是一件非常简单的事，因为测试 stook 也就是在测试 react hooks。
+
+推荐使用 [react-hooks-testing-library](https://react-hooks-testing-library.com/)工具来测试 stook。
+
+### 安装依赖
+
+```bash
+npm install -D @testing-library/react-hooks react-test-renderer
+```
+
+### 例子
+
+**`useCounter.ts`**
+
+```js
+function useCounter() {
+  const [count, setCount] = useStore('COUNTER', 0)
+  const decrease = () => setCount(count - 1)
+  const increase = () => setCount(count + 1)
+  return { count, increase, decrease }
+}
+```
+
+**`useCounter.test.ts`**
+
+```js
+import { renderHook, act } from '@testing-library/react-hooks'
+import useCounter from './useCounter'
+
+test('should increment counter', () => {
+  const { result } = renderHook(() => useCounter())
+
+  act(() => {
+    result.current.increase()
+  })
+
+  expect(result.current.count).toBe(1)
+})
+```
+
+更多的测试技巧请看：[react-hooks-testing-library](https://react-hooks-testing-library.com/)。
+
+<!-- ## FAQ
+
+### 和 Redux Mobx 有什么区别?
+
+### 支持 TypeScript 吗？
+
+### 性能怎样？ 会有 "Too many re-renders"问题吗？ -->

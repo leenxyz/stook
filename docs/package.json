@@ -1,11 +1,12 @@
 {
-  "name": "docs",
+  "name": "stook",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "now --prod"
   },
   "dependencies": {
     "@mdx-js/loader": "^1.5.1",
