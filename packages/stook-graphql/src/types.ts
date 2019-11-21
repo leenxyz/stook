@@ -62,13 +62,15 @@ export interface GraphqlConfig {
   headers?: HeadersInit
 }
 
-export interface SubscriptionOption {
+export interface SubscriptionOption<T = any> {
+  key?: string
   variables?: Object
   operationName?: string
   initialQuery?: {
     query: string
     variables?: Variables
   }
+  onUpdate?(result: Result<T>): any
 }
 
 export interface FromSubscriptionOption {

@@ -5,9 +5,9 @@ import { query } from './query'
 import clients from './clients'
 import { SubscribeResult, Interceptor, SubscriptionOption } from './types'
 
-export function useSubscribe<T = any>(input: string, options: SubscriptionOption = {}) {
+export function useSubscribe<T = any>(input: string, options: SubscriptionOption<T> = {}) {
   const { interceptor: configInterceptors } = graphqlConfig
-  const { variables = {}, operationName = '', initialQuery = '' } = options
+  const { variables = {}, operationName = '', initialQuery = '', onUpdate } = options
 
   let unmounted = false
   let interceptor = {} as Interceptor
@@ -16,23 +16,26 @@ export function useSubscribe<T = any>(input: string, options: SubscriptionOption
 
   if (configInterceptors) interceptor = configInterceptors
 
+  function update(updatedState: Partial<SubscribeResult<T>>) {
+    const newState = { ...result, ...updatedState }
+    setState(newState)
+    onUpdate && onUpdate(newState)
+  }
+
   const initQuery = async () => {
     if (!initialQuery) return
 
-    setState(prev => ({ ...prev, loading: true }))
     try {
       let data = await query<T>(initialQuery.query, { variables: initialQuery.variables || {} })
 
-      if (interceptor.responses) {
-        interceptor.responses.forEach(item => {
-          data = item(data)
-        })
+      if (!unmounted) {
+        update({ loading: false, data })
       }
-
-      if (!unmounted) setState(prev => ({ ...prev, loading: false, data }))
       return data
     } catch (error) {
-      if (!unmounted) setState(prev => ({ ...prev, loading: false, error }))
+      if (!unmounted) {
+        update({ loading: false, error })
+      }
       return error
     }
   }
@@ -48,10 +51,20 @@ export function useSubscribe<T = any>(input: string, options: SubscriptionOption
       })
       .subscribe({
         next({ data }) {
-          if (!unmounted) setState(prev => ({ ...prev, loading: false, data: data as any }))
+          if (interceptor.responses) {
+            interceptor.responses.forEach(item => {
+              data = item(data)
+            })
+          }
+
+          if (!unmounted) {
+            update({ loading: false, data: data as any })
+          }
         },
         error(error) {
-          if (!unmounted) setState(prev => ({ ...prev, loading: false, error }))
+          if (!unmounted) {
+            update({ loading: false, error })
+          }
         },
         complete() {
           console.log('completed')
