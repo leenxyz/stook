@@ -9,8 +9,9 @@ mutate('COUNTER', 10)
 
 
 const Counter = () => {
-  const [count, setCount] = useStore('COUNTER', 0)
-  const [] = useStore('project', { foo: 'bar', id: 10 })
+  const [count, setCount] = useStore('COUNTER')
+  const [state] = useStore('project', { foo: 'bar', id: 10 })
+  console.log('state:', state)
   return (
     <div>
       <button onClick={() => setCount(count - 1)}>-</button>
