@@ -5,6 +5,6 @@ export function mutate<S>(key: string, value?: S) {
   if (store) {
     store.setState(value)
   } else {
-    // TODO:
+    Storage.set(key, { state: value } as any)
   }
 }

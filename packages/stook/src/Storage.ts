@@ -10,7 +10,8 @@ interface Stores {
 export class Storage {
   static stores: Stores = {}
   static set(key: string, value: Store) {
-    if (!Storage.stores[key]) {
+    const store = Storage.stores[key]
+    if (!store || !store.setState) {
       Storage.stores[key] = value
     }
   }

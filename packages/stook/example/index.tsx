@@ -1,8 +1,12 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { useStore } from 'stook'
+// import { useStore } from 'stook'
+import { useStore, mutate } from './src'
 import Fetch from './Fetch'
-import DevTool from './dev-tool'
+import DevTool from './DevTool'
+
+mutate('COUNTER', 10)
+
 
 const Counter = () => {
   const [count, setCount] = useStore('COUNTER', 0)

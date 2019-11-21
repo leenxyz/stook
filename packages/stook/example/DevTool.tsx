@@ -40,6 +40,7 @@ interface Stores {
 const DevTool = () => {
   function getJson() {
     const stores: Stores = Storage.stores
+
     return Object.keys(stores).reduce((result, cur: any) => {
       result[cur] = stores[cur].state
       return result
