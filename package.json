@@ -5,7 +5,8 @@
     "build:watch": "lerna run --parallel --stream build:watch",
     "format": "prettier --write \"packages/**/src/**/*.{ts,tsx}\"",
     "test": "lerna run --parallel --stream test",
-    "test:watch": "lerna run --parallel --stream test:watch"
+    "test:watch": "lerna run --parallel --stream test:watch",
+    "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
   },
   "prettier": {
     "printWidth": 100,
@@ -14,7 +15,20 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
+  "jest": {
+    "preset": "ts-jest",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/",
+      "/.history/"
+    ]
+  },
   "devDependencies": {
-    "lerna": "^3.18.4"
+    "@types/jest": "^24.0.23",
+    "coveralls": "^3.0.8",
+    "jest": "^24.9.0",
+    "lerna": "^3.19.0",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.7.2"
   }
 }
