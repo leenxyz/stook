@@ -11,20 +11,36 @@ export class Store<S = any> {
     this.state = value
   }
 
-  // TODO: handle any
-  setState = (value: any) => {
-    const useImmer = typeof value === 'function' && typeof this.state === 'object'
+  private getNextState(value: any): any {
+    let nextState: any
 
-    if (!useImmer) {
-      this.state = value
-      this.setters.forEach(setter => setter(this.state))
-      return
-    }
+    // not function
+    if (typeof value !== 'function') return value
 
-    const nextState = produce(this.state, draft => {
-      value(draft)
+    // can not use immer
+    if (typeof this.state !== 'object') return value()
+
+    let useImmer = true
+
+    const immerState = produce(this.state, draft => {
+      const fnValue = value(draft)
+
+      // use function return value
+      if (fnValue && typeof fnValue === 'object') {
+        nextState = fnValue
+        useImmer = false
+      }
     })
 
+    if (useImmer) {
+      nextState = immerState
+    }
+
+    return nextState
+  }
+
+  setState = (value: any) => {
+    const nextState = this.getNextState(value)
     this.state = nextState
     this.setters.forEach(setter => setter(nextState))
   }

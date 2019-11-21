@@ -1,25 +1,28 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Storage } from './Storage'
 import { Store } from './Store'
 import { Trigger, Action } from './types'
+const equal = require('fast-deep-equal');
+
 
 export function useStore<S = any>(key: string, value?: S): [S, Trigger<Action<S>>] {
-  const currentStore = Storage.get(key)
-  const inited = currentStore && Reflect.has(currentStore, 'state')
+  const storageStore = Storage.get(key)
+  const initalValue = storageStore ? storageStore.state : value
+  const { current: initialState } = useRef(initalValue)
 
-  if (inited) {
-    if (value !== undefined) {
-      const error = new Error(`[stook]: store ${key} is inited, initialState is unnecessary`)
-      console.warn(error)
-    }
-    value = currentStore.state
+
+  if (!equal(initialState, value) && value !== undefined) {
+    const initialStateString = JSON.stringify(initialState)
+    const error = new Error(
+      `[stook]: store ${key} is inited with ${initialStateString}, initialState is unnecessary`,
+    )
+    console.warn(error)
   }
 
-  Storage.set(key, new Store<S>(value))
+  Storage.set(key, new Store<S>(initialState))
 
   const newStore = Storage.get(key)
-
-  const [state, set] = useState<S>(newStore.state)
+  const [state, set] = useState<S>(initialState)
   const { setters } = newStore
 
   useEffect(() => {
