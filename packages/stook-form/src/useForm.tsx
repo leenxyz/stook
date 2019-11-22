@@ -27,7 +27,7 @@ export function useForm<T>(Model: ModelType<T>, options: Options<T> = {}) {
     submitting: false,
   })
   const isMounted = useIsMounted()
-  const key = options.name || `STOOK_FORM_${uuid()}`
+  const name = useRef(options.name || `STOOK_FORM_${uuid()}`)
 
   if (!isMounted) {
     initialValue.current.values = !options.initValues
@@ -35,7 +35,7 @@ export function useForm<T>(Model: ModelType<T>, options: Options<T> = {}) {
       : deepmerge<T>(instance, options.initValues(instance) || {})
   }
 
-  const [state, setState] = useStore(key, initialValue.current)
+  const [state, setState] = useStore(name.current, initialValue.current)
   const actionBuilder = new ActionBuilder(state, setState, initialValue.current)
 
   const actions = {

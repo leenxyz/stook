@@ -11,7 +11,7 @@ class User {
 
 export default () => {
   const { handlers, name, actions, state } = useForm(User, {
-    name: 'my_form',
+    // name: 'my_form',
     initValues(values) {
       console.log('init.........')
       return {
