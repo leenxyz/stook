@@ -34,6 +34,7 @@ module.exports = {
       },
       links: [
         { to: '/docs/intro/quick-start', label: 'Docs', position: 'right' },
+        { to: '/ecosystem', label: 'Ecosystem', position: 'right' },
         {
           href: 'https://www.github.com/forsigner/stook',
           label: 'GitHub',
@@ -93,7 +94,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/pea-team/pea/edit/master/website/',
+          editUrl: 'https://github.com/forsigner/stook/edit/master/website/',
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
         },
