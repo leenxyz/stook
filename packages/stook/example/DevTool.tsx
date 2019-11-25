@@ -1,7 +1,7 @@
 import * as React from 'react'
 import JSONTree from 'react-json-tree'
 // import { Storage } from './src'
-import { Storage } from 'stook'
+import { Storage } from './src'
 import styled from 'styled-components'
 
 const Wrapper = styled.div``

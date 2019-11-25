@@ -10,6 +10,7 @@
   "dependencies": {
     "gql-tag": "^1.0.1",
     "react-app-polyfill": "^1.0.0",
+    "react-fast-compare": "^2.0.4",
     "react-json-tree": "^0.11.2",
     "stook": "^0.1.0",
     "stook-graphql": "^0.1.0",
