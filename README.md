@@ -6,7 +6,7 @@ Manage {store} in {hooks}.
 
 ## Documentation
 
-The documentation site of stook is hosted at [stook.now.sh](https://stook.now.sh/).
+The documentation site of stook is hosted at [The documentation site of stook is hosted at [https://stook.now.sh](https://stook.now.sh/).
 
 ## License
 

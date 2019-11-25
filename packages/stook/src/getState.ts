@@ -1,6 +1,6 @@
 import { Storage } from './Storage'
 
-export function getState<S>(key: string) {
+export function getState<S = any>(key: string) {
   const store = Storage.get<S>(key)
   return store ? store.state : null
 }
