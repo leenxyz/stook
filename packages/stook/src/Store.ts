@@ -1,8 +1,8 @@
-import { Dispatch, SetStateAction } from 'react'
 import { produce } from 'immer'
+import { Dispatch, SetStateAction } from './types'
 
 /**
- * on store
+ * store for one key
  */
 export class Store<S = any> {
   state: S
