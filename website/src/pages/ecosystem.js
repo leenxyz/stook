@@ -50,8 +50,7 @@ const Btn = styled.a`
 `
 
 const Name = styled.div`
-  color: #aaa;
-  font-size: 12px;
+  font-size: 24px;
   margin-top: 5px;
 `
 

@@ -9,7 +9,7 @@ module.exports = {
   docs: {
     Introduction: ['intro/quick-start', 'intro/philosophy'],
     stook: [
-      'stook/installation',
+      'stook/intro',
       'stook/quick-start',
       'stook/share-state',
       'stook/custom-hooks',
@@ -20,10 +20,26 @@ module.exports = {
       'stook/faq',
     ],
 
-    'stook-rest': ['rest/started', 'rest/useFetch', 'rest/useUpdate', 'rest/fetch', 'rest/reFetch'],
-    'stook-graphql': ['graphql/started', 'graphql/useQuery', 'graphql/useMutate', 'graphql/query'],
+    'stook-devtools': ['devtools/intro'],
+
+    'stook-rest': [
+      'rest/intro',
+      'rest/quick-start',
+      'rest/useFetch',
+      'rest/useUpdate',
+      'rest/fetch',
+      'rest/reFetch',
+    ],
+    'stook-graphql': [
+      'graphql/intro',
+      'graphql/quick-start',
+      'graphql/useQuery',
+      'graphql/useMutate',
+      'graphql/query',
+    ],
     'stook-form': [
-      'form/start',
+      'form/intro',
+      'form/quick-start',
       'form/array',
       'form/nested-object',
       'form/validation',
