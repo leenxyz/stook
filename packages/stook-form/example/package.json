@@ -42,7 +42,8 @@
     "react-select": "^3.0.8",
     "reflect-metadata": "^0.1.13",
     "scheduler": "^0.16.2",
-    "stook": "^0.1.0",
+    "stook": "^0.2.0",
+    "stook-devtools": "^0.1.0",
     "styled-components": "^4.4.0"
   },
   "devDependencies": {

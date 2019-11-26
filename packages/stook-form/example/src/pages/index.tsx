@@ -1,8 +1,11 @@
 import 'reflect-metadata'
 import React from 'react'
-// import { useForm } from '@peajs/form'
 import { useForm } from '../src'
 import { useStore } from 'stook'
+
+// import { devtools } from 'stook-devtools'
+
+// devtools.init()
 
 class User {
   username = 'Jack'

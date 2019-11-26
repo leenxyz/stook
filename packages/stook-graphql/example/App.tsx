@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import gql from 'gql-tag'
 
-import { config, query, useQuery, useMutate, fetcher, useSubscribe, fromSubscription } from '../src'
+import { config, query, useQuery, useMutate, fetcher, useSubscribe, fromSubscription } from './src'
 
 import { Storage } from 'stook'
 
@@ -87,12 +87,6 @@ const GET_NOTICE = gql`
   }
 `
 
-fromSubscription(SUB).subscribe({
-  next(data: any) {
-    console.log('data:', data)
-  },
-})
-
 const SubApp = () => {
   const { data = {} } = useSubscribe(SUB, {
     initialQuery: {
@@ -161,7 +155,6 @@ const UseQueryById = () => {
 
   const { loading, data, error, refetch } = useQuery<Project>(GET_PROJECT, {
     // name: 'getUserById',
-    data: {} as Project,
     variables: { slug: 'forsigner' },
     deps: [],
     onUpdate({ data }) {
@@ -171,6 +164,7 @@ const UseQueryById = () => {
 
   // console.log('loading:', loading)
   console.log('render---------data:', data)
+  console.log('error:', error)
   // console.log('render....')
   if (loading) return <div>loading....</div>
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>
