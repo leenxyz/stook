@@ -18,30 +18,27 @@ export function useQuery<T = any>(input: string, options: Options<T> = {}) {
   const deps = getDeps(options)
   const [result, setState] = useStore(fetcherName, initialState)
 
-  function update(updatedState: Partial<QueryResult<T>>) {
-    const newState = { ...result, ...updatedState }
-    setState(newState)
-    onUpdate && onUpdate(newState)
+  function update(nextState: QueryResult<T>) {
+    setState(nextState)
+    onUpdate && onUpdate(nextState)
   }
 
   const doFetch = async (opt: Options = {}) => {
+    if (unmounted) return
+
     try {
       const data = await query<T>(input, opt || {})
-      if (!unmounted) {
-        update({ loading: false, data })
-      }
+      update({ loading: false, data } as QueryResult<T>)
       return data
     } catch (error) {
-      if (!unmounted) {
-        update({ loading: false, error })
-      }
+      update({ loading: false, error } as QueryResult<T>)
       return error
     }
   }
 
   const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
-    const refetchedData: any = await doFetch(opt)
-    return refetchedData as P
+    const data: any = await doFetch(opt)
+    return data as P
   }
 
   useEffect(() => {

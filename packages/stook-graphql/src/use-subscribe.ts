@@ -16,31 +16,27 @@ export function useSubscribe<T = any>(input: string, options: SubscriptionOption
 
   if (configInterceptors) interceptor = configInterceptors
 
-  function update(updatedState: Partial<SubscribeResult<T>>) {
-    const newState = { ...result, ...updatedState }
-    setState(newState)
-    onUpdate && onUpdate(newState)
+  function update(nextState: SubscribeResult<T>) {
+    setState(nextState)
+    onUpdate && onUpdate(nextState)
   }
 
   const initQuery = async () => {
     if (!initialQuery) return
+    if (unmounted) return
 
     try {
       let data = await query<T>(initialQuery.query, { variables: initialQuery.variables || {} })
-
-      if (!unmounted) {
-        update({ loading: false, data })
-      }
+      update({ loading: false, data } as SubscribeResult<T>)
       return data
     } catch (error) {
-      if (!unmounted) {
-        update({ loading: false, error })
-      }
+      update({ loading: false, error } as SubscribeResult<T>)
       return error
     }
   }
 
   const fetchData = async () => {
+    if (unmounted) return
     clients.subscriptionClient
       .request({
         query: gql`
@@ -57,14 +53,10 @@ export function useSubscribe<T = any>(input: string, options: SubscriptionOption
             })
           }
 
-          if (!unmounted) {
-            update({ loading: false, data: data as any })
-          }
+          update({ loading: false, data } as SubscribeResult<T>)
         },
         error(error) {
-          if (!unmounted) {
-            update({ loading: false, error })
-          }
+          update({ loading: false, error } as SubscribeResult<T>)
         },
         complete() {
           console.log('completed')
