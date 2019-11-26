@@ -22,6 +22,11 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
+
+  "bugs": {
+    "url": "https://github.com/forsigner/stook/issues"
+  },
+  "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-devtools",
   "peerDependencies": {
     "react": ">=16"
   },
