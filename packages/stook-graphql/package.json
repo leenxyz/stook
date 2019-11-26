@@ -1,6 +1,6 @@
 {
   "name": "stook-graphql",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -39,7 +39,7 @@
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-test-renderer": "^16.11.0",
-    "stook": "^0.2.0",
+    "stook": "^0.2.1",
     "tsdx": "^0.11.0",
     "tslib": "^1.10.0",
     "typescript": "^3.7.2"
