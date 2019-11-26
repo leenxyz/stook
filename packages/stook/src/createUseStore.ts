@@ -13,11 +13,12 @@ export function createUseStore(useState: any, useEffect: any, useRef: any) {
 
     // check multi init
     if (!isEqual(initialState, value) && value !== undefined) {
-      const initialStateString = JSON.stringify(initialState)
-      const error = new Error(
-        `[stook]: store ${key} is inited with ${initialStateString}, initialState is unnecessary`,
-      )
-      console.warn(error)
+      // TODO: mybe should show tip
+      // const initialStateString = JSON.stringify(initialState)
+      // const error = new Error(
+      //   `[stook]: store ${key} is inited with ${initialStateString}, initialState is unnecessary`,
+      // )
+      // console.warn(error)
     }
 
     Storage.set(key, new Store<S>(initialState))

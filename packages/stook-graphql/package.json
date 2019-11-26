@@ -45,7 +45,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@peajs/graphql-client": "^0.2.0",
+    "@peajs/graphql-client": "^0.1.1",
     "gql-tag": "^1.0.1",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
