@@ -1,42 +1,18 @@
 # stook-form
 
-> React Form base on hooks
+[![npm](https://img.shields.io/npm/v/stook-form.svg)](https://www.npmjs.com/package/stook-form) [![Minzipped size](https://img.shields.io/bundlephobia/minzip/stook-form.svg)](https://bundlephobia.com/result?p=stook-form) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-English | [简体中文](./README.zh-CN.md)
+> React Form base on stook
 
 ## Installation
 
-```sh
+```bash
 npm i stook-form
 ```
 
-## Quickstart
+## Documentation
 
-```js
-import React from 'react'
-import { useForm } from 'stook-form'
-
-class User {
-  username = 'foo'
-  password = ''
-}
-
-export default () => {
-  const { handlers, name } = useForm(User, {
-    onSubmit(values) {
-      console.log('values:', values)
-    },
-  })
-
-  return (
-    <form onSubmit={handlers.handleSubmit}>
-      <input {...name('username')} />
-      <input {...name('password')} />
-      <button type="submit">Submit</button>
-    </form>
-  )
-}
-```
+https://stook.now.sh/docs/form/intro
 
 ## License
 
