@@ -1,8 +1,6 @@
 {
   "name": "stook-project",
   "scripts": {
-    "build": "lerna run --parallel --stream build",
-    "build:watch": "lerna run --parallel --stream build:watch",
     "format": "prettier --write \"packages/**/src/**/*.{ts,tsx}\"",
     "test": "lerna run --parallel --stream test",
     "test:watch": "lerna run --parallel --stream test:watch",
