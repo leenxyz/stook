@@ -1,5 +1,6 @@
 import { produce } from 'immer'
 import { Dispatch, SetStateAction } from './types'
+import { emitStoreUpdate } from './emitter'
 
 /**
  * store for one key
@@ -39,8 +40,11 @@ export class Store<S = any> {
     return nextState
   }
 
-  setState = (value: any) => {
+  setState = (key: any, value: any): any => {
     const nextState = this.getNextState(value)
+
+    emitStoreUpdate({ key, nextState })
+
     this.state = nextState
     this.setters.forEach(setter => setter(nextState))
   }

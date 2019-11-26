@@ -7,7 +7,7 @@ import { useStore } from './src'
 // }, 1000)
 
 export const Counter = () => {
-  const [count, setCount] = useStore('COUNTER', 0)
+  const [count, setCount] = useStore('COUNTER')
   return (
     <div>
       <button onClick={() => setCount(count - 1)}>-</button>

@@ -1,4 +1,4 @@
-import { useStore } from '../src'
+import { useStore } from './src'
 
 export function useCounter() {
   const [count, setCount] = useStore('[Counter]', 10)

@@ -4,7 +4,7 @@ export function mutate<S>(key: string, value?: S) {
   const store = Storage.get(key)
 
   if (store) {
-    store.setState(value)
+    store.setState(key, value)
   } else {
     // init state, if no store exist
     Storage.set(key, { state: value } as any)
