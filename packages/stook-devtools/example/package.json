@@ -18,7 +18,7 @@
     "src": "^1.1.2",
     "stook": "^0.2.0",
     "stook-graphql": "^0.1.0",
-    "stook-rest": "^0.1.0",
+    "stook-rest": "^0.2.0",
     "styled-components": "^4.4.1"
   },
   "alias": {

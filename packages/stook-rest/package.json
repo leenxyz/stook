@@ -31,26 +31,20 @@
   "peerDependencies": {
     "react": ">=16"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
   "devDependencies": {
     "@testing-library/react-hooks": "^3.2.1",
     "@types/jest": "^24.0.22",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
-    "husky": "^3.0.9",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-test-renderer": "^16.11.0",
+    "stook": "^0.2.0",
     "tsdx": "^0.11.0",
     "tslib": "^1.10.0",
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@peajs/request": "^0.1.0",
-    "stook": "^0.2.0"
+    "@peajs/request": "^0.1.1"
   }
 }

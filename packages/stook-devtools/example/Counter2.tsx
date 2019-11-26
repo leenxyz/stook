@@ -4,6 +4,7 @@ import { useCounter } from './useCounter'
 
 export const Counter2 = () => {
   const { count, increase, decrease } = useCounter()
+
   return (
     <div>
       <button onClick={decrease}>-</button>

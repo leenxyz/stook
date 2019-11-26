@@ -29,7 +29,7 @@ const Todos = () => {
 
   return (
     <ul>
-      {items.map(item => (
+      {data.map(item => (
         <li key={item.id}>{item.title}</li>
       ))}
     </ul>

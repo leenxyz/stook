@@ -1,10 +1,9 @@
 import { useEffect } from 'react'
-import { useStore, Storage } from 'stook'
+import { useStore } from 'stook'
 import { fetch } from './fetch'
 import { fetcher } from './fetcher'
 import { FetchResult, Refetch, Options, HooksResult, Deps, Params, FetcherItem } from './types'
 
-console.log('Storage:', Storage.stores)
 
 function last<T>(arr: T[]): T {
   return arr[arr.length - 1]
