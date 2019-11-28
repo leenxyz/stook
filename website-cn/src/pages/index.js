@@ -15,16 +15,17 @@ import styles from './styles.module.css'
 
 const features = [
   {
-    title: 'minimalism',
-    description: '核心 Api 几乎和 `useState`用法一样，极低的学习成本',
+    title: 'Minimalism',
+    description: '核心 Api 几乎和 `useState`用法一样，极低的学习成本.',
   },
   {
-    title: <>Dependency Injection</>,
-    description: <>使用依赖注入组织代码，易于写出可维护性、可读性、可测试性的代码</>,
+    title: 'Hooks',
+    description: '基于 hooks 实现，符合 React 的发展趋势.',
   },
+
   {
-    title: <>Extensible</>,
-    description: <>强大的插件机制，让框架灵活、易于扩展</>,
+    title: 'TypeScript',
+    description: 'TypeScipt 支持非常完美.',
   },
 ]
 
@@ -53,6 +54,7 @@ function Home() {
     >
       <header className={classnames('hero hero--primary', styles.heroBanner)}>
         <div className="container">
+        <img width="150" src="/img/logo.png" alt=""/>
           <h1 className="hero__title">{siteConfig.title}</h1>
           <p className="hero__subtitle">{siteConfig.tagline}</p>
           <div className={styles.buttons}>
@@ -61,7 +63,7 @@ function Home() {
                 'button button--outline button--secondary button--lg',
                 styles.getStarted,
               )}
-              to={useBaseUrl('/docs/intro/quick-start')}
+              to={useBaseUrl('/docs/stook/quick-start')}
             >
               Get Started
             </Link>

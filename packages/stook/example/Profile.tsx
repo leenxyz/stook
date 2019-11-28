@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useStore, mutate } from './src'
+import { useStore, mutate } from '../src'
 
 const user = { id: 1, name: 'foo' }
 
