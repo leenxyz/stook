@@ -3,7 +3,7 @@ import { Storage } from './Storage'
 export function mutate<S>(key: string, value?: S) {
   const store = Storage.get(key)
 
-  if (store) {
+  if (store && store.setState) {
     store.setState(key, value)
   } else {
     // init state, if no store exist

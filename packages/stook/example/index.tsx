@@ -2,6 +2,8 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Counter } from './Counter'
 import { Counter2 } from './Counter2'
+import { Profile } from './Profile'
+import { Form } from './Form'
 import { mutate } from './src'
 import { devtools } from './devtools'
 
@@ -14,6 +16,8 @@ const App = () => {
     <div>
       <Counter></Counter>
       <Counter2></Counter2>
+      <Profile></Profile>
+      <Form></Form>
     </div>
   )
 }
