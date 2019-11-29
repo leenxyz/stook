@@ -31,7 +31,7 @@ devtools.init()
 ```js
 import { devtools } from './devtools'
 
-if (process.env !== 'production') {
+if (process.env.NODE_ENV !== 'production') {
   devtools.init()
 }
 ```

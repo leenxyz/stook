@@ -1,5 +1,5 @@
 import { createStore, combineReducers } from 'redux'
-import { getState, onStoreInit, onStoreUpdate } from './src'
+import { getState, onStoreInit, onStoreUpdate } from 'stook'
 
 export class devtools {
   static init() {

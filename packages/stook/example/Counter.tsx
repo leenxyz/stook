@@ -1,13 +1,11 @@
 import * as React from 'react'
 
-import { useStore } from './src'
+import { useStore, mutate } from './src'
 
-// setTimeout(() => {
-//   mutate('COUNTER', 10)
-// }, 1000)
+mutate('[Counter]', 10)
 
 export const Counter = () => {
-  const [count, setCount] = useStore('COUNTER')
+  const [count, setCount] = useStore('[Counter]')
   return (
     <div>
       <button onClick={() => setCount(count - 1)}>-</button>

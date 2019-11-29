@@ -4,10 +4,8 @@ import { Counter } from './Counter'
 import { Counter2 } from './Counter2'
 import { Profile } from './Profile'
 import { Form } from './Form'
-import { mutate } from '../src'
+import { mutate } from './src'
 import { devtools } from './devtools'
-
-mutate('COUNTER', 520)
 
 devtools.init()
 

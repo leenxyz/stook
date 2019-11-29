@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useStore, getState } from 'stook'
+import { useStore, getState } from './src'
 
 function handleSubmit() {
   const name = getState('[UserForm]')
@@ -8,10 +8,10 @@ function handleSubmit() {
 }
 
 export const Form = () => {
-  const [name, setName] = useStore('[UserForm]', 'iniial name')
+  const [user, setUser] = useStore('[UserForm]', { name: 'iniial name' })
   return (
     <div>
-      <input type="text" value={name} onChange={e => setName(e.target.value)} />
+      <input type="text" value={user.name} onChange={e => setUser({ name: e.target.value })} />
       <button onClick={handleSubmit}>Submit</button>
     </div>
   )
