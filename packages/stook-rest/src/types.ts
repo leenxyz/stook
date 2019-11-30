@@ -26,7 +26,6 @@ export interface Fetcher<T = any> {
   [key: string]: FetcherItem<T>
 }
 
-
 export interface Result<T = any> {
   loading: boolean
   data: T
@@ -36,30 +35,22 @@ export interface Result<T = any> {
 export interface FetchResult<T> extends Result<T> {}
 export interface UpdateResult<T> extends Result<T> {}
 
-export type RequestInterceptor = (config: Options) => any
-export type RequestErrorInterceptor = (config: any) => any
-export type ResponseInterceptor = (error: any) => any
-export type ResponseErrorInterceptor = (error: any) => any
-
-export interface Interceptor {
-  requests?: RequestInterceptor[]
-  requestErrors?: RequestErrorInterceptor[]
-  responses?: ResponseInterceptor[]
-  responseErrors?: ResponseErrorInterceptor[]
-}
-
-export interface RestConfig {
-  endpoint: string
-  interceptor?: Interceptor
+export interface RestOptions {
+  baseURL: string
   headers?: HeadersInit
-}
-
-export interface Fetcher {
-  [key: string]: {
-    refetch: Refetch
-  }
+  middlewares?: Middleware[]
 }
 
 export interface HooksResult<T> extends FetchResult<T> {
   refetch: Refetch
 }
+
+export interface Ctx {
+  headers: {
+    [key: string]: string
+  }
+  body: any
+  valid: boolean
+}
+
+export type Middleware = (ctx: Ctx, next: () => Promise<any>) => any
