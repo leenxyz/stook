@@ -1,26 +1,33 @@
 import React, { useState, useEffect } from 'react'
 
-import { config, fetch, useFetch, useUpdate, fetcher } from '../src'
+import { config, fetch, useFetch, useUpdate, fetcher, RestOptions, applyMiddleware } from './src'
 
-config({
-  endpoint: 'https://jsonplaceholder.typicode.com',
-  interceptor: {
-    responses: [
-      data => {
-        return data
-      },
-    ],
-    requests: [
-      config => {
-        config.headers = {
-          ...config.headers,
-          uid: 'test',
-        }
-        return config
-      },
-    ],
-  },
+applyMiddleware(async (ctx, next) => {
+  ctx.headers.fo = 'livia'
+  await next()
+  // console.log('4')
+  // ctx.body = { ddd: ctx.body }
+  // console.log('context.body:', ctx.body)
 })
+
+applyMiddleware(async (ctx, next) => {
+  console.log('2')
+  console.log('context.headers:', ctx.headers)
+  ctx.headers.uuid = '123455'
+  await next()
+  console.log('3')
+})
+
+const options: RestOptions = {
+  baseURL: 'https://jsonplaceholder.typicode.com',
+  headers: {
+    foo: 'bar',
+  },
+}
+
+config(options)
+
+// const client = new Client({ baseURL: 'https://jsonplaceholder.typicode.com' })
 
 enum Api {
   GetTodo = 'GET /todos/:id',
@@ -36,8 +43,14 @@ interface Todo {
 const FetchApp = () => {
   const [data, setData] = useState()
   async function fetchData() {
-    const res = await fetch<Todo>('/todos/1')
-    setData(res)
+    try {
+      const res = await fetch<Todo>('/todos/1')
+      console.log('res---------------:', res)
+      setData(res)
+    } catch (error) {
+      console.log('==========error---------------:', error)
+      setData(error)
+    }
   }
 
   useEffect(() => {
@@ -50,6 +63,7 @@ const FetchApp = () => {
 const UseFetchApp = () => {
   const { loading, data, error, refetch } = useFetch<Todo>(Api.GetTodo, {
     params: { id: 1 },
+    headers: { hello: 'hahaa' },
     // deps: [store.id],
   })
 
@@ -61,7 +75,12 @@ const UseFetchApp = () => {
   }
 
   if (loading) return <div>loading....</div>
-  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>
+  if (error)
+    return (
+      <div>
+        error: <pre>{JSON.stringify(error, null, 2)}</pre>
+      </div>
+    )
 
   return (
     <div className="App">
