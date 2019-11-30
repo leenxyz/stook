@@ -6,4 +6,4 @@ const { fetch, useFetch, useUpdate, config, applyMiddleware } = client
 
 export * from './types'
 export * from './fetcher'
-export { config, Client, fetch, useFetch, useUpdate, applyMiddleware }
+export { Client, config, fetch, useFetch, useUpdate, applyMiddleware }

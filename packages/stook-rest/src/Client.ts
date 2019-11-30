@@ -81,7 +81,7 @@ export class Client {
   middleware: Middleware[] = []
 
   ctx: Ctx = {
-    body: {},
+    body: undefined,
     headers: {},
     valid: true,
   }
