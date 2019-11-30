@@ -1,8 +1,28 @@
-export { query } from './query'
-export { useQuery } from './use-query'
-export { useMutate } from './use-mutate'
-export { useSubscribe } from './use-subscribe'
-export { fromSubscription } from './from-subscription'
-export * from './config'
+import { Client } from './Client'
+
+const client = new Client({ endpoint: '/graphql' })
+const {
+  query,
+  useQuery,
+  useMutate,
+  useSubscribe,
+  fromSubscription,
+  applyMiddleware,
+  config,
+} = client
+
+export * from './types'
+export * from './fetcher'
+export {
+  Client,
+  query,
+  useQuery,
+  useMutate,
+  useSubscribe,
+  fromSubscription,
+  applyMiddleware,
+  config,
+}
+
 export * from './types'
 export * from './fetcher'

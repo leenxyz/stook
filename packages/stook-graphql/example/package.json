@@ -8,6 +8,8 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
+    "@types/koa-compose": "^3.2.5",
+    "koa-compose": "^4.1.0",
     "react-app-polyfill": "^1.0.0"
   },
   "alias": {

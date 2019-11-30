@@ -1,59 +1,74 @@
 import React, { useState, useEffect } from 'react'
 import gql from 'gql-tag'
 
-import { config, query, useQuery, useMutate, fetcher, useSubscribe, fromSubscription } from './src'
+import {
+  config,
+  query,
+  useQuery,
+  useMutate,
+  fetcher,
+  useSubscribe,
+  fromSubscription,
+  applyMiddleware,
+  Client,
+} from '../src'
 
-import { Storage } from 'stook'
+applyMiddleware(async (ctx, next) => {
+  ctx.headers.Authorization = `bearer token...`
+  await next()
+  if (typeof ctx.body !== 'object') return
+  if (Object.keys(ctx.body).length === 1) {
+    ctx.body = ctx.body[Object.keys(ctx.body)[0]]
+  }
+})
 
 export const GET_USER = gql`
-  query GetUser($login: String!) {
-    user(login: $login) {
-      _id
-      login
-      avatar
-      nickname
-      username
-      email
-      intro
-      token
+  {
+    users {
+      name
+      age
     }
+    # user(name: "Rose") {
+    #   name
+    # }
   }
 `
-
-function handleResponse(result: any) {
-  if (typeof result !== 'object') return result
-  if (Object.keys(result).length === 1) {
-    return result[Object.keys(result)[0]]
-  }
-  return result
-}
-
-function setToken(config: any) {
-  config.headers = {
-    ...config.headers,
-    Authorization: `bearer token...`,
-  }
-  return config
-}
 
 config({
   // endpoint: 'http://localhost:7001/graphql',
   // endpoint: 'https://graphql-compose.herokuapp.com/user',
   endpoint: 'http://localhost:5001/graphql',
   subscriptionsEndpoint: 'ws://localhost:5001/graphql',
-  interceptor: {
-    responses: [handleResponse],
-    requests: [setToken],
-  },
+})
+
+const client = new Client({
+  endpoint: 'http://localhost:5001/graphql',
+  subscriptionsEndpoint: 'ws://localhost:5001/graphql',
 })
 
 export const GET_PROJECT = gql`
-  query getProject($slug: String!) {
-    project(slug: $slug) {
-      _id
-      name
+  # query getProject($slug: String!) {
+  #   project(slug: $slug) {
+  #     _id
+  #     name
+  #   }
+  # }
+  {
+    message {
+      content
+      id
     }
   }
+
+  # {
+  #   users {
+  #     name
+  #     age
+  #   }
+  #   user(name: "Rose") {
+  #     name
+  #   }
+  # }
 `
 
 const GET_USER_BY_ID = gql`
@@ -68,27 +83,25 @@ const GET_USER_BY_ID = gql`
 `
 
 const SUB = gql`
-  subscription notice {
-    normalSubscription {
+  subscription msg {
+    messageSubscription {
       id
-      date
-      message
+      content
     }
   }
 `
 
 const GET_NOTICE = gql`
   {
-    notification {
+    message {
+      content
       id
-      message
-      date
     }
   }
 `
 
 const SubApp = () => {
-  const { data = {} } = useSubscribe(SUB, {
+  const { data = {} } = client.useSubscribe(SUB, {
     initialQuery: {
       query: GET_NOTICE,
     },
@@ -153,7 +166,7 @@ const UseQueryById = () => {
   //   variables: { login: 'forsigner' },
   // })
 
-  const { loading, data, error, refetch } = useQuery<Project>(GET_PROJECT, {
+  const { loading, data, error, refetch } = client.useQuery<Project>(GET_PROJECT, {
     // name: 'getUserById',
     variables: { slug: 'forsigner' },
     deps: [],
@@ -168,8 +181,6 @@ const UseQueryById = () => {
   // console.log('render....')
   if (loading) return <div>loading....</div>
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>
-
-  console.log('---', Storage.get(GET_PROJECT))
 
   return (
     <div className="App">
@@ -186,12 +197,13 @@ const UseQueryById = () => {
 
 const UseMutateApp = () => {
   const [addTodo, { loading, data, error }] = useMutate(GET_USER)
+  console.log('loading:', loading)
 
   return (
     <div className="App">
       <button onClick={() => addTodo({})}>
-        {loading === undefined && 'Add Todo'}
-        {loading !== undefined && (loading ? 'loading...' : ' Added')}
+        {!loading && 'Add Todo'}
+        {loading && 'loading...'}
       </button>
 
       {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
@@ -202,10 +214,16 @@ const UseMutateApp = () => {
 
 export default () => (
   <div>
-    {/* <SubApp></SubApp> */}
+    <SubApp></SubApp>
     {/* <QueryApp /> */}
     <UseQueryById />
     {/* <UseQueryApp /> */}
     {/* <UseMutateApp /> */}
   </div>
 )
+
+fromSubscription(SUB).subscribe({
+  next(data) {
+    console.log('data---------:', data)
+  },
+})

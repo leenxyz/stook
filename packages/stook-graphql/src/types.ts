@@ -43,23 +43,16 @@ export interface MutateResult<T> extends Result<T> {}
 
 export interface SubscribeResult<T> extends Result<T> {}
 
-export type RequestInterceptor = (config: Options) => any
-export type RequestErrorInterceptor = (config: any) => any
-export type ResponseInterceptor = (error: any) => any
-export type ResponseErrorInterceptor = (error: any) => any
-
-export interface Interceptor {
-  requests?: RequestInterceptor[]
-  requestErrors?: RequestErrorInterceptor[]
-  responses?: ResponseInterceptor[]
-  responseErrors?: ResponseErrorInterceptor[]
-}
-
-export interface GraphqlConfig {
+export interface GraphqlOptions {
   endpoint: string
   subscriptionsEndpoint?: string
-  interceptor?: Interceptor
   headers?: HeadersInit
+}
+
+export interface Observer<T> {
+  next?: (value: T) => void
+  error?: (error: Error) => void
+  complete?: () => void
 }
 
 export interface SubscriptionOption<T = any> {
@@ -76,3 +69,13 @@ export interface SubscriptionOption<T = any> {
 export interface FromSubscriptionOption {
   variables?: Object
 }
+
+export interface Ctx {
+  headers: {
+    [key: string]: string
+  }
+  body: any
+  valid: boolean
+}
+
+export type Middleware = (ctx: Ctx, next: () => Promise<any>) => any
