@@ -4,7 +4,9 @@ title: 简介
 sidebar_label: 简介
 ---
 
-异步数据管理一直是一个难点，在 React 的生态圈中，很多人把异步数据使用状态管理维护，比如使用 Redux，用异步 Action 获取远程数据。Pea 不推崇使用状态管理维护异步数据，Pea 推荐在组件内直接获取异步数据，使用 hooks，简化数据的获取和管理。
+异步数据管理一直是一个难点，在 React 的生态圈中，很多人把异步数据使用状态管理维护，比如使用 Redux，用异步 Action 获取远程数据。我个人不喜欢使用 Redux 状态管理维护异步数据，我更倾向于在组件内直接获取异步数据，使用 hooks，简化数据的获取和管理。
+
+为什么要使用 Hooks 管理呢？可以看 [React 异步数据管理思考](https://zhuanlan.zhihu.com/p/64648552)
 
 下面我们看看和使用 Redux 有什么本质上的区别。
 
@@ -21,9 +23,7 @@ import React from 'react'
 import { useFetch } from 'stook-rest'
 
 const Todos = () => {
-  const { loading, data, error } = useFetch(
-    'https://jsonplaceholder.typicode.com/todos',
-  )
+  const { loading, data, error } = useFetch('https://jsonplaceholder.typicode.com/todos')
 
   if (loading) return <span>loading...</span>
   if (error) return <span>error!</span>
@@ -36,8 +36,11 @@ const Todos = () => {
     </ul>
   )
 }
-export defulat Todos
+
+export default Todos
 ```
+
+[![Edit bitter-frog-t2tbm](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/bitter-frog-t2tbm?fontsize=14&hidenavigation=1&theme=dark)
 
 如果你是 graphql 用户，类似的，可以使用 `stook-graphql` 的 `useQuery`。
 
@@ -56,11 +59,7 @@ export const LOAD_TODOS_ERROR = 'LOAD_TODOS_ERROR'
 然后，编写异步的 action, `actions.js`:
 
 ```js
-import {
-  LOADING_TODOS,
-  LOAD_TODOS_SUCCESS,
-  LOAD_TODOS_ERROR,
-} from '../constant'
+import { LOADING_TODOS, LOAD_TODOS_SUCCESS, LOAD_TODOS_ERROR } from '../constant'
 
 export function fetchTodos() {
   return dispatch => {
@@ -86,11 +85,7 @@ export function fetchTodos() {
 接着，在 reducer 中处理数据，`reducer.js`
 
 ```js
-import {
-  LOADING_TODOS,
-  LOAD_TODOS_SUCCESS,
-  LOAD_TODOS_ERROR,
-} from '../constant'
+import { LOADING_TODOS, LOAD_TODOS_SUCCESS, LOAD_TODOS_ERROR } from '../constant'
 
 const initialState = {
   todos: {
@@ -156,5 +151,7 @@ const mapStateToProps = state => {
 
 export default connect(mapStateToProps)(Todos)
 ```
+
+[![Edit fetch-data-with-redux](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xjl84rjvno?fontsize=14&hidenavigation=1&theme=dark)
 
 我们可以发现，使用 Redux 管理异步数据，代码量激增，是 `stook-rest` 5 倍以上的代码量，不管开发效率还是开发体验，亦或是可以维护性和可读性，个人认为，类似的 redux 这样的解决方案并不优秀。Pea 版本简单直观，Redux 本地冗长，并且链路太长，需维护多个文件，更多的代码量。

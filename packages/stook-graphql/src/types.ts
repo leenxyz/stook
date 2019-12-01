@@ -78,4 +78,6 @@ export interface Ctx {
   valid: boolean
 }
 
-export type Middleware = (ctx: Ctx, next: () => Promise<any>) => any
+export type NextFn = () => Promise<any>
+
+export type Middleware = (ctx: Ctx, next: NextFn) => any

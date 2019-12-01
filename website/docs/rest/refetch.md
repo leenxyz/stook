@@ -1,7 +1,7 @@
 ---
-id: reFetch
-title: 重新获取 (reFetch)
-sidebar_label: 重新获取 (reFetch)
+id: refetch
+title: 重新获取 (refetch)
+sidebar_label: 重新获取 (refetch)
 ---
 
 由于 Pea 推崇在组件内维护异步数据，但很多场景中，你需要更新异步数据，比如在 CRUD 功能中，新增、删除、修改、分页、筛选等功能都需要更新异步数据。`stook-rest` 提供了三中方式更新数据，三种方式可在不同业务场景中使用，这是`stook-rest`的重要功能之一，你应该仔细阅读并理解它的使用场景，使用这种方式管理异步数据，整个应用的状态将变得更加简单，代码量会成本的减少，相应的可维护性大大增加。

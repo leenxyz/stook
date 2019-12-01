@@ -28,7 +28,7 @@ module.exports = {
       'rest/useFetch',
       'rest/useUpdate',
       'rest/fetch',
-      'rest/reFetch',
+      'rest/refetch',
     ],
     'stook-graphql': [
       'graphql/intro',

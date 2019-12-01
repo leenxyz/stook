@@ -1,12 +1,20 @@
 ---
-id: reFetch
-title: 重新获取 (reFetch)
-sidebar_label: 重新获取 (reFetch)
+id: refetch
+title: refetch
+sidebar_label: refetch
 ---
 
-由于 Pea 推崇在组件内维护异步数据，但很多场景中，你需要更新异步数据，比如在 CRUD 功能中，新增、删除、修改、分页、筛选等功能都需要更新异步数据。`stook-rest` 提供了三中方式更新数据，三种方式可在不同业务场景中使用，这是`stook-rest`的重要功能之一，你应该仔细阅读并理解它的使用场景，使用这种方式管理异步数据，整个应用的状态将变得更加简单，代码量会成本的减少，相应的可维护性大大增加。
+很多场景中，你需要更新异步数据，比如在 CRUD 功能中，新增、删除、修改、分页、筛选等功能都需要更新异步数据。`stook-rest` 提供了三中方式更新数据，三种方式可在不同业务场景中使用，这是`stook-rest`的重要功能之一，你应该仔细阅读并理解它的使用场景，使用这种方式管理异步数据，整个应用的状态将变得更加简单，代码量会成本的减少，相应的可维护性大大增加。
 
-## 内部 refetch
+## 重新获取数据的三种方式
+
+但很多时候，你需要更新异步数据，`stook-rest`提供三种方式更新数据:
+
+- 内部 Refetch
+- 更新依赖 deps
+- 使用 fetcher
+
+## refetch in component
 
 这是最简单的重新获取数据的方式，通常，如果触发更新的动作和`useFetch`在统一组件内，可以使用这种方式。
 
@@ -38,7 +46,7 @@ const Todos = () => {
 }
 ```
 
-## 更新依赖 (deps)
+## refetch with deps
 
 通过更新依赖来重新获取数据，这也是常用的方式之一，因为在很多业务场景中，触发动作会在其他组件中，下面演示如何通过更新依赖触发数据更新：
 
@@ -96,7 +104,7 @@ const Todos = observe(() => {
 
 注意：这里的依赖是个对象，你必须更新整个对象的引用，如果你只更新对象的属性是无效的。
 
-## 使用 fetcher
+## use fetcher
 
 有时候，你需要在组件外部重新获取数据，但`useFetch` 却没有任何可以被依赖的参数，这时你可以使用 fetcher:
 
@@ -118,9 +126,7 @@ const Todos = () => {
   )
 }
 
-const Refresh = () => (
-  <button onClick={() => fetcher.GetTodos.refetch()}>refresh</button>
-)
+const Refresh = () => <button onClick={() => fetcher.GetTodos.refetch()}>refresh</button>
 
 const TodoApp = () => (
   <div>

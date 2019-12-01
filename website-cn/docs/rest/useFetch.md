@@ -6,9 +6,9 @@ sidebar_label: 获取数据 (useFetch)
 
 > const result = useFetch(url, options)
 
-以简单高效的方式获取和管理异步数据是 Pea 的核心功能之一。接下来，你将学习如何通过 `useFetch` 获取数据并渲染成 UI。
+以简单高效的方式获取和管理异步数据是 stook-rest 的核心功能。接下来，你将学习如何通过 `useFetch` 获取数据并渲染成 UI。
 
-下面是一个实例，这里假设你已经配置好 Rest client，如果不了解如何配置，请看 [配置 Rest](/docs/rest/config)。
+下面是一个示例，这里假设你已经配置好 client，如果不了解如何配置，请看 [配置](/docs/rest/config)。
 
 ## 使用 `useFetch`
 
@@ -37,15 +37,7 @@ const Todos = () => {
 }
 ```
 
-## 如果重新获取数据
-
-Pea 不推崇使用状态管理维护异步数据，Pea 推崇直接在组件内维护异步数据，但很多时候，你需要更新异步数据，`stook-rest`提供 3 中方式更新数据:
-
-- [内部 Refetch](/docs/rest/reFetch#内部-refetch)
-- [更新依赖 (deps)](/docs/rest/reFetch#更新依赖-deps)
-- [使用 fetcher](/docs/rest/reFetch#使用-fetcher)
-
-这是`stook-rest`的重要功能之一，你应该仔细阅读并理解它的使用场景，使用这种方式管理异步数据，整个应用的状态将变得更加简单，代码量会成本的减少，相应的可维护性大大增加。
+[![Edit bitter-frog-t2tbm](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/bitter-frog-t2tbm?fontsize=14&hidenavigation=1&theme=dark)
 
 ## URL（string）
 
@@ -83,13 +75,13 @@ const { loading, data, error } = useFetch('/todos', {
 })
 ```
 
-**`param?: Param`**
+**`params?: Params`**
 
 URL 的参数对象，用法如下：
 
 ```js
 const { loading, data, error } = useFetch('/todos/:id', {
-  param: { id: 10 },
+  params: { id: 10 },
 })
 ```
 
@@ -105,15 +97,15 @@ HTTP 请求头，和原生`fetch`的 [`Headers`](https://github.github.io/fetch/
 
 依赖值 deps 是个数组,类型为：`type Deps = ReadonlyArray<any>`
 
-**`name?: string`**
+**`key?: string`**
 
-为该 HTTP 请求命名，对于 refetch 非常有用。默认是为 `${method} ${url}`，比如请求如下:
+该 HTTP 的唯一 key，因为 stook-rest 是基于 stook，这个 key 就是 stook 的唯一 key，对于 refetch 非常有用。默认是为 `${method} ${url}`，比如请求如下:
 
 ```js
 const { loading, data } = useFetch('/todos', { method: 'POST' })
 ```
 
-那默认的 name 为: `POST /todos`
+那默认的 key 为: `POST /todos`
 
 ## 结果 (Result)
 
@@ -144,7 +136,7 @@ const Todos = () => {
     <div>
       <button onClick={refetch}>Refetch</button>
       <ul>
-        {items.map(item => (
+        {data.map(item => (
           <li key={item.id}>{item.title}</li>
         ))}
       </ul>

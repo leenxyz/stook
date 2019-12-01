@@ -18,17 +18,21 @@ module.exports = {
     'stook-rest': [
       'rest/intro',
       'rest/quick-start',
+      'rest/config',
       'rest/useFetch',
       'rest/useUpdate',
       'rest/fetch',
-      'rest/reFetch',
+      'rest/refetch',
+      'rest/middleware',
     ],
     'stook-graphql': [
       'graphql/intro',
       'graphql/quick-start',
+      'graphql/config',
       'graphql/useQuery',
       'graphql/useMutate',
       'graphql/query',
+      'graphql/middleware',
     ],
     'stook-form': [
       'form/intro',

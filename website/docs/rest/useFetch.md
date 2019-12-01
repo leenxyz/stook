@@ -41,9 +41,9 @@ const Todos = () => {
 
 Pea 不推崇使用状态管理维护异步数据，Pea 推崇直接在组件内维护异步数据，但很多时候，你需要更新异步数据，`stook-rest`提供 3 中方式更新数据:
 
-- [内部 Refetch](/docs/rest/reFetch#内部-refetch)
-- [更新依赖 (deps)](/docs/rest/reFetch#更新依赖-deps)
-- [使用 fetcher](/docs/rest/reFetch#使用-fetcher)
+- [内部 Refetch](/docs/rest/refetch#内部-refetch)
+- [更新依赖 (deps)](/docs/rest/refetch#更新依赖-deps)
+- [使用 fetcher](/docs/rest/refetch#使用-fetcher)
 
 这是`stook-rest`的重要功能之一，你应该仔细阅读并理解它的使用场景，使用这种方式管理异步数据，整个应用的状态将变得更加简单，代码量会成本的减少，相应的可维护性大大增加。
 

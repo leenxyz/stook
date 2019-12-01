@@ -1,10 +1,15 @@
 ---
 id: fetch
-title: 网络请求 (fetch)
-sidebar_label: 网络请求 (fetch)
+title: fetch
+sidebar_label: fetch
 ---
 
-大部分情况下，建议使用 `useFetch` 获取数据，使用`useUpdate`更新数据，然后把异步数据放在组件内维护。不过有些场景，异步数据是明确需要多组件共享的，这时你需要使用状态管理维护异步数据。在 Pea 中，建议使用 `fetch` 获取远程数据。
+大部分情况下，建议使用 `useFetch` 获取数据。不过有些场景，你不需要在维护异步数据的状态，你只需要发送普通的网络请求。
+
+比如，点击一个按钮提交表单，执行一个更新操作：
+
+
+**todoService.ts**
 
 ```jsx
 import { createStore } from 'stook-store'

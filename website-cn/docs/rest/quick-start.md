@@ -4,27 +4,17 @@ title: 快速开始
 sidebar_label: 快速开始
 ---
 
-## 配置 Rest Client
+stook-rest 一个基于 hooks 实现的 Restful Api 数据请求工具。
 
-首先，你需要配置 Rest Client，通常包括 Rest Api 的端点 (endpoint) 和 headers 等。如下，修改配置文件 `config/config.default`:
+## 安装
 
-```tsx
-// config/config.default
-const config = {
-  rest: {
-    endpoint: 'https://jsonplaceholder.typicode.com',
-    // headers: {/* header config */}
-  },
-}
-
-export default config
+```bash
+npm i stook-rest
 ```
-
-注意，你不需要手动初始化 Rest Client，你只需要更新配置文件，Pea 会帮你初始化。
 
 ## 获取数据
 
-配置好端点后，你就可以使用 `stook-rest` 提供的一个 hooks `useFetch`，来获取远程服务器数据。下面是获取 todos 列表并渲染到组件，可以看到，代码相当简洁：
+下面展示如何快速，获取 Restful Api 数据。你就可以使用 `stook-rest` 提供的一个 hooks `useFetch`，来获取远程服务器数据。下面是获取 todos 列表并渲染到组件，可以看到，代码相当简洁：
 
 ```tsx
 import { useFetch } from 'stook-rest'
@@ -43,7 +33,7 @@ const Todos = () => {
 
   return (
     <ul>
-      {items.map(item => (
+      {data.map(item => (
         <li key={item.id}>{item.title}</li>
       ))}
     </ul>
@@ -51,21 +41,13 @@ const Todos = () => {
 }
 ```
 
+[![Edit bitter-frog-t2tbm](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/bitter-frog-t2tbm?fontsize=14&hidenavigation=1&theme=dark)
+
 当然，这只是 `useFetch` 最基本功能，如果你想深入了解它的其他功能，比如 refetch、retry 等高级功能，你看详情阅读 `useFetch` Api。
-
-## Rest Client 配置选项
-
-**`endpoint`**: string
-
-Rest Api 服务器端点， 默认为当前前端页面 host。
-
-**`headers`**: object
-
-每个请求都会带上的请求头，默认为 `{ 'content-type': 'application/json; charset=utf-8' }`
 
 ## 下一步
 
-上面就是 Pea 使用 Rest Api 获取数据最简单的例子，如果你要深入了解如何使用 `stook-rest`，建议细看：
+上面就是用获取数据最简单的例子，如果你要深入了解如何使用 `stook-rest`，建议细看：
 
 - [获取数据](/docs/rest/useFetch): 深入了解 `useFetch` 的使用
 - [更新数据](/docs/rest/useUpdate): 深入了解 `useUpdate` 的使用
