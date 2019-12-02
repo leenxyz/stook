@@ -12,8 +12,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test --env=jsdom",
-    "lint": "tsdx lint"
+    "test": "tsdx test --env=jsdom"
   },
   "prettier": {
     "printWidth": 100,

@@ -12,6 +12,11 @@ export class devtools {
     )
 
     const reducers = {} as any
+
+    /**
+     * 
+     * @param key useStor key
+     */
     function createReducers(key: any) {
       const initialState = getState(key) || null
       reducers[key] = (state: any = initialState, action: any) => {
