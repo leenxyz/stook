@@ -98,7 +98,7 @@ export class Client {
     return this.ctx.body
   }
 
-  useQuery<T = any>(input: string, options: Options<T> = {}) {
+  useQuery = <T = any>(input: string, options: Options<T> = {}) => {
     const { initialData: data, onUpdate } = options
     const fetcherName = options.key || input
     let unmounted = false
