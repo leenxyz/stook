@@ -8,7 +8,7 @@ export type Deps = ReadonlyArray<any>
 
 export interface Options<T = any> {
   key?: string
-  variables?: Variables
+  variables?: Variables | (() => Variables)
   deps?: Deps
   headers?: HeadersInit
   initialData?: T

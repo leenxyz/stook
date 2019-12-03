@@ -11,7 +11,7 @@ import {
   fromSubscription,
   applyMiddleware,
   Client,
-} from '../src'
+} from './src'
 
 applyMiddleware(async (ctx, next) => {
   ctx.headers.Authorization = `bearer token...`
@@ -47,18 +47,25 @@ const client = new Client({
 })
 
 export const GET_PROJECT = gql`
+  query plot($scriptId: Int) {
+    plots(scriptId: $scriptId) {
+      scriptId
+      id
+      title
+    }
+  }
   # query getProject($slug: String!) {
   #   project(slug: $slug) {
   #     _id
   #     name
   #   }
   # }
-  {
-    message {
-      content
-      id
-    }
-  }
+  # {
+  #   message {
+  #     content
+  #     id
+  #   }
+  # }
 
   # {
   #   users {
@@ -166,19 +173,28 @@ const UseQueryById = () => {
   //   variables: { login: 'forsigner' },
   // })
 
+  const { data: script, loading: loading1 } = client.useQuery(`
+    {
+      script(id: 22){
+        id
+        limitNum
+        title
+      }
+    }
+  `)
+
   const { loading, data, error, refetch } = client.useQuery<Project>(GET_PROJECT, {
     // name: 'getUserById',
-    variables: { slug: 'forsigner' },
-    deps: [],
+    variables: () => {
+      return { scriptId: script.script.id }
+    },
+    // deps: [script],
     onUpdate({ data }) {
       // console.log('---------:', data)
     },
   })
 
-  // console.log('loading:', loading)
-  console.log('render---------data:', data)
-  console.log('error:', error)
-  // console.log('render....')
+  console.log('render---------data:', loading1, loading, script, data)
   if (loading) return <div>loading....</div>
   if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>
 
@@ -214,7 +230,7 @@ const UseMutateApp = () => {
 
 export default () => (
   <div>
-    <SubApp></SubApp>
+    {/* <SubApp></SubApp> */}
     {/* <QueryApp /> */}
     <UseQueryById />
     {/* <UseQueryApp /> */}
@@ -222,8 +238,8 @@ export default () => (
   </div>
 )
 
-fromSubscription(SUB).subscribe({
-  next(data) {
-    console.log('data---------:', data)
-  },
-})
+// fromSubscription(SUB).subscribe({
+//   next(data) {
+//     console.log('data---------:', data)
+//   },
+// })

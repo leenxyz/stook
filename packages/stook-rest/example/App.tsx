@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { config, fetch, useFetch, useUpdate, fetcher, RestOptions, applyMiddleware } from './src'
+import { config, fetch, useFetch, useUpdate, fetcher, RestOptions, applyMiddleware } from '../src'
 
 applyMiddleware(async (ctx, next) => {
   ctx.headers.fo = 'livia'
@@ -8,14 +8,6 @@ applyMiddleware(async (ctx, next) => {
   // console.log('4')
   // ctx.body = { ddd: ctx.body }
   // console.log('context.body:', ctx.body)
-})
-
-applyMiddleware(async (ctx, next) => {
-  console.log('2')
-  console.log('context.headers:', ctx.headers)
-  ctx.headers.uuid = '123455'
-  await next()
-  console.log('3')
 })
 
 const options: RestOptions = {
@@ -30,6 +22,7 @@ config(options)
 // const client = new Client({ baseURL: 'https://jsonplaceholder.typicode.com' })
 
 enum Api {
+  QueryTodo = 'GET /todos',
   GetTodo = 'GET /todos/:id',
   CreateTodo = 'POST /todos',
 }
@@ -45,10 +38,8 @@ const FetchApp = () => {
   async function fetchData() {
     try {
       const res = await fetch<Todo>('/todos/1')
-      console.log('res---------------:', res)
       setData(res)
     } catch (error) {
-      console.log('==========error---------------:', error)
       setData(error)
     }
   }
@@ -60,14 +51,23 @@ const FetchApp = () => {
   return <pre className="App">{JSON.stringify(data, null, 2)}</pre>
 }
 
-const UseFetchApp = () => {
-  const { loading, data, error, refetch } = useFetch<Todo>(Api.GetTodo, {
-    params: { id: 1 },
-    headers: { hello: 'hahaa' },
-    // deps: [store.id],
-  })
+const Dependent = () => {
+  const { data: todos } = useFetch<Todo[]>(Api.QueryTodo)
+  const { data: todo } = useFetch<Todo>(Api.GetTodo, { params: { id: todos[1].id } })
 
-  console.log('data:', data)
+  return (
+    <div className="App">
+      <h2>Dependent</h2>
+      <div>Todo:</div>
+      {todos && <pre>{JSON.stringify(todo, null, 2)}</pre>}
+      <div>Todos:</div>
+      {todo && <pre>{JSON.stringify(todos, null, 2)}</pre>}
+    </div>
+  )
+}
+
+const UseFetchApp = () => {
+  const { loading, data, error, refetch } = useFetch<Todo>(Api.GetTodo, { params: { id: 1 } })
 
   const handleClick = async () => {
     const r = await refetch<Todo>({ params: { id: 2 } })
@@ -112,8 +112,9 @@ const UseUpdateApp = () => {
 
 export default () => (
   <div>
-    <FetchApp />
-    <UseFetchApp />
-    <UseUpdateApp />
+    {/* <FetchApp /> */}
+    <Dependent></Dependent>
+    {/* <UseFetchApp /> */}
+    {/* <UseUpdateApp /> */}
   </div>
 )

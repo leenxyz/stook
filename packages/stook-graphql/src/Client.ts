@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useStore } from 'stook'
 import gql from 'graphql-tag'
 import compose from 'koa-compose'
@@ -23,6 +23,13 @@ import {
   FromSubscriptionOption,
   Observer,
 } from './types'
+
+type VariableStatus = {
+  inited?: boolean
+  throwed?: boolean
+  resolved?: boolean
+  used?: boolean
+}
 
 function getDeps(options?: Options): Deps {
   if (options && Array.isArray(options.deps)) return options.deps
@@ -105,8 +112,9 @@ export class Client {
     const initialState = { loading: true, data } as QueryResult<T>
     const deps = getDeps(options)
     const [result, setState] = useStore(fetcherName, initialState)
+    const variableStatus = useRef<VariableStatus>({ inited: true })
 
-    function update(nextState: QueryResult<T>) {
+    const update = (nextState: QueryResult<T>) => {
       setState(nextState)
       onUpdate && onUpdate(nextState)
     }
@@ -130,7 +138,31 @@ export class Client {
     }
 
     useEffect(() => {
-      doFetch(options)
+      if (typeof options.variables !== 'function') {
+        return
+      }
+
+      try {
+        const variables = options.variables()
+        variableStatus.current.resolved = true
+        if (variableStatus.current.resolved && !variableStatus.current.used) {
+          doFetch({ ...options, variables })
+          variableStatus.current.used = true
+        }
+      } catch (e) {
+        variableStatus.current.throwed = true
+      }
+    })
+
+    useEffect(() => {
+      if (typeof options.variables !== 'function') {
+        doFetch(options)
+      } else {
+        try {
+          const variables = options.variables()
+          doFetch({ ...options, variables })
+        } catch (e) {}
+      }
 
       // store refetch fn to fetcher
       fetcher.set(fetcherName, { refetch } as FetcherItem<T>)
