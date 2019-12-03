@@ -9,6 +9,8 @@ sidebar_label: 配置
 你可以使用 `config` 方法进行全局配置，全局配置将在每个请求生效：
 
 ```tsx
+import { config } from 'stook-rest'
+
 config({
   baseURL: 'https://jsonplaceholder.typicode.com',
   headers: {

@@ -13,7 +13,7 @@ import React from 'react'
 import { useStore } from 'stook'
 
 function Counter() {
-  const [count, setCount] = useStore('[Counter]', 0)
+  const [count, setCount] = useStore('Counter', 0)
   return (
     <div>
       <p>You clicked {count} times</p>
@@ -23,12 +23,8 @@ function Counter() {
 }
 
 function Display() {
-  const [count] = useStore('[Counter]')
-  return (
-    <div>
-      <p>{count}</p>
-    </div>
-  )
+  const [count] = useStore('Counter')
+  return <p>{count}</p>
 }
 
 function App() {

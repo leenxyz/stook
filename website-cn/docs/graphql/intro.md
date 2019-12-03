@@ -4,9 +4,7 @@ title: 简介
 sidebar_label: 简介
 ---
 
-有人说，GraphQL 是未来，这里不讨论 GraphQL 和 RESTful 谁更优秀。Pea 对 GraphQL 和 RESTful 都有很好的支持。如果你愿意，你可以在项目中同时使用两者。
-
-`stook-graphql`和 `stook-rest`一样，推崇在组件内获取并维护异步数据。
+有人说，GraphQL 是未来，这里不讨论 GraphQL 和 RESTful 谁更优秀。`stook-graphql`和 `stook-rest`一样，推崇使用 hooks 获取并维护异步数据。
 
 ## 使用 `stook-graphql`
 
@@ -36,4 +34,4 @@ const User = () => {
 }
 ```
 
-这是 Pea 中最简单的 GraphQL 用法，下面章节你会学习到如何配置 endpoint、refetch、mutate 等更多详细的用法。
+这是最简单的 GraphQL 用法，下面章节你会学习到如何配置 endpoint、refetch、mutate 等更多详细的用法。

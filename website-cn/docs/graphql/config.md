@@ -9,8 +9,10 @@ sidebar_label: 配置
 你可以使用 `config` 方法进行全局配置，全局配置将在每个请求生效：
 
 ```tsx
+import { config } from 'stook-graphql'
+
 config({
-  baseURL: 'https://jsonplaceholder.typicode.com',
+  endpoint: 'https://graphql-compose.herokuapp.com/user',
   headers: {
     foo: 'bar',
   },
@@ -19,9 +21,9 @@ config({
 
 ## 配置选项
 
-**`baseURL`**: string
+**`endpoint`**: string
 
-Restful Api 服务器 baseURL， 默认为当前前端页面 host。
+GraphQL Client 服务器端点， 默认为 /graphql。
 
 **`headers`**: object
 
@@ -33,7 +35,7 @@ Restful Api 服务器 baseURL， 默认为当前前端页面 host。
 
 ```js
 const client = new Client({
-  baseURL: 'https://jsonplaceholder.typicode.com',
+  endpoint: 'https://graphql-compose.herokuapp.com/user',
   headers: {
     foo: 'bar',
   },

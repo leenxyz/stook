@@ -13,7 +13,7 @@ import React from 'react'
 import { useStore } from 'stook'
 
 function useCounter() {
-  const [count, setCount] = useStore('[Counter]', 0)
+  const [count, setCount] = useStore('Counter', 0)
   const decrease = () => setCount(count - 1)
   const increase = () => setCount(count + 1)
   return { count, increase, decrease }
