@@ -19,7 +19,7 @@ export class Store<S = any> {
     if (typeof value !== 'function') return value
 
     // can not use immer
-    if (typeof this.state !== 'object') return value()
+    if (typeof this.state !== 'object') return value(this.state)
 
     let useImmer = true
 
@@ -46,6 +46,6 @@ export class Store<S = any> {
     emitStoreUpdate({ key, nextState })
 
     this.state = nextState
-    this.setters.forEach(setter => setter(nextState))
+    this.setters.forEach(set => set(nextState))
   }
 }
