@@ -4,6 +4,7 @@ import gql from 'graphql-tag'
 import compose from 'koa-compose'
 import { GraphQLClient } from '@peajs/graphql-client'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
+import isEqual from 'react-fast-compare'
 
 import { fetcher } from './fetcher'
 import {
@@ -23,13 +24,6 @@ import {
   FromSubscriptionOption,
   Observer,
 } from './types'
-
-type VariableStatus = {
-  inited?: boolean
-  throwed?: boolean
-  resolved?: boolean
-  used?: boolean
-}
 
 function getDeps(options?: Options): Deps {
   if (options && Array.isArray(options.deps)) return options.deps
@@ -112,7 +106,6 @@ export class Client {
     const initialState = { loading: true, data } as QueryResult<T>
     const deps = getDeps(options)
     const [result, setState] = useStore(fetcherName, initialState)
-    const variableStatus = useRef<VariableStatus>({ inited: true })
 
     const update = (nextState: QueryResult<T>) => {
       setState(nextState)
@@ -137,31 +130,25 @@ export class Client {
       return data as P
     }
 
-    useEffect(() => {
-      if (typeof options.variables !== 'function') {
-        return
-      }
-
+    const getVariables = (options: Options): Variables | null => {
+      if (!options.variables) return {}
+      if (typeof options.variables !== 'function') return options.variables
       try {
-        const variables = options.variables()
-        variableStatus.current.resolved = true
-        if (variableStatus.current.resolved && !variableStatus.current.used) {
-          doFetch({ ...options, variables })
-          variableStatus.current.used = true
-        }
-      } catch (e) {
-        variableStatus.current.throwed = true
+        return options.variables()
+      } catch (error) {
+        return null
       }
-    })
+    }
+
+    const variablesRef = useRef<Variables | null>(getVariables(options))
+
+    if (!isEqual(variablesRef.current, getVariables(options))) {
+      variablesRef.current = getVariables(options)
+    }
 
     useEffect(() => {
-      if (typeof options.variables !== 'function') {
-        doFetch(options)
-      } else {
-        try {
-          const variables = options.variables()
-          doFetch({ ...options, variables })
-        } catch (e) {}
+      if (variablesRef.current !== null) {
+        doFetch({ ...options, variables: variablesRef.current })
       }
 
       // store refetch fn to fetcher
@@ -170,7 +157,7 @@ export class Client {
       return () => {
         unmounted = true
       }
-    }, deps)
+    }, [...deps, variablesRef.current])
 
     return { ...result, refetch }
   }

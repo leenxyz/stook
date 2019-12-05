@@ -186,7 +186,8 @@ const UseQueryById = () => {
   const { loading, data, error, refetch } = client.useQuery<Project>(GET_PROJECT, {
     // name: 'getUserById',
     variables: () => {
-      return { scriptId: script.script.id }
+      // return { scriptId: script.script.id };
+      return { scriptId: 21 }
     },
     // deps: [script],
     onUpdate({ data }) {
