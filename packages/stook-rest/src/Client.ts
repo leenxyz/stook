@@ -82,7 +82,17 @@ export class Client {
     this.restOptions = { ...this.restOptions, ...opt }
   }
 
-  fetch = async <T = any>(url: string, options: RequestOptions = {}): Promise<T> => {
+  private getParams = (options: Options): Params | null => {
+    if (!options.params) return {}
+    if (typeof options.params !== 'function') return options.params
+    try {
+      return options.params()
+    } catch (error) {
+      return null
+    }
+  }
+
+  private fetch = async <T = any>(url: string, options: RequestOptions = {}): Promise<T> => {
     const action = async (ctx: Ctx) => {
       const { baseURL, headers } = this.restOptions
       const reqURL = getReqURL(url, baseURL)
@@ -119,25 +129,20 @@ export class Client {
       onUpdate && onUpdate(newState)
     }
 
-    const getParams = (options: Options): Params | null => {
-      if (!options.params) return {}
-      if (typeof options.params !== 'function') return options.params
-      try {
-        return options.params()
-      } catch (error) {
-        return null
-      }
+    const paramsRef = useRef<Params | null>(this.getParams(options))
+
+    if (!isEqual(paramsRef.current, this.getParams(options))) {
+      paramsRef.current = this.getParams(options)
     }
 
-    const paramsRef = useRef<Params | null>(getParams(options))
+    const doFetch = async (opt?: Options, isRefetch = false) => {
+      // called, so do not request
+      if (!isRefetch && fetcher.get(fetcherName).called) return
 
-    if (!isEqual(paramsRef.current, getParams(options))) {
-      paramsRef.current = getParams(options)
-    }
-
-    const doFetch = async (opt?: Options) => {
       try {
+        fetcher.get(fetcherName).called = true
         const data: T = await this.fetch(url, opt || {})
+
         if (!unmounted) {
           update({ loading: false, data })
         }
@@ -151,17 +156,19 @@ export class Client {
     }
 
     const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
-      const refetchedData: any = await doFetch(opt)
+      const refetchedData: any = await doFetch(opt, true)
       return refetchedData as P
     }
 
     useEffect(() => {
+      // store refetch fn to fetcher
+      if (!fetcher.get(fetcherName)) {
+        fetcher.set(fetcherName, { refetch, called: false } as FetcherItem<T>)
+      }
+
       if (paramsRef.current !== null) {
         doFetch({ ...options, params: paramsRef.current })
       }
-
-      // store refetch fn to fetcher
-      fetcher.set(fetcherName, { refetch } as FetcherItem<T>)
 
       return () => {
         unmounted = true

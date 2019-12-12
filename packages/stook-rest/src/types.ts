@@ -20,6 +20,7 @@ export type Refetch = <T>(options?: Options) => Promise<T>
 export interface FetcherItem<T = any> {
   refetch: Refetch
   result: Result<T>
+  called: boolean // is request called
 }
 
 export interface Fetcher<T = any> {

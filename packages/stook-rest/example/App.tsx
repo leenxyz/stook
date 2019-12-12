@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 
 import { config, fetch, useFetch, useUpdate, fetcher, RestOptions, applyMiddleware } from '../src'
 
@@ -52,7 +52,8 @@ const FetchApp = () => {
 }
 
 const Dependent = () => {
-  const { data: todos } = useFetch<Todo[]>(Api.QueryTodo)
+  const { loading: loading, data: todos, refetch } = useFetch<Todo[]>(Api.QueryTodo)
+
   const { data: todo } = useFetch<Todo>(Api.GetTodo, {
     // params: { id: 10 },
     params: () => {
@@ -60,15 +61,21 @@ const Dependent = () => {
       // return { id: 9 }
     },
   })
-  console.log('todos:', todos)
 
   return (
     <div className="App">
-      <h2>Dependent</h2>
+      <h2
+        onClick={() => {
+          console.log('111')
+          refetch()
+        }}
+      >
+        Dependent
+      </h2>
       <div>Todo:</div>
       {todo && <pre>{JSON.stringify(todo, null, 2)}</pre>}
       <div>Todos:</div>
-      {todos && <pre>{JSON.stringify(todos, null, 2)}</pre>}
+      {todos && <pre>{JSON.stringify(todos[0], null, 2)}</pre>}
     </div>
   )
 }
