@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { request, Options as RequestOptions } from '@peajs/request'
 import { useEffect } from 'react'
 import { useStore } from 'stook'
 import compose from 'koa-compose'
+import isEqual from 'react-fast-compare'
 import { fetcher } from './fetcher'
 import {
   FetchResult,
@@ -40,26 +41,9 @@ function last<T>(arr: T[]): T {
   return arr[arr.length - 1]
 }
 
-function getDeps(options?: Options): Deps {
-  if (options && Array.isArray(options.deps)) return options.deps
+function getDeps(options: Options): Deps {
+  if (Array.isArray(options.deps)) return options.deps
   return []
-}
-
-function getOptions(options: RequestOptions = {}, method: string): RequestOptions {
-  const defaultOpt = { method } as RequestOptions
-  return { ...defaultOpt, ...options }
-}
-
-function setUrlParam(url: string = '', params: Params) {
-  return url
-    .split('/')
-    .map(item => {
-      if (item.startsWith(':')) {
-        return params[item.replace(/^\:/, '')]
-      }
-      return item
-    })
-    .join('/')
 }
 
 function getMethod(url: string, options: Options = {}) {
@@ -104,7 +88,7 @@ export class Client {
       const reqURL = getReqURL(url, baseURL)
 
       // merge global headers, interceptor headers,fetch headers
-      options.headers = { ...headers, ...this.ctx.headers, ...options.headers }
+      options.headers = { ...headers, ...this.ctx.headers, ...options.headers } as any
 
       try {
         ctx.body = await request(reqURL, options)
@@ -122,7 +106,6 @@ export class Client {
   }
 
   useFetch = <T extends any>(url: string, options: Options<T> = {}) => {
-    let reqUrl: string = url
     let unmounted = false
     const { initialData: data, onUpdate } = options
     const initialState = { loading: true, data } as FetchResult<T>
@@ -130,17 +113,31 @@ export class Client {
     const fetcherName = getFetcherName(url, options)
     const [result, setState] = useStore(fetcherName, initialState)
 
-    function update(updatedState: Partial<FetchResult<T>>) {
+    const update = (updatedState: Partial<FetchResult<T>>) => {
       const newState = { ...result, ...updatedState }
       setState(newState)
       onUpdate && onUpdate(newState)
     }
 
-    const doFetch = async (opt?: Options) => {
-      const fetchOptions = getOptions(opt, 'GET')
-      if (fetchOptions.params) reqUrl = setUrlParam(url, fetchOptions.params)
+    const getParams = (options: Options): Params | null => {
+      if (!options.params) return {}
+      if (typeof options.params !== 'function') return options.params
       try {
-        const data: T = await this.fetch(reqUrl, fetchOptions || {})
+        return options.params()
+      } catch (error) {
+        return null
+      }
+    }
+
+    const paramsRef = useRef<Params | null>(getParams(options))
+
+    if (!isEqual(paramsRef.current, getParams(options))) {
+      paramsRef.current = getParams(options)
+    }
+
+    const doFetch = async (opt?: Options) => {
+      try {
+        const data: T = await this.fetch(url, opt || {})
         if (!unmounted) {
           update({ loading: false, data })
         }
@@ -159,8 +156,9 @@ export class Client {
     }
 
     useEffect(() => {
-      const fetchOptions = getOptions(options, 'GET')
-      doFetch(fetchOptions)
+      if (paramsRef.current !== null) {
+        doFetch({ ...options, params: paramsRef.current })
+      }
 
       // store refetch fn to fetcher
       fetcher.set(fetcherName, { refetch } as FetcherItem<T>)
@@ -168,29 +166,27 @@ export class Client {
       return () => {
         unmounted = true
       }
-    }, deps)
+    }, [...deps, paramsRef.current])
 
     return { ...result, refetch } as HooksResult<T>
   }
 
-  useUpdate = <T = any>(url: string, options?: RequestOptions) => {
+  useUpdate = <T = any>(url: string, options: RequestOptions = {}) => {
     const initialState = {} as UpdateResult<T>
     const [result, setState] = useState(initialState)
 
-    const updateData = async (updateOptions?: RequestOptions) => {
+    const updateData = async (updateOptions: RequestOptions = {}) => {
       setState(prev => ({ ...prev, loading: true }))
       try {
-        let opt = getOptions(options, 'POST')
-        if (updateOptions) opt = { ...opt, ...updateOptions }
-
-        const data: T = await this.fetch(url, opt)
+        options.method = options.method || 'POST'
+        const data: T = await this.fetch(url, { ...options, ...updateOptions })
         setState(prev => ({ ...prev, loading: false, data }))
       } catch (error) {
         setState(prev => ({ ...prev, loading: false, error }))
       }
     }
 
-    const update = (updateOptions?: RequestOptions): any => {
+    const update = (updateOptions: RequestOptions = {}): any => {
       updateData(updateOptions)
     }
 

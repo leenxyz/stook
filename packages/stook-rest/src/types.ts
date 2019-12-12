@@ -9,7 +9,7 @@ export interface Params {
 export type Deps = ReadonlyArray<any>
 export interface Options<T = any> extends RequestOptions {
   key?: string
-  params?: Params
+  params?: Params | (() => Params)
   deps?: Deps
   initialData?: T
   onUpdate?(result: Result<T>): any

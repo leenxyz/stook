@@ -46,7 +46,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "@peajs/request": "^0.2.1",
+    "@peajs/request": "^0.3.0",
     "koa-compose": "^4.1.0"
   }
 }

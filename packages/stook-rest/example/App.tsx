@@ -53,15 +53,22 @@ const FetchApp = () => {
 
 const Dependent = () => {
   const { data: todos } = useFetch<Todo[]>(Api.QueryTodo)
-  const { data: todo } = useFetch<Todo>(Api.GetTodo, { params: { id: todos[1].id } })
+  const { data: todo } = useFetch<Todo>(Api.GetTodo, {
+    // params: { id: 10 },
+    params: () => {
+      return { id: todos[1].id }
+      // return { id: 9 }
+    },
+  })
+  console.log('todos:', todos)
 
   return (
     <div className="App">
       <h2>Dependent</h2>
       <div>Todo:</div>
-      {todos && <pre>{JSON.stringify(todo, null, 2)}</pre>}
+      {todo && <pre>{JSON.stringify(todo, null, 2)}</pre>}
       <div>Todos:</div>
-      {todo && <pre>{JSON.stringify(todos, null, 2)}</pre>}
+      {todos && <pre>{JSON.stringify(todos, null, 2)}</pre>}
     </div>
   )
 }
