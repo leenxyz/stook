@@ -99,7 +99,7 @@ HTTP 请求头，和原生`fetch`的 [`Headers`](https://github.github.io/fetch/
 
 **`key?: string`**
 
-该 HTTP 的唯一 key，因为 stook-rest 是基于 stook，这个 key 就是 stook 的唯一 key，对于 refetch 非常有用。默认是为 `${method} ${url}`，比如请求如下:
+该请求的唯一标识符，因为 stook-rest 是基于 stook，这个 key 就是 stook 的唯一 key，对于 refetch 非常有用。默认是为 `${method} ${url}`，比如请求如下:
 
 ```js
 const { loading, data } = useFetch('/todos', { method: 'POST' })

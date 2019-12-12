@@ -136,6 +136,8 @@ export class Client {
     }
 
     const doFetch = async (opt?: Options, isRefetch = false) => {
+      if (unmounted) return
+
       // called, so do not request
       if (!isRefetch && fetcher.get(fetcherName).called) return
 
@@ -143,14 +145,10 @@ export class Client {
         fetcher.get(fetcherName).called = true
         const data: T = await this.fetch(url, opt || {})
 
-        if (!unmounted) {
-          update({ loading: false, data })
-        }
+        update({ loading: false, data })
         return data
       } catch (error) {
-        if (!unmounted) {
-          update({ loading: false, error })
-        }
+        update({ loading: false, error })
         throw error
       }
     }
