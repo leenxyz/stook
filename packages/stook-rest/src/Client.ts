@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { request, Options as RequestOptions } from '@peajs/request'
 import { useEffect } from 'react'
 import { useStore } from 'stook'
@@ -172,8 +172,9 @@ export class Client {
   }
 
   useUpdate = <T = any>(url: string, options: RequestOptions = {}) => {
+    const fetcherName = getFetcherName(url, options)
     const initialState = {} as UpdateResult<T>
-    const [result, setState] = useState(initialState)
+    const [result, setState] = useStore(fetcherName, initialState)
 
     const updateData = async (updateOptions: RequestOptions = {}) => {
       setState(prev => ({ ...prev, loading: true }))
