@@ -2,14 +2,11 @@ import { Options as RequestOptions } from '@peajs/request'
 
 export type Update = (updateOptions?: RequestOptions) => any
 
-export interface Params {
-  [key: string]: string | number | boolean
-}
 
 export type Deps = ReadonlyArray<any>
+
 export interface Options<T = any> extends RequestOptions {
   key?: string
-  params?: Params | (() => Params)
   deps?: Deps
   initialData?: T
   onUpdate?(result: Result<T>): any

@@ -52,15 +52,32 @@ const FetchApp = () => {
 }
 
 const Dependent = () => {
-  const { loading: loading, data: todos, refetch } = useFetch<Todo[]>(Api.QueryTodo)
+  const { loading: loading, data: todos, refetch } = useFetch<Todo[]>(Api.QueryTodo, {
+    key: 'haha',
+  })
+  // const { data: todo } = useFetch<Todo>(Api.GetTodo, {
+  //   // params: { id: 10 },
+  //   params: () => {
+  //     return { id: todos[1].id }
+  //     // return { id: 9 }
+  //   },
+  // })
 
-  const { data: todo } = useFetch<Todo>(Api.GetTodo, {
-    // params: { id: 10 },
-    params: () => {
-      return { id: todos[1].id }
-      // return { id: 9 }
+  const { data: todo } = useFetch<Todo>(Api.QueryTodo, {
+    // query: { _limit: 2 },
+    key: 'test',
+    query: () => {
+      // console.log('todos[4].id:', todos[2].id)
+      return { _limit: todos[2].id }
+      // return { _limit: 2 }
     },
   })
+
+  // const { data: todox } = useFetch<Todo>(Api.CreateTodo, {
+  //   body() {
+  //     return { title: todos[10].title }
+  //   },
+  // })
 
   return (
     <div className="App">

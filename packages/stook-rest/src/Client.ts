@@ -11,7 +11,6 @@ import {
   Options,
   HooksResult,
   Deps,
-  Params,
   FetcherItem,
   Update,
   UpdateResult,
@@ -19,6 +18,11 @@ import {
   Middleware,
   RestOptions,
 } from './types'
+import { type } from 'os'
+
+type Params = Pick<Options, 'params'>
+type Query = Pick<Options, 'query'>
+type Body = Pick<Options, 'body'>
 
 /**
  * get final url for http
@@ -92,7 +96,27 @@ export class Client {
     }
   }
 
-  private fetch = async <T = any>(url: string, options: RequestOptions = {}): Promise<T> => {
+  private getQuery = (options: Options): Query | null => {
+    if (!options.query) return {}
+    if (typeof options.query !== 'function') return options.query
+    try {
+      return options.query()
+    } catch (error) {
+      return null
+    }
+  }
+
+  private getBody = (options: Options): Body | null => {
+    if (!options.body) return {}
+    if (typeof options.body !== 'function') return options.body as any
+    try {
+      return options.body()
+    } catch (error) {
+      return null
+    }
+  }
+
+  fetch = async <T = any>(url: string, options: RequestOptions = {}): Promise<T> => {
     const action = async (ctx: Ctx) => {
       const { baseURL, headers } = this.restOptions
       const reqURL = getReqURL(url, baseURL)
@@ -129,10 +153,22 @@ export class Client {
       onUpdate && onUpdate(newState)
     }
 
+    // params
     const paramsRef = useRef<Params | null>(this.getParams(options))
-
     if (!isEqual(paramsRef.current, this.getParams(options))) {
       paramsRef.current = this.getParams(options)
+    }
+
+    // query
+    const queryRef = useRef<Query | null>(this.getQuery(options))
+    if (!isEqual(queryRef.current, this.getQuery(options))) {
+      queryRef.current = this.getQuery(options)
+    }
+
+    //body
+    const bodyRef = useRef<Body | null>(this.getBody(options))
+    if (!isEqual(bodyRef.current, this.getBody(options))) {
+      bodyRef.current = this.getBody(options)
     }
 
     const doFetch = async (opt?: Options, isRefetch = false) => {
@@ -158,20 +194,36 @@ export class Client {
       return refetchedData as P
     }
 
+    const getOpt = (options: Options): Options => {
+      if (paramsRef.current && Object.keys(paramsRef.current).length) {
+        options.params = paramsRef.current as any
+      }
+
+      if (queryRef.current && Object.keys(queryRef.current).length) {
+        options.query = queryRef.current
+      }
+
+      if (bodyRef.current && Object.keys(bodyRef.current).length) {
+        options.body = bodyRef.current
+      }
+      return options
+    }
+
     useEffect(() => {
       // store refetch fn to fetcher
       if (!fetcher.get(fetcherName)) {
         fetcher.set(fetcherName, { refetch, called: false } as FetcherItem<T>)
       }
 
-      if (paramsRef.current !== null) {
-        doFetch({ ...options, params: paramsRef.current })
+      if (paramsRef.current !== null && queryRef.current !== null && bodyRef.current !== null) {
+        const opt = getOpt(options)
+        doFetch(opt)
       }
 
       return () => {
         unmounted = true
       }
-    }, [...deps, paramsRef.current])
+    }, [...deps, paramsRef.current, queryRef.current, bodyRef.current])
 
     return { ...result, refetch } as HooksResult<T>
   }
