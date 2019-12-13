@@ -1,5 +1,6 @@
 import { Fetcher, FetcherItem } from './types'
 
+const NULL: any = null
 export class fetcher {
   private static store: Fetcher = {}
 
@@ -9,12 +10,13 @@ export class fetcher {
 
   static get(name: string) {
     if (!fetcher.store[name]) {
-      fetcher.store[name] = {
-        refetch() {
-          const error = new Error(`[stook-rest]: In fetcher, can not get ${name}`)
-          console.warn(error)
-        },
-      } as FetcherItem
+      // fetcher.store[name] = {
+      //   refetch() {
+      //     const error = new Error(`[stook-rest]: In fetcher, can not get ${name}`)
+      //     console.warn(error)
+      //   },
+      // } as FetcherItem
+      fetcher.store[name] = NULL
     }
     return fetcher.store[name]
   }

@@ -112,10 +112,14 @@ export class Client {
       onUpdate && onUpdate(nextState)
     }
 
-    const doFetch = async (opt: Options = {}) => {
+    const doFetch = async (opt: Options = {}, isRefetch = false) => {
       if (unmounted) return
 
+      // called, so do not request
+      if (!isRefetch && fetcher.get(fetcherName).called) return
+
       try {
+        fetcher.get(fetcherName).called = true
         const data = await this.query<T>(input, opt || {})
         update({ loading: false, data } as QueryResult<T>)
         return data
@@ -126,7 +130,7 @@ export class Client {
     }
 
     const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
-      const data: any = await doFetch(opt)
+      const data: any = await doFetch(opt, true)
       return data as P
     }
 
@@ -147,12 +151,19 @@ export class Client {
     }
 
     useEffect(() => {
+      // store refetch fn to fetcher
+      if (!fetcher.get(fetcherName)) {
+        fetcher.set(fetcherName, { refetch, called: false } as FetcherItem<T>)
+      }
+
+      // 重新设置为 loading: true
+      if (fetcher.get(fetcherName).called) {
+        update({ loading: true } as QueryResult<T>)
+      }
+
       if (variablesRef.current !== null) {
         doFetch({ ...options, variables: variablesRef.current })
       }
-
-      // store refetch fn to fetcher
-      fetcher.set(fetcherName, { refetch } as FetcherItem<T>)
 
       return () => {
         unmounted = true

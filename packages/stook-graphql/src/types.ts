@@ -23,6 +23,7 @@ export type Mutate = (variables: Variables, options?: Options) => any
 export interface FetcherItem<T = any> {
   refetch: Refetch
   result: Result<T>
+  called: boolean
 }
 
 export interface Fetcher<T = any> {

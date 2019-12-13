@@ -11,7 +11,7 @@ import {
   fromSubscription,
   applyMiddleware,
   Client,
-} from './src'
+} from '../src'
 
 applyMiddleware(async (ctx, next) => {
   ctx.headers.Authorization = `bearer token...`
@@ -175,7 +175,7 @@ const UseQueryById = () => {
 
   const { data: script, loading: loading1 } = client.useQuery(`
     {
-      script(id: 22){
+      script(id: 32){
         id
         limitNum
         title
@@ -186,11 +186,7 @@ const UseQueryById = () => {
   const { loading, data, error, refetch } = client.useQuery<Project>(GET_PROJECT, {
     // name: 'getUserById',
     variables: () => {
-      return { scriptId: script.script.id };
-    },
-    // deps: [script],
-    onUpdate({ data }) {
-      // console.log('---------:', data)
+      return { scriptId: script.script.id }
     },
   })
 
