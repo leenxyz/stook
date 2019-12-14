@@ -147,10 +147,9 @@ export class Client {
     const fetcherName = getFetcherName(url, options)
     const [result, setState] = useStore(fetcherName, initialState)
 
-    const update = (updatedState: Partial<FetchResult<T>>) => {
-      const newState = { ...result, ...updatedState }
-      setState(newState)
-      onUpdate && onUpdate(newState)
+    const update = (nextState: Partial<FetchResult<T>>) => {
+      setState(nextState as FetchResult<T>)
+      onUpdate && onUpdate(nextState as FetchResult<T>)
     }
 
     // params
@@ -190,6 +189,7 @@ export class Client {
     }
 
     const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
+      update({ loading: true })
       const refetchedData: any = await doFetch(opt, true)
       return refetchedData as P
     }
