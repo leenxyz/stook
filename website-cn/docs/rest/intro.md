@@ -1,7 +1,7 @@
 ---
 id: intro
-title: 简介
-sidebar_label: 简介
+title: Introduction
+sidebar_label: Introduction
 ---
 
 异步数据管理一直是一个难点，在 React 的生态圈中，很多人把异步数据使用状态管理维护，比如使用 Redux，用异步 Action 获取远程数据。我个人不喜欢使用 Redux 状态管理维护异步数据，我更倾向于在组件内直接获取异步数据，使用 hooks，简化数据的获取和管理。
@@ -154,4 +154,4 @@ export default connect(mapStateToProps)(Todos)
 
 [![Edit fetch-data-with-redux](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/xjl84rjvno?fontsize=14&hidenavigation=1&theme=dark)
 
-我们可以发现，使用 Redux 管理异步数据，代码量激增，是 `stook-rest` 5 倍以上的代码量，不管开发效率还是开发体验，亦或是可以维护性和可读性，个人认为，类似的 redux 这样的解决方案并不优秀。Pea 版本简单直观，Redux 本地冗长，并且链路太长，需维护多个文件，更多的代码量。
+我们可以发现，使用 Redux 管理异步数据，代码量激增，是 `stook-rest` 5 倍以上的代码量，不管开发效率还是开发体验，亦或是可以维护性和可读性，个人认为，类似的 redux 这样的解决方案并不优秀。 Hooks 简单直观，Redux 本地冗长，并且链路太长，需维护多个文件，更多的代码量。

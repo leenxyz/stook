@@ -1,7 +1,7 @@
 ---
 id: quick-start
-title: 快速开始
-sidebar_label: 快速开始
+title: Quick start
+sidebar_label:  Quick start
 ---
 
 stook-rest 一个基于 hooks 实现的 Restful Api 数据请求工具。

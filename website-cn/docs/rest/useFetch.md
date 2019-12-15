@@ -1,7 +1,7 @@
 ---
 id: useFetch
-title: 获取数据 (useFetch)
-sidebar_label: 获取数据 (useFetch)
+title: useFetch
+sidebar_label: useFetch
 ---
 
 > const result = useFetch(url, options)
