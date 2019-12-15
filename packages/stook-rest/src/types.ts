@@ -1,6 +1,6 @@
 import { Options as RequestOptions } from '@peajs/request'
 
-export type Update = (updateOptions?: RequestOptions) => any
+export type Update<T> = (updateOptions?: RequestOptions) => Promise<UpdateResult<T>>
 
 
 export type Deps = ReadonlyArray<any>
@@ -28,6 +28,8 @@ export interface Result<T = any> {
   loading: boolean
   data: T
   error: any
+  called: boolean
+  requestCount: number
 }
 
 export interface FetchResult<T> extends Result<T> {}

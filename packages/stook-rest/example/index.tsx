@@ -1,11 +1,22 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import App from './App'
+import { devtools } from 'stook-devtools'
+import ShareState from './ShareState'
+import CustomHooks from './CustomHooks'
+import Dependent from './Dependent'
+import UseUpdate from './UseUpdate'
+import UseUpdate2 from './UseUpdate2'
+
+devtools.init()
 
 const Index = () => {
   return (
     <div>
-      <App></App>
+      {/* <ShareState></ShareState> */}
+      {/* <UseUpdate></UseUpdate> */}
+      {/* <UseUpdate2></UseUpdate2> */}
+      <CustomHooks></CustomHooks>
+      {/* <Dependent></Dependent> */}
     </div>
   )
 }

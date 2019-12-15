@@ -18,7 +18,6 @@ import {
   Middleware,
   RestOptions,
 } from './types'
-import { type } from 'os'
 
 type Params = Pick<Options, 'params'>
 type Query = Pick<Options, 'query'>
@@ -229,26 +228,30 @@ export class Client {
   }
 
   useUpdate = <T = any>(url: string, options: RequestOptions = {}) => {
+    options.method = options.method || 'POST'
     const fetcherName = getFetcherName(url, options)
-    const initialState = {} as UpdateResult<T>
+    const initialState = { loading: false, called: false } as UpdateResult<T>
     const [result, setState] = useStore(fetcherName, initialState)
 
     const updateData = async (updateOptions: RequestOptions = {}) => {
-      setState(prev => ({ ...prev, loading: true }))
       try {
-        options.method = options.method || 'POST'
+        setState({ loading: true } as UpdateResult<T>)
         const data: T = await this.fetch(url, { ...options, ...updateOptions })
-        setState(prev => ({ ...prev, loading: false, data }))
+        const nextState = { loading: false, called: true, data } as UpdateResult<T>
+        setState(nextState)
+        return nextState
       } catch (error) {
-        setState(prev => ({ ...prev, loading: false, error }))
+        const nextState = { loading: false, called: true, error } as UpdateResult<T>
+        setState(nextState)
+        return nextState
       }
     }
 
-    const update = (updateOptions: RequestOptions = {}): any => {
-      updateData(updateOptions)
+    const update = async (updateOptions: RequestOptions = {}): Promise<any> => {
+      return await updateData(updateOptions)
     }
 
-    const out: [Update, UpdateResult<T>] = [update, result]
+    const out: [Update<T>, UpdateResult<T>] = [update, result]
 
     return out
   }
