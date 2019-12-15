@@ -18,7 +18,7 @@ export interface Options<T = any> {
   // retryOnError: false
 }
 
-export type Mutate = (variables: Variables, options?: Options) => any
+export type Mutate<T> = (variables: Variables, options?: Options) => Promise<MutateResult<T>>
 
 export interface FetcherItem<T = any> {
   refetch: Refetch
@@ -32,6 +32,7 @@ export interface Fetcher<T = any> {
 
 export interface Result<T = any> {
   loading: boolean
+  called: boolean
   data: T
   error: any
 }

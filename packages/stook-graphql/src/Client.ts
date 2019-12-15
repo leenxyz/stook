@@ -175,11 +175,11 @@ export class Client {
 
   useMutate = <T = any>(input: string, options: Options = {}) => {
     const { initialData: data, onUpdate } = options
-    const initialState = { loading: false, data } as MutateResult<T>
+    const initialState = { loading: false, data, called: false } as MutateResult<T>
     const fetcherName = options.key || input
     const [result, setState] = useStore(fetcherName, initialState)
 
-    function update(nextState: MutateResult<T>) {
+    const update = (nextState: MutateResult<T>) => {
       setState(nextState)
       onUpdate && onUpdate(nextState)
     }
@@ -187,20 +187,20 @@ export class Client {
     const doFetch = async (opt: Options = {}) => {
       try {
         const data = await this.query<T>(input, { ...options, ...opt })
-        update({ loading: false, data } as MutateResult<T>)
+        update({ loading: false, called: true, data } as MutateResult<T>)
         return data
       } catch (error) {
-        update({ loading: false, error } as MutateResult<T>)
+        update({ loading: false, called: true, error } as MutateResult<T>)
         return error
       }
     }
 
-    const mutate = (variables: Variables, opt: Options = {}): any => {
+    const mutate = async (variables: Variables, opt: Options = {}): Promise<any> => {
       update({ loading: true } as MutateResult<T>)
-      doFetch({ ...opt, variables })
+      return await doFetch({ ...opt, variables })
     }
 
-    const out: [Mutate, MutateResult<T>] = [mutate, result]
+    const out: [Mutate<T>, MutateResult<T>] = [mutate, result]
 
     return out
   }

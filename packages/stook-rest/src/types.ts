@@ -26,10 +26,9 @@ export interface Fetcher<T = any> {
 
 export interface Result<T = any> {
   loading: boolean
+  called: boolean
   data: T
   error: any
-  called: boolean
-  requestCount: number
 }
 
 export interface FetchResult<T> extends Result<T> {}

@@ -1,7 +1,7 @@
 ---
 id: useQuery
-title: 获取数据 (useQuery)
-sidebar_label: 获取数据 (useQuery)
+title: useQuery
+sidebar_label: useQuery
 ---
 
 > const result = useQuery(url, options, deps)

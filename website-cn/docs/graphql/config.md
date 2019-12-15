@@ -1,7 +1,7 @@
 ---
 id: config
-title: 配置
-sidebar_label: 配置
+title: Config
+sidebar_label: Config
 ---
 
 ## 全局配置

@@ -14,7 +14,7 @@ npm i stook-rest
 
 ## 获取数据
 
-下面展示如何快速，获取 Restful Api 数据。你就可以使用 `stook-rest` 提供的一个 hooks `useFetch`，来获取远程服务器数据。下面是获取 todos 列表并渲染到组件，可以看到，代码相当简洁：
+下面展示如何快速获取 Restful Api 数据。你就可以使用 `stook-rest` 提供的一个 hooks `useFetch`来获取远程服务器数据。下面是获取 todos 列表并渲染到组件，可以看到，代码相当简洁：
 
 ```tsx
 import { useFetch } from 'stook-rest'

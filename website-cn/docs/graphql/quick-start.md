@@ -1,12 +1,20 @@
 ---
 id: quick-start
-title: 快速开始
-sidebar_label: 快速开始
+title: Quick start
+sidebar_label: Quick start
 ---
+
+stook-graphql 一个基于 hooks 实现的 Graphql 数据请求工具。
+
+## 安装
+
+```bash
+npm i stook-graphql
+```
 
 ## 获取数据
 
-配置好 client 后，你就可以使用 `stook-graphql` 提供的一个 hooks `useGraphql`，来获取远程服务器数据。
+下面展示如何快速获取 GraphQL Api 数据。你就可以使用 `stook-graphql` 提供的一个 hooks `useQuery`来获取远程服务器数据。
 
 ```tsx
 import { useQuery } from 'stook-graphql'

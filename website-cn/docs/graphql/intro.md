@@ -1,7 +1,7 @@
 ---
 id: intro
-title: 简介
-sidebar_label: 简介
+title: Introduction
+sidebar_label: Introduction
 ---
 
 有人说，GraphQL 是未来，这里不讨论 GraphQL 和 RESTful 谁更优秀。`stook-graphql`和 `stook-rest`一样，推崇使用 hooks 获取并维护异步数据。
