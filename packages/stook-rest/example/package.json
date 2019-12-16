@@ -12,7 +12,9 @@
     "koa-compose": "^4.1.0",
     "react-app-polyfill": "^1.0.0",
     "redux": "^4.0.4",
-    "stook-devtools": "^0.1.3"
+    "stook": "^0.2.3",
+    "stook-devtools": "^0.1.3",
+    "stook-rest": "^0.2.3"
   },
   "alias": {
     "react": "../node_modules/react",
