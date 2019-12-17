@@ -48,8 +48,7 @@ export class Client {
   constructor(opt: GraphqlOptions = { endpoint: '/graphql', headers: {} }) {
     const { endpoint, headers, subscriptionsEndpoint } = opt
     this.graphqlOptions = opt
-    this.graphqlClient = new GraphQLClient({
-      endpoint,
+    this.graphqlClient = new GraphQLClient(endpoint, {
       headers,
     } as any)
 
@@ -64,10 +63,7 @@ export class Client {
     this.graphqlOptions = { ...this.graphqlOptions, ...opt }
 
     const { endpoint, headers, subscriptionsEndpoint } = opt
-    this.graphqlClient = new GraphQLClient({
-      endpoint,
-      headers,
-    } as any)
+    this.graphqlClient = new GraphQLClient(endpoint, { headers } as any)
 
     if (subscriptionsEndpoint) {
       this.subscriptionClient = new SubscriptionClient(subscriptionsEndpoint, {

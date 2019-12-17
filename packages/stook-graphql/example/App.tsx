@@ -11,7 +11,7 @@ import {
   fromSubscription,
   applyMiddleware,
   Client,
-} from '../src'
+} from 'stook-graphql'
 
 applyMiddleware(async (ctx, next) => {
   ctx.headers.Authorization = `bearer token...`

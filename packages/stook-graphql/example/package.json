@@ -10,7 +10,8 @@
   "dependencies": {
     "@types/koa-compose": "^3.2.5",
     "koa-compose": "^4.1.0",
-    "react-app-polyfill": "^1.0.0"
+    "react-app-polyfill": "^1.0.0",
+    "stook-graphql": "^0.2.5"
   },
   "alias": {
     "react": "../node_modules/react",
