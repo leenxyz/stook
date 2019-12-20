@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useStore } from 'stook'
+import { useStore, Storage } from 'stook'
 import gql from 'graphql-tag'
 import compose from 'koa-compose'
 import { GraphQLClient } from '@peajs/graphql-client'
@@ -109,13 +109,15 @@ export class Client {
     }
 
     const doFetch = async (opt: Options = {}, isRefetch = false) => {
-      if (unmounted) return
+      if (!isRefetch && unmounted) return
 
-      // called, so do not request
+      // 如果不是 refetch，并且 called，那就不发请求，防止多个组件使用同一个 hooks 引起多次请求
       if (!isRefetch && fetcher.get(fetcherName).called) return
 
       try {
         fetcher.get(fetcherName).called = true
+        update({ loading: true } as QueryResult<T>)
+
         const data = await this.query<T>(input, opt || {})
         update({ loading: false, data } as QueryResult<T>)
         return data
@@ -140,8 +142,10 @@ export class Client {
       }
     }
 
+    // 变量ref
     const variablesRef = useRef<Variables | null>(getVariables(options))
 
+    // 变量已经改变
     if (!isEqual(variablesRef.current, getVariables(options))) {
       variablesRef.current = getVariables(options)
     }
@@ -152,17 +156,22 @@ export class Client {
         fetcher.set(fetcherName, { refetch, called: false } as FetcherItem<T>)
       }
 
-      // 重新设置为 loading: true
-      if (fetcher.get(fetcherName).called) {
-        update({ loading: true } as QueryResult<T>)
-      }
-
+      // 不等于 null, 说明已经拿到最终的 variables
       if (variablesRef.current !== null) {
         doFetch({ ...options, variables: variablesRef.current })
       }
 
       return () => {
         unmounted = true
+
+        // 全部 unmount，设置 called false
+        const store = Storage.get(fetcherName)
+        if (store && store.setters.length === 0) {
+          fetcher.get(fetcherName).called = false
+
+          // TODO: 要为true ?
+          update({ loading: true } as any)
+        }
       }
     }, [...deps, variablesRef.current])
 
