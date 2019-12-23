@@ -10,7 +10,6 @@ import { fetcher } from './fetcher'
 import {
   Options,
   QueryResult,
-  Deps,
   Refetch,
   FetcherItem,
   Middleware,
@@ -24,10 +23,16 @@ import {
   FromSubscriptionOption,
   Observer,
 } from './types'
+import { getDeps, getVariables, getDepsMaps, useUnmounted, useUnmount } from './utils'
 
-function getDeps(options?: Options): Deps {
-  if (options && Array.isArray(options.deps)) return options.deps
-  return []
+interface VarCurrent {
+  value: any
+  resolve: boolean
+}
+
+interface DepsCurrent {
+  value: any
+  resolve: boolean
 }
 
 const NULL_AS: any = null
@@ -96,28 +101,21 @@ export class Client {
   }
 
   useQuery = <T = any>(input: string, options: Options<T> = {}) => {
+    const isUnmouted = useUnmounted()
     const { initialData: data, onUpdate } = options
     const fetcherName = options.key || input
-    let unmounted = false
     const initialState = { loading: true, data } as QueryResult<T>
     const deps = getDeps(options)
     const [result, setState] = useStore(fetcherName, initialState)
-
     const update = (nextState: QueryResult<T>) => {
       setState(nextState)
       onUpdate && onUpdate(nextState)
     }
 
-    const doFetch = async (opt: Options = {}, isRefetch = false) => {
-      if (!isRefetch && unmounted) return
-
-      // 如果不是 refetch，并且 called，那就不发请求，防止多个组件使用同一个 hooks 引起多次请求
-      if (!isRefetch && fetcher.get(fetcherName).called) return
-
+    const makeFetch = async (opt: Options = {}) => {
       try {
         fetcher.get(fetcherName).called = true
-        update({ loading: true } as QueryResult<T>)
-
+        // update({ loading: true } as QueryResult<T>)
         const data = await this.query<T>(input, opt || {})
         update({ loading: false, data } as QueryResult<T>)
         return data
@@ -128,26 +126,22 @@ export class Client {
     }
 
     const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
-      const data: any = await doFetch(opt, true)
-      return data as P
+      update({ loading: true } as QueryResult<T>)
+      const data: P = await makeFetch(opt)
+      return data
     }
 
-    const getVariables = (options: Options): Variables | null => {
-      if (!options.variables) return {}
-      if (typeof options.variables !== 'function') return options.variables
-      try {
-        return options.variables()
-      } catch (error) {
-        return null
-      }
-    }
+    /**
+     * handle variable
+     */
+    const variables = getVariables(options)
+    const varRef = useRef<VarCurrent>({
+      value: getVariables(options),
+      resolve: typeof options.variables !== 'function' ? true : false,
+    })
 
-    // 变量ref
-    const variablesRef = useRef<Variables | null>(getVariables(options))
-
-    // 变量已经改变
-    if (!isEqual(variablesRef.current, getVariables(options))) {
-      variablesRef.current = getVariables(options)
+    if (!varRef.current.resolve && !isEqual(varRef.current.value, variables)) {
+      varRef.current = { value: variables, resolve: true }
     }
 
     useEffect(() => {
@@ -156,24 +150,43 @@ export class Client {
         fetcher.set(fetcherName, { refetch, called: false } as FetcherItem<T>)
       }
 
-      // 不等于 null, 说明已经拿到最终的 variables
-      if (variablesRef.current !== null) {
-        doFetch({ ...options, variables: variablesRef.current })
+      // if resolve, 说明已经拿到最终的 variables
+      const shouldFetch =
+        varRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted()
+      if (shouldFetch) makeFetch({ ...options, variables })
+    }, [varRef.current])
+
+    /**
+     * handle deps
+     */
+    const depsMaps = getDepsMaps(deps)
+    const depsRef = useRef<DepsCurrent>({ value: depsMaps, resolve: false })
+
+    if (!isEqual(depsRef.current.value, depsMaps)) {
+      depsRef.current = { value: depsMaps, resolve: true }
+    }
+
+    useEffect(() => {
+      if (depsRef.current.resolve) {
+        update({ loading: true } as QueryResult<T>)
+        makeFetch({ ...options, variables: varRef.current.value })
       }
+    }, [depsRef.current])
 
-      return () => {
-        unmounted = true
+    // when unmount
+    useUnmount(() => {
+      // 全部 unmount，设置 called false
+      const store = Storage.get(fetcherName)
 
-        // 全部 unmount，设置 called false
-        const store = Storage.get(fetcherName)
-        if (store && store.setters.length === 0) {
-          fetcher.get(fetcherName).called = false
+      // 对应的 hooks 全部都 unmount 了
+      if (store && store.setters.length === 0) {
+        // 重新设置为 false，以便后续调用刷新
+        fetcher.get(fetcherName).called = false
 
-          // TODO: 要为true ?
-          update({ loading: true } as any)
-        }
+        // TODO: 要为true ? 还是 undefined 好
+        update({ loading: true } as any)
       }
-    }, [...deps, variablesRef.current])
+    })
 
     return { ...result, refetch }
   }
