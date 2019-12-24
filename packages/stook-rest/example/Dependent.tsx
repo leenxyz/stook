@@ -10,7 +10,9 @@ export default () => {
   const { data: todos } = useFetch('/todos')
 
   const { loading, data: todo } = useFetch('/todos/:id', {
-    params: () => ({ id: todos[9].id }),
+    params: () => {
+      return { id: todos[9].id }
+    },
   })
 
   if (loading) return <div>loading....</div>

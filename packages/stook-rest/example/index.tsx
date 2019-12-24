@@ -15,8 +15,8 @@ const Index = () => {
       {/* <ShareState></ShareState> */}
       {/* <UseUpdate></UseUpdate> */}
       {/* <UseUpdate2></UseUpdate2> */}
-      <CustomHooks></CustomHooks>
-      {/* <Dependent></Dependent> */}
+      {/* <CustomHooks></CustomHooks> */}
+      <Dependent></Dependent>
     </div>
   )
 }

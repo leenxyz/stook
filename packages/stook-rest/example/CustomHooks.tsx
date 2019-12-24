@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
-// import { config, useFetch } from '../src'
-import { config, useFetch } from 'stook-rest'
+import { config, useFetch } from '../src'
+// import { config, useFetch } from 'stook-rest'
 
 config({
   baseURL: 'https://jsonplaceholder.typicode.com',

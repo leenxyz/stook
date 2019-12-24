@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { request, Options as RequestOptions } from '@peajs/request'
 import { useEffect } from 'react'
-import { useStore } from 'stook'
+import { useStore, Storage } from 'stook'
 import compose from 'koa-compose'
 import isEqual from 'react-fast-compare'
 import { fetcher } from './fetcher'
@@ -18,10 +18,19 @@ import {
   Middleware,
   RestOptions,
 } from './types'
+import { useUnmount, useUnmounted, getDepsMaps, isResolve, getArg } from './utils'
 
-type Params = Pick<Options, 'params'>
-type Query = Pick<Options, 'query'>
-type Body = Pick<Options, 'body'>
+interface ArgsCurrent {
+  resolve: boolean
+  params: any
+  query: any
+  body: any
+}
+
+interface DepsCurrent {
+  value: any
+  resolve: boolean
+}
 
 /**
  * get final url for http
@@ -85,36 +94,6 @@ export class Client {
     this.restOptions = { ...this.restOptions, ...opt }
   }
 
-  private getParams = (options: Options): Params | null => {
-    if (!options.params) return {}
-    if (typeof options.params !== 'function') return options.params
-    try {
-      return options.params()
-    } catch (error) {
-      return null
-    }
-  }
-
-  private getQuery = (options: Options): Query | null => {
-    if (!options.query) return {}
-    if (typeof options.query !== 'function') return options.query
-    try {
-      return options.query()
-    } catch (error) {
-      return null
-    }
-  }
-
-  private getBody = (options: Options): Body | null => {
-    if (!options.body) return {}
-    if (typeof options.body !== 'function') return options.body as any
-    try {
-      return options.body()
-    } catch (error) {
-      return null
-    }
-  }
-
   fetch = async <T = any>(url: string, options: RequestOptions = {}): Promise<T> => {
     const action = async (ctx: Ctx) => {
       const { baseURL, headers } = this.restOptions
@@ -139,7 +118,7 @@ export class Client {
   }
 
   useFetch = <T extends any>(url: string, options: Options<T> = {}) => {
-    let unmounted = false
+    const isUnmouted = useUnmounted()
     const { initialData: data, onUpdate } = options
     const initialState = { loading: true, data } as FetchResult<T>
     const deps = getDeps(options)
@@ -151,30 +130,7 @@ export class Client {
       onUpdate && onUpdate(nextState as FetchResult<T>)
     }
 
-    // params
-    const paramsRef = useRef<Params | null>(this.getParams(options))
-    if (!isEqual(paramsRef.current, this.getParams(options))) {
-      paramsRef.current = this.getParams(options)
-    }
-
-    // query
-    const queryRef = useRef<Query | null>(this.getQuery(options))
-    if (!isEqual(queryRef.current, this.getQuery(options))) {
-      queryRef.current = this.getQuery(options)
-    }
-
-    //body
-    const bodyRef = useRef<Body | null>(this.getBody(options))
-    if (!isEqual(bodyRef.current, this.getBody(options))) {
-      bodyRef.current = this.getBody(options)
-    }
-
-    const doFetch = async (opt?: Options, isRefetch = false) => {
-      if (unmounted) return
-
-      // called, so do not request
-      if (!isRefetch && fetcher.get(fetcherName).called) return
-
+    const makeFetch = async (opt?: Options) => {
       try {
         fetcher.get(fetcherName).called = true
         const data: T = await this.fetch(url, opt || {})
@@ -189,22 +145,42 @@ export class Client {
 
     const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
       update({ loading: true })
-      const refetchedData: any = await doFetch(opt, true)
+      const refetchedData: any = await makeFetch(opt)
       return refetchedData as P
     }
 
+    const argsRef = useRef<ArgsCurrent>({
+      resolve: isResolve(options.params) && isResolve(options.query) && isResolve(options.body),
+      params: getArg(options.params),
+      query: getArg(options.query),
+      body: getArg(options.body),
+    })
+
+    if (
+      !argsRef.current.resolve &&
+      getArg(options.params) &&
+      getArg(options.query) &&
+      getArg(options.body)
+    ) {
+      argsRef.current = {
+        resolve: true,
+        params: getArg(options.params),
+        query: getArg(options.query),
+        body: getArg(options.body),
+      }
+    }
+
     const getOpt = (options: Options): Options => {
-      if (paramsRef.current && Object.keys(paramsRef.current).length) {
-        options.params = paramsRef.current as any
+      if (Object.keys(argsRef.current.params).length) {
+        options.params = argsRef.current.params
+      }
+      if (Object.keys(argsRef.current.query).length) {
+        options.query = argsRef.current.query
+      }
+      if (Object.keys(argsRef.current.body).length) {
+        options.body = argsRef.current.body
       }
 
-      if (queryRef.current && Object.keys(queryRef.current).length) {
-        options.query = queryRef.current
-      }
-
-      if (bodyRef.current && Object.keys(bodyRef.current).length) {
-        options.body = bodyRef.current
-      }
       return options
     }
 
@@ -214,15 +190,48 @@ export class Client {
         fetcher.set(fetcherName, { refetch, called: false } as FetcherItem<T>)
       }
 
-      if (paramsRef.current !== null && queryRef.current !== null && bodyRef.current !== null) {
-        const opt = getOpt(options)
-        doFetch(opt)
-      }
+      // if resolve, 说明已经拿到最终的 args
+      const shouldFetch =
+        argsRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted()
 
-      return () => {
-        unmounted = true
+      if (shouldFetch) {
+        const opt = getOpt(options)
+        makeFetch(opt)
       }
-    }, [...deps, paramsRef.current, queryRef.current, bodyRef.current])
+    }, [argsRef.current])
+
+    /**
+     * handle deps
+     */
+    const depsMaps = getDepsMaps(deps)
+    const depsRef = useRef<DepsCurrent>({ value: depsMaps, resolve: false })
+
+    if (!isEqual(depsRef.current.value, depsMaps)) {
+      depsRef.current = { value: depsMaps, resolve: true }
+    }
+
+    useEffect(() => {
+      if (depsRef.current.resolve) {
+        update({ loading: true } as FetchResult<T>)
+        const opt = getOpt(options)
+        makeFetch(opt)
+      }
+    }, [depsRef.current])
+
+    // when unmount
+    useUnmount(() => {
+      // 全部 unmount，设置 called false
+      const store = Storage.get(fetcherName)
+
+      // 对应的 hooks 全部都 unmount 了
+      if (store && store.setters.length === 0) {
+        // 重新设置为 false，以便后续调用刷新
+        fetcher.get(fetcherName).called = false
+
+        // TODO: 要为true ? 还是 undefined 好
+        update({ loading: true } as any)
+      }
+    })
 
     return { ...result, refetch } as HooksResult<T>
   }
