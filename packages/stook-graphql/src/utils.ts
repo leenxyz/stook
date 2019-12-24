@@ -9,20 +9,31 @@ export function isFalsy(value: any) {
   return value === undefined || value === null
 }
 
-export const getDeps = (options?: Options): Deps => {
-  if (options && Array.isArray(options.deps)) return options.deps
-  return []
+
+export function isResolve(arg: any) {
+  if (!arg) return true
+  if (typeof arg !== 'function') return true
+  try {
+    arg()
+    return true
+  } catch (error) {
+    return false
+  }
 }
 
 export const getVariables = (options: Options): any => {
   if (!options.variables) return {}
-
   if (typeof options.variables !== 'function') return options.variables
   try {
     return options.variables()
   } catch (error) {
     return false
   }
+}
+
+export const getDeps = (options?: Options): Deps => {
+  if (options && Array.isArray(options.deps)) return options.deps
+  return []
 }
 
 /**

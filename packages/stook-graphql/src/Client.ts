@@ -23,7 +23,7 @@ import {
   FromSubscriptionOption,
   Observer,
 } from './types'
-import { getDeps, getVariables, getDepsMaps, useUnmounted, useUnmount } from './utils'
+import { getDeps, getVariables, getDepsMaps, useUnmounted, useUnmount, isResolve } from './utils'
 
 interface VarCurrent {
   value: any
@@ -137,10 +137,10 @@ export class Client {
     const variables = getVariables(options)
     const varRef = useRef<VarCurrent>({
       value: getVariables(options),
-      resolve: typeof options.variables !== 'function' ? true : false,
+      resolve: isResolve(options.variables),
     })
 
-    if (!varRef.current.resolve && !isEqual(varRef.current.value, variables)) {
+    if (!varRef.current.resolve && getVariables(options)) {
       varRef.current = { value: variables, resolve: true }
     }
 
