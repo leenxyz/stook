@@ -2,11 +2,11 @@
 
 [![npm](https://img.shields.io/npm/v/stook.svg)](https://www.npmjs.com/package/stook) [![Coverage Status](https://coveralls.io/repos/github/forsigner/stook/badge.svg?branch=master)](https://coveralls.io/github/forsigner/stook?branch=master) [![Minzipped size](https://img.shields.io/bundlephobia/minzip/stook.svg)](https://bundlephobia.com/result?p=stook) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Manage {store} in {hooks}.
+A minimalist design state management library for React.
 
 ## Documentation
 
-The documentation site of stook is hosted at [The documentation site of stook is hosted at [https://stook.now.sh](https://stook.now.sh/).
+The documentation site of stook is hosted at  [https://stook-cn.now.sh](https://stook-cn.now.sh).
 
 ## Quick start
 
