@@ -14,7 +14,7 @@ sidebar_label: refetch
 - 更新依赖 deps
 - 使用 fetcher
 
-## refetch in component
+## 内部 Refetch
 
 这是最简单的重新获取数据的方式，通常，如果触发更新的动作和`useFetch`在统一组件内，可以使用这种方式。
 
@@ -46,50 +46,32 @@ const Todos = () => {
 }
 ```
 
-## refetch with deps
+[![Edit vigilant-bouman-y0gu7](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vigilant-bouman-y0gu7?fontsize=14&hidenavigation=1&theme=dark)
+
+## 更新依赖 deps
 
 通过更新依赖来重新获取数据，这也是常用的方式之一，因为在很多业务场景中，触发动作会在其他组件中，下面演示如何通过更新依赖触发数据更新：
 
-首先，定义一个 store 用来存放依赖：
-
 ```tsx
-// /stores/todoStore.ts
-import { createStore } from 'stook-store'
+import { useState } from 'react'
+import { useFetch } from 'stook-rest'
 
-const todoStore = createStore({
-  params: {
-    _start: 0,
-    _limit: 5,
-  },
-  updateParams(params) {
-    todoStore.params = params
-  },
-})
-```
-
-在组件中，使用依赖：
-
-```tsx
-import { observe } from 'stook-store'
-import todoStore from '@stores/todoStore'
-
-const Todos = observe(() => {
-  const { params } = todoStore
+export default () => {
+  const [count, setCount] = useState(1)
   const { loading, data, error } = useFetch('/todos', {
-    query: params,
-    deps: [params],
+    deps: [count],
   })
 
   if (loading) return <span>loading...</span>
   if (error) return <span>error!</span>
 
-  const updatePage = () => {
-    todoStore.updateParams({ _start: 5, _limit: 5 })
+  const update = () => {
+    setCount(count + 1)
   }
 
   return (
     <div>
-      <button onClick={updatePage}>Update Page</button>
+      <button onClick={update}>Update Page</button>
       <ul>
         {data.map(item => (
           <li key={item.id}>{item.title}</li>
@@ -97,14 +79,15 @@ const Todos = observe(() => {
       </ul>
     </div>
   )
-})
+}
 ```
+[![Edit loving-cray-b6xvq](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/loving-cray-b6xvq?fontsize=14&hidenavigation=1&theme=dark)
 
-你可以在任意地方，不管组件内还是组件外，你都可以可以调用`todoStore.updateParams`更新依赖，从而实现数据更新。
+你可以在任意地方，不管组件内还是组件外，你都可以更新依赖，从而实现数据更新。
 
 注意：这里的依赖是个对象，你必须更新整个对象的引用，如果你只更新对象的属性是无效的。
 
-## use fetcher
+## 使用 fetcher
 
 有时候，你需要在组件外部重新获取数据，但`useFetch` 却没有任何可以被依赖的参数，这时你可以使用 fetcher:
 
@@ -112,7 +95,7 @@ const Todos = observe(() => {
 import { useFetch, fetcher } from 'stook-rest'
 
 const Todos = () => {
-  const { loading, data, error } = useFetch('/todos', { name: 'GetTodos' })
+  const { loading, data, error } = useFetch('/todos', { key: 'GetTodos' })
 
   if (loading) return <span>loading...</span>
   if (error) return <span>error!</span>
@@ -126,7 +109,7 @@ const Todos = () => {
   )
 }
 
-const Refresh = () => <button onClick={() => fetcher.GetTodos.refetch()}>refresh</button>
+const Refresh = () => <button onClick={() => fetcher.get('GetTodos').refetch()}>refresh</button>
 
 const TodoApp = () => (
   <div>
@@ -135,6 +118,8 @@ const TodoApp = () => (
   </div>
 )
 ```
+
+[![Edit stoic-bardeen-y15mg](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/stoic-bardeen-y15mg?fontsize=14&hidenavigation=1&theme=dark)
 
 使用 fetcher 是，你需要为`useFetch` 提供 name 参数，用法是：`fetcher['name'].refetch()`，这里的 `refetch` 和内部 `refetch` 是同一个函数，所以它也有 options 参数。
 

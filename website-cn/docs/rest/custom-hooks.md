@@ -65,7 +65,7 @@ export default () => {
 }
 ```
 
-### 更好管理 computed value:
+### 更好管理 computed value
 
 为了业务逻辑更好的复用，我们经常会使用 computed value:
 

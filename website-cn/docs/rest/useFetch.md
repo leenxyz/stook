@@ -43,7 +43,7 @@ const Todos = () => {
 
 HTTP 请求的 URL，eg: "/todos"。
 
-### options
+## options
 
 **`method?: Method`**
 

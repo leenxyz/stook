@@ -7,7 +7,7 @@
 
 module.exports = {
   title: 'Stook',
-  tagline: 'Manage {store} in {hooks}',
+  tagline: 'A minimalist design state management library for React',
   baseUrl: '/',
   url: 'https://stook.now.sh', // Your website URL
   favicon: 'img/favicon.png',

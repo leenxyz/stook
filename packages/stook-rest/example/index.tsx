@@ -3,9 +3,10 @@ import * as ReactDOM from 'react-dom'
 import { devtools } from 'stook-devtools'
 import ShareState from './ShareState'
 import CustomHooks from './CustomHooks'
-import Dependent from './Dependent'
+// import Dependent from './Dependent'
 import UseUpdate from './UseUpdate'
 import UseUpdate2 from './UseUpdate2'
+import Deps from './Deps'
 
 devtools.init()
 
@@ -16,7 +17,8 @@ const Index = () => {
       {/* <UseUpdate></UseUpdate> */}
       {/* <UseUpdate2></UseUpdate2> */}
       {/* <CustomHooks></CustomHooks> */}
-      <Dependent></Dependent>
+      {/* <Dependent></Dependent> */}
+      <Deps></Deps>
     </div>
   )
 }

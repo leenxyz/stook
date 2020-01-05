@@ -21,7 +21,7 @@ npm i stook-devtools
 然后在项目代码中进入，并初始化：
 
 ```js
-import { devtools } from './devtools'
+import { devtools } from 'devtools'
 
 devtools.init()
 ```
@@ -29,7 +29,7 @@ devtools.init()
 如果你不想在生产环境引入：
 
 ```js
-import { devtools } from './devtools'
+import { devtools } from 'devtools'
 
 if (process.env.NODE_ENV !== 'production') {
   devtools.init()

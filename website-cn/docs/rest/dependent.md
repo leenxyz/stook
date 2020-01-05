@@ -31,3 +31,5 @@ export default () => {
 我们知道，`params`、`query`、`body` 三中参数值通常是一个对象，其实他们也可以是一个函数，函数参数可以让我们轻易地使用依赖请求。
 
 依赖请求的方式可以大大地减少你的代码量，并让你可以用类似同步的代码书写数据请求代码。
+
+[![Edit sweet-lake-gu2el](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/sweet-lake-gu2el?fontsize=14&hidenavigation=1&theme=dark)

@@ -39,4 +39,4 @@ function App() {
 
 [![Edit vibrant-swirles-jw7kw](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/vibrant-swirles-jw7kw?fontsize=14&hidenavigation=1&theme=dark)
 
-在这个例子中，我们可以看到，要共享状态，只需使用 useStore 订阅已 key 即可，非常简单。可以说，只要你学会了 useState，也就学会了 useStore，只要你学会了 useStore，你就学会了 React 的状态管理。
+在这个例子中，我们可以看到，要共享状态，只需使用 useStore 订阅同一个 key 即可，非常简单。可以说，只要你学会了 useState，也就学会了 useStore，只要你学会了 useStore，你就学会了 React 的状态管理。
