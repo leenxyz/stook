@@ -1,6 +1,5 @@
 import { useStore } from 'stook'
-
-type VisibilityFilter = 'show_all' | 'show_completed' | 'show_active'
+import { VISIBILITY_FILTER } from '../constants'
 
 export interface Todo {
   text: string
@@ -9,7 +8,7 @@ export interface Todo {
 }
 
 export const useVisibilityFilter = () => {
-  const [visibilityFilter, setVisibilityFilter] = useStore<string>('visibilityFilter', 'show_all')
+  const [visibilityFilter, setVisibilityFilter] = useStore<string>(VISIBILITY_FILTER, 'show_all')
 
   return { visibilityFilter, setVisibilityFilter }
 }

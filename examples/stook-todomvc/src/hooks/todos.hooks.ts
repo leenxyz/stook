@@ -1,4 +1,5 @@
 import { useStore } from 'stook'
+import { TODOS } from '../constants'
 
 export interface Todo {
   text: string
@@ -7,7 +8,7 @@ export interface Todo {
 }
 
 export const useTodos = () => {
-  const [todos, setTodos] = useStore<Todo[]>('todos', [
+  const [todos, setTodos] = useStore<Todo[]>(TODOS, [
     {
       text: 'Use Stook',
       completed: false,
