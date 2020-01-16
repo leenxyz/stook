@@ -9,6 +9,7 @@ import isEqual from 'react-fast-compare'
 import { fetcher } from './fetcher'
 import {
   Options,
+  RefetchOptions,
   QueryResult,
   Refetch,
   FetcherItem,
@@ -82,12 +83,18 @@ export class Client {
   }
 
   query = async <T = any>(input: string, options: Options = {}) => {
+    // TODO: 需初始化
+    this.ctx.valid = true
     const { variables = {} } = options
+
+    const opt: any = {}
+    if (options.headers) {
+      opt.headers = options.headers
+    }
+
     const action = async (ctx: Ctx) => {
       try {
-        ctx.body = await this.graphqlClient.query<T>(input, variables, {
-          headers: options.headers || ({} as any),
-        })
+        ctx.body = await this.graphqlClient.query<T>(input, variables, opt)
       } catch (error) {
         ctx.body = error
         ctx.valid = false
@@ -96,7 +103,9 @@ export class Client {
 
     await compose([...this.middleware, action])(this.ctx)
 
-    if (!this.ctx.valid) throw this.ctx.body
+    if (!this.ctx.valid) {
+      throw this.ctx.body
+    }
     return this.ctx.body
   }
 
@@ -121,12 +130,19 @@ export class Client {
         return data
       } catch (error) {
         update({ loading: false, error } as QueryResult<T>)
-        return error
+        throw error
       }
     }
 
-    const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
-      update({ loading: true } as QueryResult<T>)
+    const refetch: Refetch = async <P = any>(opt: RefetchOptions = {}): Promise<P> => {
+      let showLoading = true
+      if (typeof opt.showLoading === 'boolean' && opt.showLoading === false) {
+        showLoading = false
+      }
+
+      if (showLoading) {
+        update({ loading: true } as QueryResult<T>)
+      }
       const data: P = await makeFetch(opt)
       return data
     }
@@ -193,7 +209,7 @@ export class Client {
 
   useMutate = <T = any>(input: string, options: Options = {}) => {
     const { initialData: data, onUpdate } = options
-    const initialState = { loading: false, data, called: false } as MutateResult<T>
+    const initialState = { data, called: false } as MutateResult<T>
     const fetcherName = options.key || input
     const [result, setState] = useStore(fetcherName, initialState)
 
@@ -202,23 +218,23 @@ export class Client {
       onUpdate && onUpdate(nextState)
     }
 
-    const doFetch = async (opt: Options = {}) => {
+    const makeFetch = async (opt: Options = {}) => {
       try {
         const data = await this.query<T>(input, { ...options, ...opt })
         update({ loading: false, called: true, data } as MutateResult<T>)
         return data
       } catch (error) {
         update({ loading: false, called: true, error } as MutateResult<T>)
-        return error
+        throw error
       }
     }
 
-    const mutate = async (variables: Variables, opt: Options = {}): Promise<any> => {
+    const mutate = async <P = any>(variables: Variables, opt: Options = {}): Promise<P> => {
       update({ loading: true } as MutateResult<T>)
-      return await doFetch({ ...opt, variables })
+      return await makeFetch({ ...opt, variables })
     }
 
-    const out: [Mutate<T>, MutateResult<T>] = [mutate, result]
+    const out: [Mutate, MutateResult<T>] = [mutate, result]
 
     return out
   }

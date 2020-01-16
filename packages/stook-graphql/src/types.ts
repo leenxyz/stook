@@ -2,7 +2,7 @@ export interface Variables {
   [key: string]: any
 }
 
-export type Refetch = <T>(options?: Options) => Promise<T>
+export type Refetch = <T>(options?: RefetchOptions<T>) => Promise<T>
 
 export type Deps = ReadonlyArray<any>
 
@@ -18,7 +18,11 @@ export interface Options<T = any> {
   // retryOnError: false
 }
 
-export type Mutate<T> = (variables: Variables, options?: Options) => Promise<MutateResult<T>>
+export interface RefetchOptions<T = any> extends Options<T> {
+  showLoading?: boolean
+}
+
+export type Mutate = <P=any>(variables: Variables, options?: Options) => Promise<P>
 
 export interface FetcherItem<T = any> {
   refetch: Refetch
