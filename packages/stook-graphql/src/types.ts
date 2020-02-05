@@ -29,6 +29,7 @@ export interface FetcherItem<T = any> {
   refetch: Refetch
   result: Result<T>
   called: boolean
+  polled: boolean
 }
 
 export interface Fetcher<T = any> {

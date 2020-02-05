@@ -191,14 +191,15 @@ export class Client {
 
     /** pollInterval */
     useEffect(() => {
-      if (!pollInterval) return
+      if (pollInterval && !fetcher.get(fetcherName).polled) {
+        fetcher.get(fetcherName).polled = true
+        const timer = setInterval(() => {
+          makeFetch({ ...options, variables: varRef.current.value })
+        }, pollInterval)
 
-      const timer = setInterval(() => {
-        makeFetch({ ...options, variables: varRef.current.value })
-      }, pollInterval)
-
-      return () => {
-        clearInterval(timer)
+        return () => {
+          clearInterval(timer)
+        }
       }
     }, [])
 

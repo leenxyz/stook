@@ -139,6 +139,11 @@ const QueryApp = () => {
 }
 
 const UseQueryApp = () => {
+  const {} = useQuery(GET_USER, {
+    pollInterval: 3000,
+    variables: { slug: 'foo' },
+  })
+
   const { loading, data, error, refetch } = useQuery(GET_USER, {
     pollInterval: 3000,
     variables: { slug: 'foo' },
