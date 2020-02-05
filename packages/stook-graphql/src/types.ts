@@ -13,6 +13,7 @@ export interface Options<T = any> {
   headers?: HeadersInit
   initialData?: T
   onUpdate?(result: Result<T>): any
+  pollInterval?: number
   // retryOn: any
   // retryDelay: any
   // retryOnError: false

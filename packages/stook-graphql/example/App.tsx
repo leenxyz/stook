@@ -11,7 +11,7 @@ import {
   fromSubscription,
   applyMiddleware,
   Client,
-} from 'stook-graphql'
+} from './src'
 
 applyMiddleware(async (ctx, next) => {
   ctx.headers.Authorization = `bearer token...`
@@ -24,21 +24,18 @@ applyMiddleware(async (ctx, next) => {
 
 export const GET_USER = gql`
   {
-    users {
+    userMany {
+      _id
       name
-      age
     }
-    # user(name: "Rose") {
-    #   name
-    # }
   }
 `
 
 config({
   // endpoint: 'http://localhost:7001/graphql',
-  // endpoint: 'https://graphql-compose.herokuapp.com/user',
-  endpoint: 'http://localhost:5001/graphql',
-  subscriptionsEndpoint: 'ws://localhost:5001/graphql',
+  endpoint: 'https://graphql-compose.herokuapp.com/user',
+  // endpoint: 'http://localhost:5001/graphql',
+  // subscriptionsEndpoint: 'ws://localhost:5001/graphql',
 })
 
 const client = new Client({
@@ -142,7 +139,10 @@ const QueryApp = () => {
 }
 
 const UseQueryApp = () => {
-  const { loading, data, error, refetch } = useQuery(GET_PROJECT, { variables: { slug: 'foo' } })
+  const { loading, data, error, refetch } = useQuery(GET_USER, {
+    pollInterval: 3000,
+    variables: { slug: 'foo' },
+  })
 
   console.log('loading:', loading)
   console.log('data:', data)
@@ -228,8 +228,8 @@ export default () => (
   <div>
     {/* <SubApp></SubApp> */}
     {/* <QueryApp /> */}
-    <UseQueryById />
-    {/* <UseQueryApp /> */}
+    {/* <UseQueryById /> */}
+    <UseQueryApp />
     {/* <UseMutateApp /> */}
   </div>
 )

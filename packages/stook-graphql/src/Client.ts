@@ -111,7 +111,7 @@ export class Client {
 
   useQuery = <T = any>(input: string, options: Options<T> = {}) => {
     const isUnmouted = useUnmounted()
-    const { initialData: data, onUpdate } = options
+    const { initialData: data, onUpdate, pollInterval } = options
     const fetcherName = options.key || input
     const initialState = { loading: true, data } as QueryResult<T>
     const deps = getDeps(options)
@@ -188,6 +188,19 @@ export class Client {
         makeFetch({ ...options, variables: varRef.current.value })
       }
     }, [depsRef.current])
+
+    /** pollInterval */
+    useEffect(() => {
+      if (!pollInterval) return
+
+      const timer = setInterval(() => {
+        makeFetch({ ...options, variables: varRef.current.value })
+      }, pollInterval)
+
+      return () => {
+        clearInterval(timer)
+      }
+    }, [])
 
     // when unmount
     useUnmount(() => {
