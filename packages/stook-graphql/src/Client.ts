@@ -201,6 +201,7 @@ export class Client {
           clearInterval(timer)
         }
       }
+      return
     }, [])
 
     // when unmount
