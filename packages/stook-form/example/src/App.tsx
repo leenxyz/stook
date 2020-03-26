@@ -80,6 +80,14 @@ const routes: Item[] = [
     type: 'react-select',
     ui: true,
   },
+  {
+    type: 'entity',
+    ui: true,
+  },
+  {
+    type: 'form-item',
+    ui: true,
+  },
 ]
 
 const codeBaseUrl = 'https://github.com/pea-team/pea/blob/master/packages/form/example/src/pages/'

@@ -1,60 +1,75 @@
-import { useRef } from 'react'
+import 'reflect-metadata'
+import { useRef, useCallback } from 'react'
 import { useStore } from 'stook'
-import deepmerge from 'deepmerge'
-import { State, ModelType, Handlers, Actions, Result, Options } from './types'
-import { HandlerBuilder } from './HandlerBuilder'
-import { ActionBuilder } from './ActionBuilder'
-import { ToolBuilder } from './ToolBuilder'
+import { State, EntityType, Handlers, Actions, Result, Options } from './types'
+import { HandlerBuilder } from './builders/HandlerBuilder'
+import { ActionBuilder } from './builders/ActionBuilder'
+import { ToolBuilder } from './builders/ToolBuilder'
 import { Validator } from './Validator'
 import { useIsMounted } from './utils/useIsMounted'
 import { uuid } from './utils/uuid'
+import { entityStore } from './stores/entityStore'
+import { getInitialValues } from './utils/getInitialValues'
+import { getInitialVisibles } from './utils/getInitialVisibles'
 
 /**
  * useForm hooks
- * @generic T Model Type
- * @param Model
+ * @generic T Entity Type
+ * @param Entity
  */
-export function useForm<T>(Model: ModelType<T>, options: Options<T> = {}) {
-  const instance = new Model()
-  const initialValue = useRef<State<T>>({
+export function useForm<T>(Entity: EntityType<T>, options: Options<T> = {}) {
+  const instanceRef = useRef<T>(new Entity())
+  const instance = instanceRef.current
+  const initialState = useRef<State<T>>({
     values: instance,
     touched: {},
     errors: {},
-    visible: {},
+    visibles: {},
     dirty: false,
     valid: true,
     submitCount: 0,
     submitting: false,
   })
+  const formName = entityStore.get(Entity)
   const isMounted = useIsMounted()
-  const name = useRef(options.name || `STOOK_FORM_${uuid()}`)
+  const name = useRef(options.name || formName || `STOOK_FORM_${uuid()}`)
 
   if (!isMounted) {
-    initialValue.current.values = !options.initValues
-      ? instance
-      : deepmerge<T>(instance, options.initValues(instance) || {})
+    const defaultValues = getInitialValues(instance, options)
+    initialState.current.values = defaultValues
+    initialState.current.visibles = getInitialVisibles(instance)
   }
 
-  const [state, setState] = useStore(name.current, initialValue.current)
-  const actionBuilder = new ActionBuilder(state, setState, initialValue.current)
+  // eslint-disable-next-line
+  const [state, setState] = useStore(name.current, initialState.current)
+  const actionBuilder = new ActionBuilder(state, setState, initialState.current)
 
   const actions = {
     setTouched: actionBuilder.setTouched,
     setValues: actionBuilder.setValues,
     setErrors: actionBuilder.setErrros,
-    setVisible: actionBuilder.setVisible,
+    setVisibles: actionBuilder.setVisibles,
     setSubmitting: actionBuilder.setSubmitting,
     resetForm: actionBuilder.resetForm,
     setState,
   } as Actions<T>
 
-  const validator = new Validator(Model, state, actions, options)
-  const handlerBuilder = new HandlerBuilder(state, actions, setState, options, validator)
+  const validator = new Validator(Entity, state, actions, options)
+  const handlerBuilder = new HandlerBuilder(
+    name.current,
+    actions,
+    setState,
+    validator,
+    options,
+    instance,
+  )
   const submitHandler = handlerBuilder.createSubmitHandler()
 
   const handlers: Handlers = {
-    handleBlur: handlerBuilder.createBlurHandler(),
-    handleChange: handlerBuilder.createChangeHandler(),
+    // eslint-disable-next-line
+    handleBlur: useCallback(handlerBuilder.createBlurHandler(), []),
+    // eslint-disable-next-line
+    handleChange: useCallback(handlerBuilder.createChangeHandler(), []),
     handleSubmit: submitHandler,
   }
 
@@ -67,6 +82,7 @@ export function useForm<T>(Model: ModelType<T>, options: Options<T> = {}) {
     handlers,
     actions,
     handlerBuilder,
+    instance,
     name: toolBuilder.createName(),
     error: toolBuilder.createError(),
     help: toolBuilder.createHelp(),

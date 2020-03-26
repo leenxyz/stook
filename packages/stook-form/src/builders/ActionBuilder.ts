@@ -1,6 +1,6 @@
 import produce from 'immer'
 
-import { State, Errors, Touched, Visible } from './types'
+import { State, Errors, Touched, Visibles } from '../types'
 
 export class ActionBuilder<T> {
   constructor(
@@ -25,8 +25,8 @@ export class ActionBuilder<T> {
     this.runFn(fn, 'touched')
   }
 
-  setVisible = (fn: (visible: Visible<T>) => void) => {
-    this.runFn(fn, 'visible')
+  setVisibles = (fn: (visibles: Visibles<T>) => void) => {
+    this.runFn(fn, 'visibles')
   }
 
   setErrros = (fn: (errors: Errors<T>) => void) => {

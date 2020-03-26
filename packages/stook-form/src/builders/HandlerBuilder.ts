@@ -4,32 +4,24 @@ import get from 'lodash.get'
 import set from 'lodash.set'
 import isEqual from 'react-fast-compare'
 
-import { FieldElement, State, Errors, Actions, Options } from './types'
-import { Validator } from './Validator'
-import { checkValid } from './utils/checkValid'
-import { touchAll } from './utils/touchAll'
-import { isTouched } from './utils/isTouched'
-import { StookForm } from './StookForm'
+import { FieldElement, State, Errors, Actions } from '../types'
+import { Validator } from '../Validator'
+import { checkValid } from '../utils/checkValid'
+import { touchAll } from '../utils/touchAll'
+import { isTouched } from '../utils/isTouched'
+import { Options } from '../types'
+import { getState } from 'stook'
 
 export class HandlerBuilder<T> {
   constructor(
-    private state: State<T>,
+    private key: string,
     private actions: Actions<T>,
     private setState: any,
-    private options: Options<T>,
     private validator: Validator<T>,
+    private options: Options<T>,
+    // TODO: handle any
+    private instance: any,
   ) {}
-
-  private runExcludes(draft: any) {
-    const target = Object.getPrototypeOf(this.state.values)
-    const excludes = StookForm.excludeMaps.get(target)
-    if (!excludes) return
-    for (const item of excludes) {
-      if (item.fn(draft.values)) {
-        delete draft.values[item.propertyKey]
-      }
-    }
-  }
 
   private flatObject(obj: any, parentKey = '', result = {}) {
     for (let key in obj) {
@@ -45,7 +37,7 @@ export class HandlerBuilder<T> {
 
   private checkVisible(draft: any) {
     // handle visible
-    const flatVisible = this.flatObject(draft.visible)
+    const flatVisible = this.flatObject(draft.visibles)
 
     for (const key of Object.keys(flatVisible)) {
       if (flatVisible[key] !== false) continue
@@ -60,10 +52,12 @@ export class HandlerBuilder<T> {
   }
 
   private updateBeforeSubmit(errors: Errors<T>) {
-    const { state, options, actions, setState } = this
+    const { actions, setState } = this
+    const state = getState(this.key) as State<T>
+
     // update state
     const nextState = produce<State<T>, State<T>>(state, draft => {
-      state.errors = errors
+      draft.errors = errors
       const isValid = checkValid(draft.errors)
       draft.valid = isValid
       draft.touched = touchAll(state.values)
@@ -71,14 +65,16 @@ export class HandlerBuilder<T> {
       draft.submitting = true
       draft.dirty = true
 
-      this.runExcludes(draft)
       this.checkVisible(draft)
 
-      if (!isValid && options.onError) {
-        options.onError(original<any>(draft.errors), { state, actions })
+      if (!isValid) {
+        const erorr = this.options.onError || this.instance.onError
+        erorr && erorr(original<any>(draft.errors), { state, actions })
       }
-      if (isValid && options.onSubmit) {
-        options.onSubmit(draft.values, { state, actions })
+
+      if (isValid) {
+        const submit = this.options.onSubmit || this.instance.onSubmit
+        submit && submit(original(draft.values), { state, actions })
       }
     })
 
@@ -86,7 +82,7 @@ export class HandlerBuilder<T> {
   }
 
   private getValue(value: any, type: string, checked: boolean, name: string): any {
-    const { state } = this
+    const state = getState(this.key) as State<T>
 
     if (/number|range/.test(type)) {
       const parsed = parseFloat(value)
@@ -112,9 +108,10 @@ export class HandlerBuilder<T> {
   }
 
   createBlurHandler = (name?: string) => {
-    const { state, setState } = this
+    const { setState } = this
 
     return async (e: FocusEvent<FieldElement>) => {
+      const state = getState(this.key) as State<T>
       let fieldName: string
       if (name) {
         fieldName = name
@@ -137,30 +134,42 @@ export class HandlerBuilder<T> {
     }
   }
 
-  createChangeHandler = (name?: string) => {
-    const { state, setState } = this
+  createChangeHandler = (optName?: string) => {
+    const { setState } = this
     return async (e?: any) => {
+      const state = getState(this.key) as State<T>
       let fieldName: string = ''
       let value: any
 
       // hack for some custom onChange, eg: Antd Select
-      if (name) fieldName = name
+      if (optName) fieldName = optName
 
       if (typeof e === 'object' && e.target) {
         if (e && e.persist) e.persist()
         const { value: nodeValue, name, type, checked } = e.target
+
         if (name) fieldName = name
         value = this.getValue(nodeValue, type, checked, name)
       } else {
         value = e
       }
 
+      let newState: State<T>
+
       // setValues first，do not block ui
-      const newState = produce<State<T>, State<T>>(state, draft => {
+      newState = produce<State<T>, State<T>>(state, draft => {
         set(draft.values as any, fieldName, value)
-        this.runExcludes(draft)
         this.checkVisible(draft)
       })
+
+      // handle onUpdate
+      const setVisibles = this.options.setVisibles || this.instance.setVisibles
+      if (setVisibles) {
+        newState = produce<State<T>, State<T>>(newState, draft => {
+          setVisibles(draft)
+        })
+      }
+
       setState({ ...newState })
 
       // validate only touched
@@ -171,7 +180,7 @@ export class HandlerBuilder<T> {
 
       if (isEqual(errors, state.errors)) return
 
-      const nextState = produce<State<T>, State<T>>(state, draft => {
+      const nextState = produce<State<T>, State<T>>(newState, draft => {
         // check from is valid
         draft.errors = errors
         draft.valid = checkValid(draft.errors)

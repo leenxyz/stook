@@ -1,7 +1,7 @@
 import get from 'lodash.get'
-import { StookForm } from './StookForm'
+import { StookForm } from '../StookForm'
 import { HandlerBuilder } from './HandlerBuilder'
-import { State, Handlers, NameOptions, NameProps, Actions } from './types'
+import { State, Handlers, NameOptions, NameProps, Actions } from '../types'
 
 export class ToolBuilder<T> {
   constructor(

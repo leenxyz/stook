@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import React from 'react'
-import { useForm } from '../src'
+import { useForm } from 'stook-form'
 import { useStore } from 'stook'
 
 // import { devtools } from 'stook-devtools'

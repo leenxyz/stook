@@ -25,7 +25,7 @@
     "@material-ui/core": "^4.5.1",
     "@peajs/core": "^0.1.0",
     "@peajs/form": "^0.2.3",
-    "@peajs/form-antd": "0.0.1",
+    "@peajs/form-antd": "^0.2.1",
     "@peajs/router": "^0.1.0",
     "@types/react-select": "^3.0.5",
     "antd": "^3.19.8",

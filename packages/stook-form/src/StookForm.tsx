@@ -1,4 +1,4 @@
-import { HandlerBuilder } from './HandlerBuilder'
+import { HandlerBuilder } from './builders/HandlerBuilder'
 import { State, Handlers, Actions } from './types'
 
 export type Creator = <T>({
@@ -26,6 +26,7 @@ export class StookForm {
   static helpCreator: any = null
   static nameCreator: any = null
   static errorCreator: any = null
+  static componetStore: any = {}
 
   static updateExcludeMaps(target: any, propertyKey: any, fn: any) {
     if (this.excludeMaps.get(target)) {
@@ -36,6 +37,15 @@ export class StookForm {
     } else {
       this.excludeMaps.set(target, [{ propertyKey, fn }])
     }
+  }
+
+  /**
+   *
+   * @param name componentName
+   * @param cmp
+   */
+  static registerComponent(name: string, cmp: any) {
+    this.componetStore[name] = cmp
   }
 
   /**
