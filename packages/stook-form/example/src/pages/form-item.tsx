@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 import { IsNotEmpty } from 'class-validator'
-import { Entity } from '../src/decorators/Entity'
-import { Field } from '../src/decorators/Field'
-import { Form, useForm, FormField } from '../src'
-import { StookForm } from '../src'
+import { Entity } from '../../../src/decorators/Entity'
+import { Field } from '../../../src/decorators/Field'
+import { Form, useForm, FormField } from '../../../src'
+import { StookForm } from '../../../src'
 
 const PasswordInput: FC<any> = props => {
   return (

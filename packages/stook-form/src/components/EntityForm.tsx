@@ -2,7 +2,7 @@ import React, { FC, memo } from 'react'
 import { Button } from 'antd'
 import { StookForm } from '../StookForm'
 import get from 'lodash.get'
-import { getFieldMetadata } from 'src/utils/getFieldMetadata'
+import { getFieldMetadata } from '../utils/getFieldMetadata'
 import { Result } from '../types'
 
 interface Props {

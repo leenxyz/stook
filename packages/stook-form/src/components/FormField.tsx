@@ -3,7 +3,7 @@ import get from 'lodash.get'
 import { FormContext } from './Form'
 import { StookForm } from '../StookForm'
 import { Result } from '../types'
-import { getFieldMetadata } from 'src/utils/getFieldMetadata'
+import { getFieldMetadata } from '../utils/getFieldMetadata'
 
 interface Props {
   name: string
