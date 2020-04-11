@@ -50,34 +50,7 @@ const routes: Item[] = [
     type: 'password-confirm',
   },
   {
-    type: 'linkage',
-  },
-  {
     type: 'material-ui',
-    ui: true,
-  },
-  {
-    type: 'antd',
-    ui: true,
-  },
-  {
-    type: 'field',
-    ui: true,
-  },
-  {
-    type: 'item',
-    ui: true,
-  },
-  {
-    type: 'antd-validation',
-    ui: true,
-  },
-  {
-    type: 'antd-radio',
-    ui: true,
-  },
-  {
-    type: 'react-select',
     ui: true,
   },
   {
@@ -85,7 +58,7 @@ const routes: Item[] = [
     ui: true,
   },
   {
-    type: 'form-item',
+    type: 'field',
     ui: true,
   },
 ]

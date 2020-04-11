@@ -1,9 +1,10 @@
 import React, { FC } from 'react'
+import { Input, Form } from 'antd'
 import { IsNotEmpty } from 'class-validator'
-import { Entity } from '../../../src/decorators/Entity'
-import { Field } from '../../../src/decorators/Field'
-import { EntityForm, useForm } from '../../../src'
-import { StookForm } from '../../../src'
+import { entity } from '../src'
+import { field } from '../src'
+import { EntityForm, useForm } from '../src'
+import { Tools } from '../src'
 
 const PasswordInput: FC<any> = props => {
   return (
@@ -13,32 +14,34 @@ const PasswordInput: FC<any> = props => {
   )
 }
 
-StookForm.registerComponent('PasswordInput', PasswordInput)
+Tools.registerField('PasswordInput', PasswordInput)
+Tools.registerField('Input', Input)
+Tools.registerForm(Form)
 
-@Entity('profile')
+@entity('profile')
 class Profile {
-  @Field({ defaultValue: 'forsigner', component: 'PasswordInput', label: '名字' })
+  @field({ defaultValue: 'forsigner', component: 'PasswordInput', label: '名字' })
   name: string
 
-  @Field({ defaultValue: '码农一个', component: 'PasswordInput', label: '简介' })
+  @field({ defaultValue: '码农一个', component: 'PasswordInput', label: '简介' })
   intro: string
 }
 
-@Entity('user')
+@entity('user')
 export class User {
-  @Field({ defaultValue: 'jobs', label: '用户名' })
+  @field({ defaultValue: 'jobs', label: '用户名', component: 'Input' })
   @IsNotEmpty()
   username = 'jobhaha'
 
-  @Field({ defaultValue: '123456', component: 'PasswordInput', label: '密码' })
+  @field({ defaultValue: '123456', component: 'PasswordInput', label: '密码' })
   @IsNotEmpty()
   password = 10
 
-  @Field({ defaultValue: 100, label: '年龄' })
+  @field({ defaultValue: 100, label: '年龄' })
   @IsNotEmpty()
   age = 10
 
-  @Field(() => Profile)
+  @field(() => Profile)
   @IsNotEmpty()
   profile: Profile
 

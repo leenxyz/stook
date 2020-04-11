@@ -1,46 +1,20 @@
 import 'reflect-metadata'
 import React from 'react'
-import { useForm } from 'stook-form'
-import { useStore } from 'stook'
+import { entity, field, EntityForm } from '../src'
 
-// import { devtools } from 'stook-devtools'
+@entity('user-entity')
+export class User {
+  @field({ defaultValue: 'jobs' })
+  username: string
 
-// devtools.init()
+  @field({ defaultValue: '' })
+  password: string
 
-class User {
-  username = 'Jack'
-  password = ''
+  onSubmit(values: User) {
+    alert(JSON.stringify(values, null, 2))
+  }
 }
 
 export default () => {
-  const { handlers, name, actions, state } = useForm(User, {
-    // name: 'my_form',
-    initValues(values) {
-      console.log('init.........')
-      return {
-        ...values,
-        username: 'new name',
-        password: '1111',
-      }
-    },
-    onSubmit(values) {
-      alert(JSON.stringify(values, null, 2))
-    },
-  })
-
-  const [formState] = useStore('my_form')
-
-  console.log('formState:', formState)
-
-  return (
-    <form onSubmit={handlers.handleSubmit}>
-      <pre>{JSON.stringify(state, null, 2)}</pre>
-      <input placeholder="username" {...name('username')} />
-      <input placeholder="password" {...name('password')} />
-      <button type="submit">Submit</button>
-      <button type="button" onClick={actions.resetForm}>
-        Reset
-      </button>
-    </form>
-  )
+  return <EntityForm entity={User}></EntityForm>
 }
