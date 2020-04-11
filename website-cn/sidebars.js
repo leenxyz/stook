@@ -36,16 +36,6 @@ module.exports = {
       'graphql/useMutate',
       'graphql/query',
       'graphql/middleware',
-    ],
-    'stook-form': [
-      'form/intro',
-      'form/quick-start',
-      'form/array',
-      'form/nested-object',
-      'form/validation',
-      'form/async-validation',
-      'form/error-message',
-      'form/antd',
-    ],
+    ]
   },
 }
