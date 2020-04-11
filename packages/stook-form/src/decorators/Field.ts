@@ -30,9 +30,9 @@ export interface Value {
 
 export declare type TypeFn = (returns?: void) => any
 
-export function Field(opt?: FieldOption): PropertyDecorator
-export function Field(typeFn?: TypeFn, opt?: FieldOption): PropertyDecorator
-export function Field(typeFn?: any, opt?: any): PropertyDecorator {
+export function field(opt?: FieldOption): PropertyDecorator
+export function field(typeFn?: TypeFn, opt?: FieldOption): PropertyDecorator
+export function field(typeFn?: any, opt?: any): PropertyDecorator {
   return (target, propertyKey: string) => {
     const isRef = typeof typeFn === 'function'
     opt = isRef ? opt : typeFn

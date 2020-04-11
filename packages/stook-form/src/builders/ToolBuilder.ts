@@ -1,15 +1,8 @@
 import get from 'lodash.get'
-import { StookForm } from '../StookForm'
-import { HandlerBuilder } from './HandlerBuilder'
-import { State, Handlers, NameOptions, NameProps, Actions } from '../types'
+import { State, Handlers, NameOptions, NameProps } from '../types'
 
 export class ToolBuilder<T> {
-  constructor(
-    private handlers: Handlers,
-    private handlerBuilder: HandlerBuilder<T>,
-    private state: State<T>,
-    private actions: Actions<T>,
-  ) {}
+  constructor(private handlers: Handlers, private state: State<T>) {}
 
   createName = () => {
     const { state, handlers } = this
@@ -50,27 +43,6 @@ export class ToolBuilder<T> {
       const error = get(errors, name)
       if (!isTouched) return null
       return error || null
-    }
-  }
-
-  createHelp = () => {
-    /**
-     * a helper
-     * @param name name of field
-     */
-    return (name: string): any => {
-      if (StookForm.helpCreator) {
-        return StookForm.helpCreator({
-          name,
-          handlerBuilder: this.handlerBuilder,
-          state: this.state,
-          handlers: this.handlers,
-          actions: this.actions,
-        })
-      }
-      return {
-        name: '',
-      }
     }
   }
 }

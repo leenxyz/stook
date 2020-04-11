@@ -76,7 +76,6 @@ export interface Result<T = any> {
   instance: T
   name(name: string, options?: NameOptions): any
   error(name: string): any
-  help(name: string): any
 }
 
 export interface Options<T = any> {

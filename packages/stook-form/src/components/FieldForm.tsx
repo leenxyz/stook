@@ -7,7 +7,7 @@ interface FormProps {
 
 export const FormContext = createContext({} as Result)
 
-export const Form: FC<FormProps> = ({ children, use, ...rest }) => {
+export const FieldForm: FC<FormProps> = ({ children, use, ...rest }) => {
   const { Provider } = FormContext
   return (
     <Provider value={use}>

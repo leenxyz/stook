@@ -1,7 +1,7 @@
 import React, { FC, useContext, memo } from 'react'
 import get from 'lodash.get'
-import { FormContext } from './Form'
-import { StookForm } from '../StookForm'
+import { FormContext } from './FieldForm'
+import { Tools } from '../Tools'
 import { Result } from '../types'
 import { getFieldMetadata } from '../utils/getFieldMetadata'
 
@@ -21,7 +21,7 @@ const Item: FC<ItemProps> = memo(
     const { item, result, name } = props
     const { values } = result.state
     const { handleChange, handleBlur } = result.handlers
-    const Cmp = StookForm.componetStore[item.component]
+    const Cmp = Tools.componetStore[item.component]
     return (
       <Cmp
         {...item}
@@ -41,7 +41,7 @@ const Item: FC<ItemProps> = memo(
   },
 )
 
-export const FormField: FC<Props> = ({ name }) => {
+export const Field: FC<Props> = ({ name }) => {
   const result = useContext(FormContext)
   const { state } = result
   const visible = get(state.visibles, name)

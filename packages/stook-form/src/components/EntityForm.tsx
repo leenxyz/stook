@@ -1,12 +1,14 @@
 import React, { FC, memo } from 'react'
 import { Button } from 'antd'
-import { StookForm } from '../StookForm'
+import { Tools } from '../Tools'
 import get from 'lodash.get'
 import { getFieldMetadata } from '../utils/getFieldMetadata'
-import { Result } from '../types'
+import { Result, EntityType } from '../types'
+import { useForm } from '../useForm'
 
-interface Props {
-  result?: any
+interface EntityFormProps {
+  result?: Result
+  entity?: EntityType
 }
 
 interface FieldProps {
@@ -16,13 +18,35 @@ interface FieldProps {
   values: any
 }
 
+function getFieldsTpl(data: any, result: Result): any {
+  const { state } = result
+  return Object.keys(data).map(key => {
+    const item = data[key]
+    if (typeof item.isRef === 'boolean' && !item.isRefh) {
+      const visible = get(state.visibles, item.name)
+      if (!visible) return null
+      return (
+        <Field
+          key={item.name}
+          name={item.name}
+          item={item}
+          result={result}
+          values={state.values}
+        ></Field>
+      )
+    }
+
+    return getFieldsTpl(item, result)
+  })
+}
+
 const Field: FC<FieldProps> = memo(
   props => {
     const { item, result, values } = props
     const { handleBlur, handleChange } = result.handlers
     if (item.component) {
       if (typeof item.component === 'string') {
-        const Cmp = StookForm.componetStore[item.component]
+        const Cmp = Tools.componetStore[item.component]
         return (
           <Cmp
             name={item.name}
@@ -54,33 +78,29 @@ const Field: FC<FieldProps> = memo(
   },
 )
 
-function getFieldsTpl(data: any, result: Result): any {
-  const { state } = result
-  return Object.keys(data).map(key => {
-    const item = data[key]
-    if (typeof item.isRef === 'boolean' && !item.isRefh) {
-      const visible = get(state.visibles, item.name)
-      if (!visible) return null
-      return (
-        <Field
-          key={item.name}
-          name={item.name}
-          item={item}
-          result={result}
-          values={state.values}
-        ></Field>
-      )
-    }
-
-    return getFieldsTpl(item, result)
-  })
+const BaseEntity: FC<{ entity: EntityType }> = ({ entity }) => {
+  const result = useForm(entity)
+  return <BaseResult result={result}></BaseResult>
 }
 
-export const EntityForm: FC<Props> = ({ result }) => {
+const BaseResult: FC<{ result: Result }> = ({ result }) => {
   const { handlers } = result
   const { handleSubmit } = handlers
   const data = getFieldMetadata(result.instance)
   const tpl = getFieldsTpl(data, result)
+
+  // use custom form
+  const Form = Tools.formComponent
+  if (Form) {
+    return (
+      <Form onSubmit={handleSubmit}>
+        {tpl}
+        <Button type="primary" htmlType="submit">
+          提交
+        </Button>
+      </Form>
+    )
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -90,4 +110,10 @@ export const EntityForm: FC<Props> = ({ result }) => {
       </Button>
     </form>
   )
+}
+
+export const EntityForm: FC<EntityFormProps> = ({ result, entity }) => {
+  if (result) return <BaseResult result={result}></BaseResult>
+  if (entity) return <BaseEntity entity={entity}></BaseEntity>
+  throw new Error('result or entity needed')
 }

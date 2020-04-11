@@ -73,7 +73,7 @@ export function useForm<T>(Entity: EntityType<T>, options: Options<T> = {}) {
     handleSubmit: submitHandler,
   }
 
-  const toolBuilder = new ToolBuilder(handlers, handlerBuilder, state, actions)
+  const toolBuilder = new ToolBuilder(handlers, state)
 
   actions.submitForm = submitHandler // attach submitHandler to action
 
@@ -85,7 +85,6 @@ export function useForm<T>(Entity: EntityType<T>, options: Options<T> = {}) {
     instance,
     name: toolBuilder.createName(),
     error: toolBuilder.createError(),
-    help: toolBuilder.createHelp(),
   }
   return result
 }
