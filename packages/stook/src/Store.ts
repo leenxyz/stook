@@ -47,5 +47,6 @@ export class Store<S = any> {
 
     this.state = nextState
     this.setters.forEach(set => set(nextState))
+    return nextState
   }
 }

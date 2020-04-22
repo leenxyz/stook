@@ -18,11 +18,12 @@ export const Profile = () => {
       <span>{user.name}</span>
       <button
         onClick={() => {
-          updateUser(user => {
+          const nextState = updateUser(user => {
             console.log('user:', user)
             console.log('original user:', original(user))
             user.name = 'forsigner'
           })
+          console.log('nextState:', nextState)
         }}
       >
         update user
