@@ -1,5 +1,5 @@
 module.exports = {
-  docs: {
+  someSidebar: {
     stook: [
       'stook/intro',
       'stook/quick-start',
@@ -36,6 +36,6 @@ module.exports = {
       'graphql/useMutate',
       'graphql/query',
       'graphql/middleware',
-    ]
+    ],
   },
 }

@@ -1,20 +1,23 @@
 {
-  "name": "website",
+  "name": "my-website",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "docusaurus start",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "GIT_USER=forsigner CURRENT_BRANCH=master USE_SSH=true docusaurus deploy"
+    "deploy": "docusaurus deploy"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.0.0-alpha.36",
-    "@docusaurus/preset-classic": "^2.0.0-alpha.36",
+    "@docusaurus/core": "^2.0.0-alpha.50",
+    "@docusaurus/plugin-ideal-image": "^2.0.0-alpha.50",
+    "@docusaurus/preset-classic": "^2.0.0-alpha.50",
+    "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.39",
     "classnames": "^2.2.6",
+    "npm-to-yarn": "^1.0.0-0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "styled-components": "^4.4.1"
+    "styled-components": "^5.1.0"
   },
   "browserslist": {
     "production": [
