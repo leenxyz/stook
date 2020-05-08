@@ -41,7 +41,7 @@ const client = new Client({
   },
 })
 
-client.fetch('/todos').then(data => {
+client.fetch('/todos').then((data) => {
   console.log(data)
 })
 ```

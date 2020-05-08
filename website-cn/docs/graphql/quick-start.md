@@ -36,3 +36,13 @@ const User = () => {
   return <pre>{JSON.stringify(data, null, 2)}</pre>
 }
 ```
+
+当然，这只是 `useQuery` 最基本功能，如果你想深入了解它的其他功能，比如 refetch、retry 等高级功能，你看详情阅读 `useQuery` Api。
+
+## 下一步
+
+上面就是用获取数据最简单的例子，如果你要深入了解如何使用 `stook-graphql`，建议细看：
+
+- [获取数据](/docs/graphql/useQuery): 深入了解 `useFetch` 的使用
+- [更新数据](/docs/graphql/useMutate): 深入了解 `useMutate` 的使用
+- [网络请求](/docs/graphql/query): 深入了解 `query` 的使用
