@@ -118,6 +118,7 @@ export class Client {
     const [result, setState] = useStore(fetcherName, initialState)
     const update = (nextState: QueryResult<T>) => {
       setState(nextState)
+      fetcher.get(fetcherName).result = nextState
       onUpdate && onUpdate(nextState)
     }
 
