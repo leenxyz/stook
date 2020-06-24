@@ -3,17 +3,20 @@ export interface Variables {
 }
 
 export type Refetch = <T>(options?: RefetchOptions<T>) => Promise<T>
+export type Start = <T>() => Promise<T>
 
 export type Deps = ReadonlyArray<any>
 
 export interface Options<T = any> {
   key?: string
-  variables?: Variables | (() => Variables)
+  variables?: Variables | ((prevVariables: Variables) => Variables)
   deps?: Deps
   headers?: HeadersInit
   initialData?: T
-  onUpdate?(result: Result<T>): any
   pollInterval?: number
+  lazy?: boolean
+  timeout?: number
+  onUpdate?(result: Result<T>): any
   // retryOn: any
   // retryDelay: any
   // retryOnError: false
@@ -23,13 +26,15 @@ export interface RefetchOptions<T = any> extends Options<T> {
   showLoading?: boolean
 }
 
-export type Mutate = <P=any>(variables: Variables, options?: Options) => Promise<P>
+export type Mutate = <P = any>(variables: Variables, options?: Options) => Promise<P>
 
 export interface FetcherItem<T = any> {
   refetch: Refetch
+  start: Start
   result: Result<T>
   called: boolean
   polled: boolean
+  variables: Variables
 }
 
 export interface Fetcher<T = any> {
@@ -45,6 +50,8 @@ export interface Result<T = any> {
 
 export interface QueryResult<T> extends Result<T> {
   refetch: Refetch
+  start: Start
+  called: boolean
 }
 
 export interface MutateResult<T> extends Result<T> {}

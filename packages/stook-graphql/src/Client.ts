@@ -23,6 +23,7 @@ import {
   SubscriptionOption,
   FromSubscriptionOption,
   Observer,
+  Start,
 } from './types'
 import { getDeps, getVariables, getDepsMaps, useUnmounted, useUnmount, isResolve } from './utils'
 
@@ -94,44 +95,54 @@ export class Client {
 
     const action = async (ctx: Ctx) => {
       try {
-        ctx.body = await this.graphqlClient.query<T>(input, variables, opt)
+        ctx.body = await this.graphqlClient.query<T>(input, variables, {
+          ...opt,
+          headers: { ...(opt.headers || {}), ...(ctx.headers || {}) },
+        })
       } catch (error) {
         ctx.body = error
         ctx.valid = false
       }
     }
 
+    // TODO: get req headers
+    await compose([...this.middleware])(this.ctx)
+
+    // call requerst
     await compose([...this.middleware, action])(this.ctx)
 
     if (!this.ctx.valid) {
       throw this.ctx.body
     }
-    return this.ctx.body
+    return this.ctx.body as T
   }
 
   useQuery = <T = any>(input: string, options: Options<T> = {}) => {
     const isUnmouted = useUnmounted()
-    const { initialData: data, onUpdate, pollInterval } = options
+    const { initialData: data, onUpdate, lazy = false, pollInterval } = options
     const fetcherName = options.key || input
     const initialState = { loading: true, data } as QueryResult<T>
     const deps = getDeps(options)
     const [result, setState] = useStore(fetcherName, initialState)
+
+    //是否应该立刻开始发送请求
+    const [shoudStart, setShouldStart] = useState(!lazy)
+
     const update = (nextState: QueryResult<T>) => {
       setState(nextState)
-      fetcher.get(fetcherName).result = nextState
       onUpdate && onUpdate(nextState)
     }
 
     const makeFetch = async (opt: Options = {}) => {
       try {
-        fetcher.get(fetcherName).called = true
+        fetcher.get(fetcherName) && (fetcher.get(fetcherName).called = true)
         // update({ loading: true } as QueryResult<T>)
         const data = await this.query<T>(input, opt || {})
         update({ loading: false, data } as QueryResult<T>)
         return data
       } catch (error) {
         update({ loading: false, error } as QueryResult<T>)
-        throw error
+        // throw error
       }
     }
 
@@ -144,8 +155,27 @@ export class Client {
       if (showLoading) {
         update({ loading: true } as QueryResult<T>)
       }
-      const data: P = await makeFetch(opt)
+
+      function getRefechVariables(opt: Options = {}): Variables {
+        if (!opt.variables) return fetcher.get(fetcherName).variables || {}
+        if (typeof opt.variables === 'function') {
+          return opt.variables(fetcher.get(fetcherName).variables)
+        }
+        return opt.variables
+      }
+
+      opt.variables = getRefechVariables(opt)
+
+      // store variables to fetcher
+      fetcher.get(fetcherName).variables = opt.variables
+
+      const data: P = (await makeFetch(opt)) as any
       return data
+    }
+
+    // TODO: 要确保 variable resolve
+    const start: Start = (): any => {
+      setShouldStart(true)
     }
 
     /**
@@ -169,9 +199,18 @@ export class Client {
 
       // if resolve, 说明已经拿到最终的 variables
       const shouldFetch =
-        varRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted()
-      if (shouldFetch) makeFetch({ ...options, variables })
-    }, [varRef.current])
+        varRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted() && shoudStart
+
+      if (shouldFetch) {
+        // store variables to fetcher
+        fetcher.get(fetcherName).variables = varRef.current.value
+
+        // make http request
+        makeFetch({ ...options, variables: varRef.current.value })
+      }
+
+      // eslint-disable-next-line
+    }, [varRef.current, shoudStart])
 
     /**
      * handle deps
@@ -188,6 +227,7 @@ export class Client {
         update({ loading: true } as QueryResult<T>)
         makeFetch({ ...options, variables: varRef.current.value })
       }
+      // eslint-disable-next-line
     }, [depsRef.current])
 
     /** pollInterval */
@@ -220,7 +260,9 @@ export class Client {
       }
     })
 
-    return { ...result, refetch }
+    const called = fetcher.get(fetcherName) && fetcher.get(fetcherName).called
+
+    return { ...result, refetch, start, called }
   }
 
   useMutate = <T = any>(input: string, options: Options = {}) => {
@@ -241,13 +283,13 @@ export class Client {
         return data
       } catch (error) {
         update({ loading: false, called: true, error } as MutateResult<T>)
-        throw error
+        // throw error
       }
     }
 
     const mutate = async <P = any>(variables: Variables, opt: Options = {}): Promise<P> => {
       update({ loading: true } as MutateResult<T>)
-      return await makeFetch({ ...opt, variables })
+      return (await makeFetch({ ...opt, variables })) as any
     }
 
     const out: [Mutate, MutateResult<T>] = [mutate, result]
@@ -258,7 +300,8 @@ export class Client {
   useSubscribe = <T = any>(input: string, options: SubscriptionOption<T> = {}) => {
     const { variables = {}, operationName = '', initialQuery = '', onUpdate } = options
 
-    let unmounted = false
+    const unmounted = useRef(false)
+
     const initialState = { loading: true } as SubscribeResult<T>
     const [result, setState] = useState(initialState)
 
@@ -269,7 +312,7 @@ export class Client {
 
     const initQuery = async () => {
       if (!initialQuery) return
-      if (unmounted) return
+      if (unmounted.current) return
 
       try {
         let data = await this.query<T>(initialQuery.query, {
@@ -284,7 +327,7 @@ export class Client {
     }
 
     const initSubscribe = async () => {
-      if (unmounted) return
+      if (unmounted.current) return
 
       this.subscriptionClient
         .request({
@@ -323,8 +366,10 @@ export class Client {
       if (initialQuery) initQuery()
       initSubscribe()
       return () => {
-        unmounted = true
+        unmounted.current = true
       }
+
+      // eslint-disable-next-line
     }, [])
 
     return result
