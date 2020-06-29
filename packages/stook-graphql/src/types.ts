@@ -2,6 +2,13 @@ export interface Variables {
   [key: string]: any
 }
 
+export type SetData<T> = (data: T, newData: T) => void
+
+export interface RefetchOptions<T = any> extends Options<T> {
+  setData?: SetData<T>
+  showLoading?: boolean
+}
+
 export type Refetch = <T>(options?: RefetchOptions<T>) => Promise<T>
 export type Start = <T>() => Promise<T>
 
@@ -77,6 +84,7 @@ export interface SubscriptionOption<T = any> {
   initialQuery?: {
     query: string
     variables?: Variables
+    onUpdate?(result: Result<T>): any
   }
   onUpdate?(result: Result<T>): any
 }

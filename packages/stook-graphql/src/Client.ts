@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useStore, Storage } from 'stook'
 import gql from 'graphql-tag'
+import get from 'lodash.get'
 import compose from 'koa-compose'
+import { produce } from 'immer'
 import { GraphQLClient } from '@peajs/graphql-client'
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 import isEqual from 'react-fast-compare'
@@ -133,13 +135,23 @@ export class Client {
       onUpdate && onUpdate(nextState)
     }
 
-    const makeFetch = async (opt: Options = {}) => {
+    const makeFetch = async (opt: RefetchOptions = {}): Promise<any> => {
       try {
         fetcher.get(fetcherName) && (fetcher.get(fetcherName).called = true)
         // update({ loading: true } as QueryResult<T>)
-        const data = await this.query<T>(input, opt || {})
-        update({ loading: false, data } as QueryResult<T>)
-        return data
+        const resData = await this.query<T>(input, opt || {})
+
+        const nextState = produce(result, (draft: any) => {
+          draft.loading = false
+          if (opt.setData && typeof opt.setData === 'function') {
+            opt.setData(draft.data, resData)
+          } else {
+            draft.data = resData
+          }
+        })
+
+        update(nextState)
+        return resData
       } catch (error) {
         update({ loading: false, error } as QueryResult<T>)
         // throw error
@@ -156,8 +168,11 @@ export class Client {
         update({ loading: true } as QueryResult<T>)
       }
 
-      function getRefechVariables(opt: Options = {}): Variables {
-        if (!opt.variables) return fetcher.get(fetcherName).variables || {}
+      function getRefechVariables(opt: RefetchOptions = {}): Variables {
+        if (!opt.variables) {
+          return fetcher.get(fetcherName).variables || {}
+        }
+
         if (typeof opt.variables === 'function') {
           return opt.variables(fetcher.get(fetcherName).variables)
         }
@@ -242,7 +257,7 @@ export class Client {
           clearInterval(timer)
         }
       }
-      return
+      return null
     }, [])
 
     // when unmount
@@ -276,7 +291,7 @@ export class Client {
       onUpdate && onUpdate(nextState)
     }
 
-    const makeFetch = async (opt: Options = {}) => {
+    const makeFetch = async (opt: Options = {}): Promsie<any> => {
       try {
         const data = await this.query<T>(input, { ...options, ...opt })
         update({ loading: false, called: true, data } as MutateResult<T>)
@@ -310,18 +325,26 @@ export class Client {
       onUpdate && onUpdate(nextState)
     }
 
+    function updateInitialQuery(nextState: SubscribeResult<T>) {
+      setState(nextState)
+      if (options.initialQuery && options.initialQuery.onUpdate) {
+        options.initialQuery.onUpdate(nextState)
+      }
+    }
+
     const initQuery = async () => {
       if (!initialQuery) return
+
       if (unmounted.current) return
 
       try {
         let data = await this.query<T>(initialQuery.query, {
           variables: initialQuery.variables || {},
         })
-        update({ loading: false, data } as SubscribeResult<T>)
+        updateInitialQuery({ loading: false, data } as SubscribeResult<T>)
         return data
       } catch (error) {
-        update({ loading: false, error } as SubscribeResult<T>)
+        updateInitialQuery({ loading: false, error } as SubscribeResult<T>)
         return error
       }
     }
@@ -329,13 +352,15 @@ export class Client {
     const initSubscribe = async () => {
       if (unmounted.current) return
 
+      const node = gql`
+        ${input}
+      `
+
       this.subscriptionClient
         .request({
-          query: gql`
-            ${input}
-          `,
+          query: node,
           variables,
-          operationName,
+          operationName: get(node, 'definitions[0].name.value') || operationName,
         })
         .subscribe({
           next: ({ data }) => {
@@ -364,6 +389,8 @@ export class Client {
 
     useEffect(() => {
       if (initialQuery) initQuery()
+
+      // TODO: 参照小程序
       initSubscribe()
       return () => {
         unmounted.current = true
