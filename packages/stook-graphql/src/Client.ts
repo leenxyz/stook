@@ -257,7 +257,7 @@ export class Client {
           clearInterval(timer)
         }
       }
-      return null
+      return () => {}
     }, [])
 
     // when unmount
@@ -291,7 +291,7 @@ export class Client {
       onUpdate && onUpdate(nextState)
     }
 
-    const makeFetch = async (opt: Options = {}): Promsie<any> => {
+    const makeFetch = async (opt: Options = {}): Promise<any> => {
       try {
         const data = await this.query<T>(input, { ...options, ...opt })
         update({ loading: false, called: true, data } as MutateResult<T>)

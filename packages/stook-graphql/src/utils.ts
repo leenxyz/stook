@@ -29,7 +29,7 @@ export const getVariables = (options: Options): any => {
 
   if (typeof options.variables !== 'function') return options.variables
   try {
-    return options.variables()
+    return options.variables({})
   } catch (error) {
     return false
   }
