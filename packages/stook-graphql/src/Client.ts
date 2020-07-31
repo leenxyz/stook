@@ -206,6 +206,9 @@ export class Client {
       varRef.current = { value: variables, resolve: true }
     }
 
+    // 轮询
+    const timerRef = useRef<any>()
+
     useEffect(() => {
       // store refetch fn to fetcher
       if (!fetcher.get(fetcherName)) {
@@ -222,8 +225,23 @@ export class Client {
 
         // make http request
         makeFetch({ ...options, variables: varRef.current.value })
+
+        if (pollInterval && !fetcher.get(fetcherName).polled) {
+          fetcher.get(fetcherName).polled = true
+          /** pollInterval */
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+          timerRef.current = setInterval(() => {
+            makeFetch({ ...options, variables: varRef.current.value })
+          }, pollInterval)
+        }
       }
 
+      return () => {
+        if (timerRef.current) {
+          clearInterval(timerRef.current)
+          fetcher.get(fetcherName).polled = false
+        }
+      }
       // eslint-disable-next-line
     }, [varRef.current, shoudStart])
 
