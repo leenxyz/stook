@@ -88,7 +88,7 @@ export class Client {
   query = async <T = any>(input: string, options: Options = {}) => {
     // TODO: 需初始化
     this.ctx.valid = true
-    const { variables = {} } = options
+    const { variables = {}, endpoint } = options
 
     const opt: any = {}
     if (options.headers) {
@@ -96,11 +96,13 @@ export class Client {
     }
 
     const action = async (ctx: Ctx) => {
+      const queryOpt = {
+        ...opt,
+        headers: { ...(opt.headers || {}), ...(ctx.headers || {}) },
+      }
+      if (endpoint) queryOpt.endpoint = endpoint
       try {
-        ctx.body = await this.graphqlClient.query<T>(input, variables, {
-          ...opt,
-          headers: { ...(opt.headers || {}), ...(ctx.headers || {}) },
-        })
+        ctx.body = await this.graphqlClient.query<T>(input, variables, queryOpt)
       } catch (error) {
         ctx.body = error
         ctx.valid = false

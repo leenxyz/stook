@@ -27,6 +27,9 @@ export interface Options<T = any> {
   // retryOn: any
   // retryDelay: any
   // retryOnError: false
+
+  // 覆盖 Client endpoint
+  endpoint?: string
 }
 
 export interface RefetchOptions<T = any> extends Options<T> {
