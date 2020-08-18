@@ -13,7 +13,6 @@ import {
   Options,
   RefetchOptions,
   QueryResult,
-  Refetch,
   FetcherItem,
   Middleware,
   Ctx,
@@ -121,7 +120,7 @@ export class Client {
     return this.ctx.body as T
   }
 
-  useQuery = <T = any>(input: string, options: Options<T> = {}) => {
+  useQuery = <T = any, V = Variables>(input: string, options: Options<T, V> = {}) => {
     const isUnmouted = useUnmounted()
     const { initialData: data, onUpdate, lazy = false, pollInterval } = options
     const fetcherName = options.key || input
@@ -137,10 +136,9 @@ export class Client {
       onUpdate && onUpdate(nextState)
     }
 
-    const makeFetch = async (opt: RefetchOptions = {}): Promise<any> => {
+    const makeFetch = async (opt: RefetchOptions<T, V> = {}): Promise<any> => {
       try {
         fetcher.get(fetcherName) && (fetcher.get(fetcherName).called = true)
-        // update({ loading: true } as QueryResult<T>)
         const resData = await this.query<T>(input, opt || {})
 
         const nextState = produce(result, (draft: any) => {
@@ -160,7 +158,12 @@ export class Client {
       }
     }
 
-    const refetch: Refetch = async <P = any>(opt: RefetchOptions = {}): Promise<P> => {
+    /**
+     *
+     * @param opt
+     * @return 返回类型为 data，也就是 T
+     */
+    const refetch = async (opt: RefetchOptions<T, V> = {}): Promise<T> => {
       let showLoading = true
       if (typeof opt.showLoading === 'boolean' && opt.showLoading === false) {
         showLoading = false
@@ -170,13 +173,17 @@ export class Client {
         update({ loading: true } as QueryResult<T>)
       }
 
-      function getRefechVariables(opt: RefetchOptions = {}): Variables {
-        if (!opt.variables) {
-          return fetcher.get(fetcherName).variables || {}
+      function getRefechVariables(opt: RefetchOptions<T, V> = {}): any {
+        const fetcherVariables: any = fetcher.get(fetcherName).variables
+
+        // TODO: handle any
+        const variables: any = opt.variables
+        if (!variables) {
+          return fetcherVariables || {}
         }
 
-        if (typeof opt.variables === 'function') {
-          return opt.variables(fetcher.get(fetcherName).variables)
+        if (typeof variables === 'function') {
+          return variables(fetcherVariables)
         }
         return opt.variables
       }
@@ -186,7 +193,7 @@ export class Client {
       // store variables to fetcher
       fetcher.get(fetcherName).variables = opt.variables
 
-      const data: P = (await makeFetch(opt)) as any
+      const data: T = (await makeFetch(opt)) as any
       return data
     }
 
@@ -237,13 +244,13 @@ export class Client {
           }, pollInterval)
         }
       }
-
       return () => {
         if (timerRef.current) {
           clearInterval(timerRef.current)
           fetcher.get(fetcherName).polled = false
         }
       }
+
       // eslint-disable-next-line
     }, [varRef.current, shoudStart])
 

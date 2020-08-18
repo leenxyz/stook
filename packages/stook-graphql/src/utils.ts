@@ -9,7 +9,7 @@ export function isFalsy(value: any) {
   return value === undefined || value === null
 }
 
-export const getDeps = (options?: Options): Deps => {
+export const getDeps = (options?: Options<any, any>): Deps => {
   if (options && Array.isArray(options.deps)) return options.deps
   return []
 }
@@ -24,7 +24,7 @@ export function isResolve(arg: any) {
   }
 }
 
-export const getVariables = (options: Options): any => {
+export const getVariables = (options: Options<any, any>): any => {
   if (!options.variables) return {}
 
   if (typeof options.variables !== 'function') return options.variables

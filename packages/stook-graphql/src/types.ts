@@ -4,19 +4,9 @@ export interface Variables {
 
 export type SetData<T> = (data: T, newData: T) => void
 
-export interface RefetchOptions<T = any> extends Options<T> {
-  setData?: SetData<T>
-  showLoading?: boolean
-}
-
-export type Refetch = <T>(options?: RefetchOptions<T>) => Promise<T>
-export type Start = <T>() => Promise<T>
-
-export type Deps = ReadonlyArray<any>
-
-export interface Options<T = any> {
+export interface Options<T = any, V = Variables> {
   key?: string
-  variables?: Variables | ((prevVariables: Variables) => Variables)
+  variables?: V | ((prevVariables: V) => V)
   deps?: Deps
   headers?: HeadersInit
   initialData?: T
@@ -32,19 +22,28 @@ export interface Options<T = any> {
   endpoint?: string
 }
 
-export interface RefetchOptions<T = any> extends Options<T> {
+export interface RefetchOptions<T = any, V = Variables> {
+  variables?: V | ((prevVariables: V) => V)
+  headers?: HeadersInit
+  setData?: SetData<T>
   showLoading?: boolean
 }
 
+export type Refetch = <T>(options?: RefetchOptions<T>) => Promise<T>
+
+export type Start = <T>() => Promise<T>
+
+export type Deps = ReadonlyArray<any>
+
 export type Mutate = <P = any>(variables: Variables, options?: Options) => Promise<P>
 
-export interface FetcherItem<T = any> {
+export interface FetcherItem<T = any, V = Variables> {
   refetch: Refetch
   start: Start
   result: Result<T>
   called: boolean
   polled: boolean
-  variables: Variables
+  variables?: V
 }
 
 export interface Fetcher<T = any> {
