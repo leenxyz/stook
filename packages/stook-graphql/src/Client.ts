@@ -307,7 +307,7 @@ export class Client {
     return { ...result, refetch, start, called }
   }
 
-  useMutate = <T = any>(input: string, options: Options = {}) => {
+  useMutate = <T = any, V = Variables>(input: string, options: Options = {}) => {
     const { initialData: data, onUpdate } = options
     const initialState = { data, called: false } as MutateResult<T>
     const fetcherName = options.key || input
@@ -329,14 +329,12 @@ export class Client {
       }
     }
 
-    const mutate = async <P = any>(variables: Variables, opt: Options = {}): Promise<P> => {
+    const mutate = async (variables: Variables, opt: Options = {}): Promise<T> => {
       update({ loading: true } as MutateResult<T>)
-      return (await makeFetch({ ...opt, variables })) as any
+      return (await makeFetch({ ...opt, variables })) as T
     }
 
-    const out: [Mutate, MutateResult<T>] = [mutate, result]
-
-    return out
+    return [mutate, result]
   }
 
   useSubscribe = <T = any>(input: string, options: SubscriptionOption<T> = {}) => {
@@ -398,7 +396,7 @@ export class Client {
               update({ loading: false, data: this.ctx.body } as SubscribeResult<T>)
             })
           },
-          error: error => {
+          error: (error) => {
             const action = async (ctx: Ctx) => {
               ctx.body = error
               ctx.valid = false

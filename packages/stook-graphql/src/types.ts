@@ -6,7 +6,7 @@ export type SetData<T> = (data: T, newData: T) => void
 
 export interface Options<T = any, V = Variables> {
   key?: string
-  variables?: V | ((prevVariables: V) => V)
+  variables?: V | (() => V)
   deps?: Deps
   headers?: HeadersInit
   initialData?: T
