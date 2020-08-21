@@ -17,7 +17,6 @@ import {
   Middleware,
   Ctx,
   GraphqlOptions,
-  Mutate,
   MutateResult,
   Variables,
   SubscribeResult,

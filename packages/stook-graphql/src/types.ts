@@ -35,8 +35,6 @@ export type Start = <T>() => Promise<T>
 
 export type Deps = ReadonlyArray<any>
 
-export type Mutate = <P = any>(variables: Variables, options?: Options) => Promise<P>
-
 export interface FetcherItem<T = any, V = Variables> {
   refetch: Refetch
   start: Start
