@@ -238,7 +238,7 @@ export class Client {
         if (pollInterval && !fetcher.get(fetcherName).polled) {
           fetcher.get(fetcherName).polled = true
           /** pollInterval */
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+
           timerRef.current = setInterval(() => {
             makeFetch({ ...options, variables: varRef.current.value })
           }, pollInterval)
@@ -311,7 +311,7 @@ export class Client {
     const { initialData: data, onUpdate } = options
     const initialState = { data, called: false } as MutateResult<T>
     const fetcherName = options.key || input
-    const [result, setState] = useStore(fetcherName, initialState)
+    const [result, setState] = useStore<MutateResult<T>>(fetcherName, initialState)
 
     const update = (nextState: MutateResult<T>) => {
       setState(nextState)
@@ -329,12 +329,12 @@ export class Client {
       }
     }
 
-    const mutate = async (variables: Variables, opt: Options = {}): Promise<T> => {
+    const mutate = async (variables: V, opt: Options = {}): Promise<T> => {
       update({ loading: true } as MutateResult<T>)
       return (await makeFetch({ ...opt, variables })) as T
     }
 
-    return [mutate, result]
+    return [mutate, result] as [(variables: V, opt?: Options) => Promise<T>, MutateResult<T>]
   }
 
   useSubscribe = <T = any>(input: string, options: SubscriptionOption<T> = {}) => {
