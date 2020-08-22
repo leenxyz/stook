@@ -3,13 +3,13 @@
   "npmClient": "npm",
   "command": {
     "publish": {
-      "ignoreChanges": ["ignored-file", "*.md"],
+      "ignoreChanges": ["ignored-file", "*.md", "*.tsconfg.json"],
       "message": "chore(release): publish",
       "registry": "http://registry.npmjs.org"
     },
     "bootstrap": {
-      "npmClientArgs": ["--registry", "https://registry.npm.taobao.org"]
+      "npmClientArgs": ["--registry", "https://registry.npm.taobao.org", "--no-package-lock"]
     }
   },
-  "version": "independent"
+  "version": "0.2.5"
 }
