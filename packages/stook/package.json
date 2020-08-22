@@ -1,6 +1,6 @@
 {
   "name": "stook",
-  "version": "0.2.5",
+  "version": "0.3.0",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
