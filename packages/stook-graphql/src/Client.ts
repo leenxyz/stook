@@ -83,7 +83,7 @@ export class Client {
     this.middleware.push(fn)
   }
 
-  query = async <T = any>(input: string, options: Options = {}) => {
+  query = async <T = any>(input: string, options: Options = {}): Promise<T> => {
     // TODO: 需初始化
     this.ctx.valid = true
     const { variables = {}, endpoint } = options
