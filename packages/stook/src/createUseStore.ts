@@ -1,4 +1,3 @@
-import isEqual from 'react-fast-compare'
 import { Storage } from './Storage'
 import { Store } from './Store'
 import { Dispatch, Action } from './types'
@@ -6,20 +5,10 @@ import { Dispatch, Action } from './types'
 import { emitStoreInit } from './emitter'
 
 export function createUseStore(useState: any, useEffect: any, useRef: any) {
-  return function useStore<S = any>(key: string, value?: S): [S, Dispatch<Action<S>>] {
+  return function useStore<S = any, K = string>(key: K, value?: S): [S, Dispatch<Action<S>>] {
     const storageStore = Storage.get(key)
     const initalValue = storageStore ? storageStore.state : value
     const { current: initialState } = useRef(initalValue)
-
-    // check multi init
-    if (!isEqual(initialState, value) && value !== undefined) {
-      // TODO: mybe should show tip
-      // const initialStateString = JSON.stringify(initialState)
-      // const error = new Error(
-      //   `[stook]: store ${key} is inited with ${initialStateString}, initialState is unnecessary`,
-      // )
-      // console.warn(error)
-    }
 
     Storage.set(key, new Store<S>(initialState))
 

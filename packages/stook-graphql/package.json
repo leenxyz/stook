@@ -32,29 +32,29 @@
     "react": ">=16"
   },
   "devDependencies": {
-    "@testing-library/react-hooks": "^3.2.1",
+    "@testing-library/react-hooks": "^3.4.1",
     "@types/jest": "^24.0.22",
     "@types/koa-compose": "^3.2.5",
     "@types/lodash.get": "^4.4.6",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
-    "immer": "^7.0.5",
+    "immer": "^7.0.7",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-test-renderer": "^16.11.0",
     "stook": "^0.3.0",
-    "tsdx": "^0.11.0",
+    "tsdx": "^0.13.2",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.2"
+    "typescript": "^4.0.2"
   },
   "dependencies": {
-    "@peajs/graphql-client": "^0.3.1",
+    "@peajs/graphql-client": "^0.4.0",
     "gql-tag": "^1.0.1",
-    "graphql": "^14.5.8",
-    "graphql-tag": "^2.10.1",
+    "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0",
     "koa-compose": "^4.1.0",
     "lodash.get": "^4.4.2",
     "react-fast-compare": "^3.2.0",
-    "subscriptions-transport-ws": "^0.9.16"
+    "subscriptions-transport-ws": "^0.9.18"
   }
 }

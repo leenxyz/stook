@@ -5,7 +5,7 @@ import { useStore, getState } from '../src'
 describe('mutate', () => {
   it('none state', () => {
     const count = getState('COUNTER1')
-    expect(count).toBe(null)
+    expect(count).toBeUndefined()
   })
 
   it('can get state', () => {
