@@ -33,24 +33,24 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: '文档',
           items: [
             {
               label: 'Quick Start',
-              to: '/docs/intro/quick-start',
+              to: '/docs/stook/quick-start',
             },
             {
-              label: 'Controller',
-              to: '/docs/basic/controller',
+              label: 'Stook',
+              to: '/docs/stook/intro',
             },
             {
               label: 'GraphQL',
-              to: '/docs/basic/graphql',
+              to: '/docs/graphql/intro',
             },
           ],
         },
         {
-          title: 'Community',
+          title: '社区',
           items: [
             {
               label: 'Stack Overflow',
@@ -63,7 +63,7 @@ module.exports = {
           ],
         },
         {
-          title: 'Social',
+          title: '社交',
           items: [
             {
               label: 'GitHub',

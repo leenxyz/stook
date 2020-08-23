@@ -30,6 +30,6 @@ Stook 是一系列基于 React hooks 的工具，它的核心一个基于 hooks 
 
 - [stook-rest](/docs/rest/intro)
 - [stook-graphql](/docs/graphql/intro)
-- [stook-form](/docs/form/intro)
+- [entity-form](https://github.com/forsigner/entity-form)
 
 more...

@@ -8,16 +8,16 @@ sidebar_label: mutate
 
 ```js
 // 直接 replace
-mutate('[User]', { id: 1, name: 'foo' })
+mutate('User', { id: 1, name: 'foo' })
 
 //or use function
-mutate('[User]', state => ({
+mutate('User', state => ({
   ...state,
   name: 'foo',
 }))
 
 //or use immer
-mutate('[User]', state => {
+mutate('User', state => {
   state.name = 'foo'
 })
 ```
@@ -27,15 +27,15 @@ mutate 你可以初始化一个**不存在的** store，这是一个特殊的使
 举个例子，你可以用 mutate 初始化一个用户的 store:
 
 ```jsx
-const user = localStorage.getItem('[User]') // { id: 1, name: 'foo' }
-mutate('[User]', user)
+const user = localStorage.getItem('User') // { id: 1, name: 'foo' }
+mutate('User', user)
 ```
 
 然后在组件使用 (不需要再初始化):
 
 ```jsx
 const Profile = () => {
-  const [user, updateUser] = useStore('[User]')
+  const [user, updateUser] = useStore('User')
   return (
     <div>
       <span>{user.name}</span>

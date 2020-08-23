@@ -9,10 +9,10 @@ interface User {
 
 const user = { id: 1, name: 'foo' }
 
-mutate('[User]', user)
+mutate('User', user)
 
 export const Profile = () => {
-  const [user, updateUser] = useStore<User>('[User]')
+  const [user, updateUser] = useStore<User>('User')
   return (
     <div>
       <span>{user.name}</span>

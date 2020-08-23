@@ -76,9 +76,9 @@ const list = [
     tag: ['graphql', 'stook', 'useQuery'],
   },
   {
-    name: 'stook-form',
+    name: 'entity-form',
     intro: 'React form base on Hooks',
-    github: 'https://github.com/forsigner/stook/blob/master/packages/stook-form/README.md',
+    github: 'https://github.com/forsigner/entity-form',
     author: 'forsigner',
     tag: ['form', 'stook'],
   },

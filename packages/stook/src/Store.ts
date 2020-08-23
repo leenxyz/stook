@@ -50,3 +50,4 @@ export class Store<S = any> {
     return nextState
   }
 }
+
