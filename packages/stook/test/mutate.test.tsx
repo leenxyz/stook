@@ -1,15 +1,15 @@
 import { renderHook, act } from '@testing-library/react-hooks'
 
-import { useStore, mutate } from '../src'
+import { useStore, mutate, Key } from '../src'
 
 describe('mutate', () => {
   it('inited', () => {
-    const { result } = renderHook(() => useStore('COUNTER1', 0))
+    const { result } = renderHook(() => useStore(Key.Counter1, 0))
 
     expect(result.current[0]).toBe(0)
 
     act(() => {
-      mutate('COUNTER1', 10)
+      mutate(Key.Counter1, 10)
     })
 
     expect(result.current[0]).toBe(10)
@@ -17,10 +17,10 @@ describe('mutate', () => {
 
   it('did not inited', () => {
     act(() => {
-      mutate('COUNTER2', 10)
+      mutate(Key.Counter2, 10)
     })
 
-    const { result } = renderHook(() => useStore('COUNTER2', 0))
+    const { result } = renderHook(() => useStore(Key.Counter2, 0))
     expect(result.current[0]).toBe(10)
   })
 })

@@ -1,6 +1,7 @@
+import { Key } from './types'
 import { Storage } from './Storage'
 
-export function mutate<S>(key: string, value?: S) {
+export function mutate<S>(key: Key, value?: S) {
   const store = Storage.get(key)
 
   if (store && store.setState) {

@@ -3,7 +3,7 @@ import { useStore, getState, Key } from '../src'
 
 describe('mutate', () => {
   it('none state', () => {
-    const count = getState('COUNTER1')
+    const count = getState(Key.Counter1)
     expect(count).toBeUndefined()
   })
 
