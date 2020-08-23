@@ -14,7 +14,7 @@ export class devtools {
     const reducers = {} as any
 
     /**
-     * 
+     *
      * @param key useStor key
      */
     function createReducers(key: any) {
@@ -28,7 +28,8 @@ export class devtools {
 
     onStoreInit(key => {
       const reducers = createReducers(key)
-      store.replaceReducer(combineReducers(reducers))
+      const newReducer:any = combineReducers(reducers)
+      store.replaceReducer(newReducer)
     })
 
     onStoreUpdate(({ key, nextState }) => {

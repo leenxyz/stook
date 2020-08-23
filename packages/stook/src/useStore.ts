@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Storage } from './Storage'
 import { Store } from './Store'
-import { Dispatch, Action, Key } from './types'
+import { Dispatch, Action, keyType } from './types'
 import { emitStoreInit } from './emitter'
 
 /**
@@ -15,7 +15,10 @@ import { emitStoreInit } from './emitter'
  *
  * 需要注意的是，如果调用多个相同key的 useStore, 第一个被调用的 useStore 的 initialValue 才是有效的 initialValue
  */
-export function useStore<S = any>(key: Key, initialValue?: S): [S, Dispatch<Action<S>>] {
+export function useStore<S = any, K = string>(
+  key: K | keyType,
+  initialValue?: S,
+): [S, Dispatch<Action<S>>] {
   const storageStore = Storage.get(key)
   const initalValue = storageStore ? storageStore.state : initialValue
   const { current: initialState } = useRef(initalValue)

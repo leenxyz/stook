@@ -1,5 +1,5 @@
-import { Key } from './types'
 import { Storage } from './Storage'
+import { keyType } from './types'
 
 /**
  * update store by key
@@ -7,7 +7,7 @@ import { Storage } from './Storage'
  * @param key unique store key (唯一key)
  * @param nextValue  next value
  */
-export function mutate<S>(key: Key, nextValue?: S) {
+export function mutate<S, K = string>(key: K | keyType, nextValue?: S) {
   const store = Storage.get(key)
 
   if (store && store.setState) {

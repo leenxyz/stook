@@ -1,9 +1,9 @@
 import { renderHook, act } from '@testing-library/react-hooks'
-import { useStore, Key } from '../src'
+import { useStore } from '../src'
 
 describe('useStore', () => {
   it('simplest', () => {
-    const { result } = renderHook(() => useStore(Key.Counter, 0))
+    const { result } = renderHook(() => useStore('Counter', 0))
 
     expect(result.current[0]).toBe(0)
 
@@ -19,7 +19,7 @@ describe('useStore', () => {
   })
 
   it('setState(value)', () => {
-    const { result } = renderHook(() => useStore(Key.User, { name: 'fo' }))
+    const { result } = renderHook(() => useStore('User', { name: 'fo' }))
 
     expect(result.current[0].name).toBe('fo')
 
@@ -30,13 +30,13 @@ describe('useStore', () => {
 
     // function
     act(() => {
-      result.current[1](state => ({ ...state, name: 'fooo' }))
+      result.current[1]((state: any) => ({ ...state, name: 'fooo' }))
     })
     expect(result.current[0].name).toBe('fooo')
 
     // immer
     act(() => {
-      result.current[1](state => {
+      result.current[1]((state: any) => {
         state.name = 'foooo'
       })
     })
@@ -44,8 +44,8 @@ describe('useStore', () => {
   })
 
   it('try init again', () => {
-    const { result: result1 } = renderHook(() => useStore(Key.User2, { name: 'fo' }))
-    const { result: result2 } = renderHook(() => useStore(Key.User2, { name: 'bar' }))
+    const { result: result1 } = renderHook(() => useStore('User2', { name: 'fo' }))
+    const { result: result2 } = renderHook(() => useStore('User2', { name: 'bar' }))
 
     expect(result1.current[0].name).toBe('fo')
     expect(result2.current[0].name).toBe('fo')
