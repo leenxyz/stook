@@ -1,10 +1,9 @@
 import { renderHook, act } from '@testing-library/react-hooks'
-
-import { useStore } from '../src'
+import { useStore, Key } from '../src'
 
 describe('useStore', () => {
   it('simplest', () => {
-    const { result } = renderHook(() => useStore('COUNTER', 0))
+    const { result } = renderHook(() => useStore(Key.Counter, 0))
 
     expect(result.current[0]).toBe(0)
 
@@ -20,7 +19,7 @@ describe('useStore', () => {
   })
 
   it('setState(value)', () => {
-    const { result } = renderHook(() => useStore('USER', { name: 'fo' }))
+    const { result } = renderHook(() => useStore(Key.User, { name: 'fo' }))
 
     expect(result.current[0].name).toBe('fo')
 
@@ -45,8 +44,8 @@ describe('useStore', () => {
   })
 
   it('try init again', () => {
-    const { result: result1 } = renderHook(() => useStore('USER2', { name: 'fo' }))
-    const { result: result2 } = renderHook(() => useStore('USER2', { name: 'bar' }))
+    const { result: result1 } = renderHook(() => useStore(Key.User2, { name: 'fo' }))
+    const { result: result2 } = renderHook(() => useStore(Key.User2, { name: 'bar' }))
 
     expect(result1.current[0].name).toBe('fo')
     expect(result2.current[0].name).toBe('fo')

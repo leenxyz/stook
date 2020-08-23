@@ -1,6 +1,5 @@
 import { renderHook } from '@testing-library/react-hooks'
-
-import { useStore, getState } from '../src'
+import { useStore, getState, Key } from '../src'
 
 describe('mutate', () => {
   it('none state', () => {
@@ -9,8 +8,8 @@ describe('mutate', () => {
   })
 
   it('can get state', () => {
-    const {} = renderHook(() => useStore('COUNTER2', 2))
-    const count = getState('COUNTER2')
+    const {} = renderHook(() => useStore(Key.Counter2, 2))
+    const count = getState(Key.Counter2)
     expect(count).toBe(2)
   })
 })

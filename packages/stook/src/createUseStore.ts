@@ -1,11 +1,11 @@
 import { Storage } from './Storage'
 import { Store } from './Store'
-import { Dispatch, Action } from './types'
+import { Dispatch, Action, Key } from './types'
 
 import { emitStoreInit } from './emitter'
 
 export function createUseStore(useState: any, useEffect: any, useRef: any) {
-  return function useStore<S = any, K = string>(key: K, value?: S): [S, Dispatch<Action<S>>] {
+  return function useStore<S = any>(key: Key, value?: S): [S, Dispatch<Action<S>>] {
     const storageStore = Storage.get(key)
     const initalValue = storageStore ? storageStore.state : value
     const { current: initialState } = useRef(initalValue)
