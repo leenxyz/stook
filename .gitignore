@@ -8,6 +8,8 @@ yarn-error.log
 npm-debug.log
 lerna-debug.log
 
+coverage/
+
 
 yarn.lock
 package-lock.json
