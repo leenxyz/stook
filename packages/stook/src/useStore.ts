@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Storage } from './Storage'
 import { Store } from './Store'
 import { Dispatch, Action, keyType } from './types'
@@ -20,8 +20,7 @@ export function useStore<S = any, K = string>(
   initialValue?: S,
 ): [S, Dispatch<Action<S>>] {
   const storageStore = Storage.get(key)
-  const initalValue = storageStore ? storageStore.state : initialValue
-  const { current: initialState } = useRef(initalValue)
+  const initialState = storageStore ? storageStore.state : initialValue
 
   Storage.set(key, new Store<S>(initialState))
 
@@ -37,7 +36,7 @@ export function useStore<S = any, K = string>(
     return () => {
       setters.splice(setters.indexOf(set), 1)
     }
-  }, [])
+  }, [setters, set])
 
   function act(key: any): Dispatch<Action<S>> {
     return (value: any) => {
