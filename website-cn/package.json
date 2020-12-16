@@ -15,8 +15,6 @@
     "@docusaurus/theme-live-codeblock": "^2.0.0-alpha.39",
     "classnames": "^2.2.6",
     "npm-to-yarn": "^1.0.0-0",
-    "react": "^16.8.4",
-    "react-dom": "^16.8.4",
     "styled-components": "^5.1.0"
   },
   "browserslist": {
