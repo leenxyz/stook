@@ -1,5 +1,6 @@
-import { Options, Deps } from './types'
+import { parse } from 'graphql'
 import { useRef, useCallback, EffectCallback, useEffect } from 'react'
+import { Options, Deps } from './types'
 
 export function isFalsy(value: any) {
   if (typeof value === 'boolean') {
@@ -72,4 +73,12 @@ export const useUnmount = (fn: () => any): void => {
   fnRef.current = fn
 
   useEffectOnce(() => () => fnRef.current())
+}
+
+export const getOperationName = (input: string) => {
+  try {
+    return (parse(input).definitions[0] as any).name.value
+  } catch (error) {
+    return null
+  }
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useStore, Storage } from 'stook'
 import gql from 'graphql-tag'
-import get from 'lodash.get'
 import compose from 'koa-compose'
 import { produce } from 'immer'
 import { GraphQLClient } from '@peajs/graphql-client'
@@ -25,7 +24,15 @@ import {
   Observer,
   Start,
 } from './types'
-import { getDeps, getVariables, getDepsMaps, useUnmounted, useUnmount, isResolve } from './utils'
+import {
+  getDeps,
+  getVariables,
+  getDepsMaps,
+  useUnmounted,
+  useUnmount,
+  isResolve,
+  getOperationName,
+} from './utils'
 
 interface VarCurrent {
   value: any
@@ -136,8 +143,9 @@ export class Client {
     }
 
     const makeFetch = async (opt: RefetchOptions<T, V> = {}): Promise<any> => {
+      const key = opt.key ?? fetcherName
       try {
-        fetcher.get(fetcherName) && (fetcher.get(fetcherName).called = true)
+        if (fetcher.get(key)) fetcher.get(key).called = true
         const resData = await this.query<T>(input, opt || {})
 
         const nextState = produce(result, (draft: any) => {
@@ -163,6 +171,7 @@ export class Client {
      * @return 返回类型为 data，也就是 T
      */
     const refetch = async (opt: RefetchOptions<T, V> = {}): Promise<T> => {
+      const key = opt.key ?? fetcherName
       let showLoading = true
       if (typeof opt.showLoading === 'boolean' && opt.showLoading === false) {
         showLoading = false
@@ -173,7 +182,7 @@ export class Client {
       }
 
       function getRefechVariables(opt: RefetchOptions<T, V> = {}): any {
-        const fetcherVariables: any = fetcher.get(fetcherName).variables
+        const fetcherVariables: any = fetcher.get(key).variables
 
         // TODO: handle any
         const variables: any = opt.variables
@@ -190,7 +199,7 @@ export class Client {
       opt.variables = getRefechVariables(opt)
 
       // store variables to fetcher
-      fetcher.get(fetcherName).variables = opt.variables
+      fetcher.get(key).variables = opt.variables
 
       const data: T = (await makeFetch(opt)) as any
       return data
@@ -384,7 +393,7 @@ export class Client {
         .request({
           query: node,
           variables,
-          operationName: get(node, 'definitions[0].name.value') || operationName,
+          operationName: getOperationName(input) || operationName,
         })
         .subscribe({
           next: ({ data }) => {
@@ -395,7 +404,7 @@ export class Client {
               update({ loading: false, data: this.ctx.body } as SubscribeResult<T>)
             })
           },
-          error: (error) => {
+          error: error => {
             const action = async (ctx: Ctx) => {
               ctx.body = error
               ctx.valid = false

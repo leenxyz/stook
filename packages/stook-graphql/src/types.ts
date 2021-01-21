@@ -23,6 +23,7 @@ export interface Options<T = any, V = Variables> {
 }
 
 export interface RefetchOptions<T = any, V = Variables> {
+  key?: string
   variables?: V | ((prevVariables: V) => V)
   headers?: HeadersInit
   setData?: SetData<T>
