@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import gql from 'gql-tag'
+import React, { useState, useEffect } from 'react';
+import gql from 'gql-tag';
 
 import {
   config,
@@ -11,16 +11,16 @@ import {
   fromSubscription,
   applyMiddleware,
   Client,
-} from './src'
+} from 'stook-graphql';
 
 applyMiddleware(async (ctx, next) => {
-  ctx.headers.Authorization = `bearer token...`
-  await next()
-  if (typeof ctx.body !== 'object') return
+  ctx.headers.Authorization = `bearer token...`;
+  await next();
+  if (typeof ctx.body !== 'object') return;
   if (Object.keys(ctx.body).length === 1) {
-    ctx.body = ctx.body[Object.keys(ctx.body)[0]]
+    ctx.body = ctx.body[Object.keys(ctx.body)[0]];
   }
-})
+});
 
 export const GET_USER = gql`
   {
@@ -29,19 +29,19 @@ export const GET_USER = gql`
       name
     }
   }
-`
+`;
 
 config({
   // endpoint: 'http://localhost:7001/graphql',
   endpoint: 'https://graphql-compose.herokuapp.com/user',
   // endpoint: 'http://localhost:5001/graphql',
   // subscriptionsEndpoint: 'ws://localhost:5001/graphql',
-})
+});
 
 const client = new Client({
   endpoint: 'http://localhost:5001/graphql',
   subscriptionsEndpoint: 'ws://localhost:5001/graphql',
-})
+});
 
 export const GET_PROJECT = gql`
   query plot($scriptId: Int) {
@@ -73,7 +73,7 @@ export const GET_PROJECT = gql`
   #     name
   #   }
   # }
-`
+`;
 
 const GET_USER_BY_ID = gql`
   query User($_id: MongoID!) {
@@ -84,7 +84,7 @@ const GET_USER_BY_ID = gql`
       age
     }
   }
-`
+`;
 
 const SUB = gql`
   subscription msg {
@@ -93,7 +93,7 @@ const SUB = gql`
       content
     }
   }
-`
+`;
 
 const GET_NOTICE = gql`
   {
@@ -102,58 +102,53 @@ const GET_NOTICE = gql`
       id
     }
   }
-`
+`;
 
 const SubApp = () => {
   const { data = {} } = client.useSubscribe(SUB, {
     initialQuery: {
       query: GET_NOTICE,
     },
-  })
+  });
   return (
     <div className="App">
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
-  )
-}
+  );
+};
 
 const QueryApp = () => {
-  const [data, setData] = useState()
+  const [data, setData] = useState();
   useEffect(() => {
     async function queryData() {
       // const res = await query(GET_USER)
       const res = await query(GET_PROJECT, {
         variables: { slug: 'foo' },
-      })
+      });
 
-      setData(res)
+      setData(res);
     }
-    queryData()
-  }, [])
+    queryData();
+  }, []);
 
   return (
     <div className="App">
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
-  )
-}
+  );
+};
 
 const UseQueryApp = () => {
-  const {} = useQuery(GET_USER, {
-    pollInterval: 3000,
-    variables: { slug: 'foo' },
-  })
-
   const { loading, data, error, refetch } = useQuery(GET_USER, {
-    pollInterval: 3000,
+    // pollInterval: 3000,
     variables: { slug: 'foo' },
-  })
+  });
 
-  console.log('loading:', loading)
-  console.log('data:', data)
+  console.log('loading:', loading);
+  console.log('data:', data);
 
-  if (loading) return <div>loading....</div>
-  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>
+  if (loading) return <div>loading....</div>;
+  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
 
   return (
     <div className="App">
@@ -161,16 +156,16 @@ const UseQueryApp = () => {
 
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
-  )
-}
+  );
+};
 
 // setTimeout(() => {
 //   store.setId()
 // }, 2000)
 
 interface Project {
-  name: string
-  age: string
+  name: string;
+  age: string;
 }
 
 const UseQueryById = () => {
@@ -186,35 +181,44 @@ const UseQueryById = () => {
         title
       }
     }
-  `)
+  `);
 
-  const { loading, data, error, refetch } = client.useQuery<Project>(GET_PROJECT, {
-    // name: 'getUserById',
-    variables: () => {
-      return { scriptId: script.script.id }
+  const { loading, data, error, refetch } = client.useQuery<Project>(
+    GET_PROJECT,
+    {
+      // name: 'getUserById',
+      variables: () => {
+        return { scriptId: script.script.id };
+      },
     },
-  })
+  );
 
-  console.log('render---------data:', loading1, loading, script, data)
-  if (loading) return <div>loading....</div>
-  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>
+  console.log('render---------data:', loading1, loading, script, data);
+  if (loading) return <div>loading....</div>;
+  if (error) return <pre>{JSON.stringify(error, null, 2)}</pre>;
 
   return (
     <div className="App">
-      <button onClick={() => refetch({ variables: { slug: 'bar' } })}>refetch</button>
-      <button onClick={() => fetcher.get(GET_PROJECT).refetch({ variables: { slug: 'hui' } })}>
+      <button onClick={() => refetch({ variables: { slug: 'bar' } })}>
+        refetch
+      </button>
+      <button
+        onClick={() =>
+          fetcher.get(GET_PROJECT).refetch({ variables: { slug: 'hui' } })
+        }
+      >
         refetch with fetcher
       </button>
       <div>
         <pre>{JSON.stringify(data, null, 2)}</pre>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const UseMutateApp = () => {
-  const [addTodo, { loading, data, error }] = useMutate(GET_USER)
-  console.log('loading:', loading)
+  const [addTodo, { loading, data, error }] = useMutate(GET_USER);
+  console.log('loading:', loading);
 
   return (
     <div className="App">
@@ -226,8 +230,8 @@ const UseMutateApp = () => {
       {error && <pre>{JSON.stringify(error, null, 2)}</pre>}
       {data && <pre>{JSON.stringify(data, null, 2)}</pre>}
     </div>
-  )
-}
+  );
+};
 
 export default () => (
   <div>
@@ -237,7 +241,7 @@ export default () => (
     <UseQueryApp />
     {/* <UseMutateApp /> */}
   </div>
-)
+);
 
 // fromSubscription(SUB).subscribe({
 //   next(data) {

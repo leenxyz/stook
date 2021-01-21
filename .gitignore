@@ -9,8 +9,11 @@ npm-debug.log
 lerna-debug.log
 
 coverage/
+.cache/
 
 
 yarn.lock
 *package-lock.json
 package-lock.json
+
+dist/
