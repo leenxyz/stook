@@ -33,7 +33,7 @@ module.exports = {
       'graphql/quick-start',
       'graphql/config',
       'graphql/useQuery',
-      'graphql/useMutate',
+      'graphql/useMutation',
       'graphql/query',
       'graphql/middleware',
     ],

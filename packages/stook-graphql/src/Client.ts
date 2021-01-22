@@ -315,7 +315,7 @@ export class Client {
     return { ...result, refetch, start, called }
   }
 
-  useMutate = <T = any, V = Variables>(input: string, options: Options = {}) => {
+  useMutation = <T = any, V = Variables>(input: string, options: Options = {}) => {
     const { initialData: data, onUpdate } = options
     const initialState = { data, called: false } as MutateResult<T>
     const fetcherName = options.key || input

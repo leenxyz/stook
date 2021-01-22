@@ -1,12 +1,12 @@
 ---
-id: useMutate
-title: useMutate
-sidebar_label: useMutate
+id: useMutation
+title: useMutation
+sidebar_label: useMutation
 ---
 
 ```jsx
 import React from 'react'
-import { useMutate } from 'stook-graphql'
+import { useMutation } from 'stook-graphql'
 
 const GET_USER = `
   query User {
@@ -19,7 +19,7 @@ const GET_USER = `
 `
 
 export default () => {
-  const [addTodo, { loading, data, error }] = useMutate(GET_USER)
+  const [addTodo, { loading, data, error }] = useMutation(GET_USER)
   return (
     <div>
       <button onClick={() => addTodo({})}>

@@ -5,7 +5,7 @@ import {
   config,
   query,
   useQuery,
-  useMutate,
+  useMutation,
   fetcher,
   useSubscribe,
   fromSubscription,
@@ -217,7 +217,7 @@ const UseQueryById = () => {
 };
 
 const UseMutateApp = () => {
-  const [addTodo, { loading, data, error }] = useMutate(GET_USER);
+  const [addTodo, { loading, data, error }] = useMutation(GET_USER);
   console.log('loading:', loading);
 
   return (

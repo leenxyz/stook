@@ -6,7 +6,7 @@ import {
   config,
   query,
   useQuery,
-  useMutate,
+  useMutation,
   fetcher,
   useSubscribe,
   fromSubscription,

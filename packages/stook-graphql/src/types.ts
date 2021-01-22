@@ -14,9 +14,15 @@ export interface Options<T = any, V = Variables> {
   lazy?: boolean
   timeout?: number
   onUpdate?(result: Result<T>): any
+
+  // TODO: 乐观更新
+  // optimisticResponse?: any
   // retryOn: any
   // retryDelay: any
   // retryOnError: false
+  // onError(err)
+  // errorRetryCount
+  // errorRetryInterval
 
   // 覆盖 Client endpoint
   endpoint?: string

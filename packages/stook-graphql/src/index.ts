@@ -4,7 +4,7 @@ const client = new Client({ endpoint: '/graphql' })
 const {
   query,
   useQuery,
-  useMutate,
+  useMutation,
   useSubscribe,
   fromSubscription,
   applyMiddleware,
@@ -17,7 +17,7 @@ export {
   Client,
   query,
   useQuery,
-  useMutate,
+  useMutation,
   useSubscribe,
   fromSubscription,
   applyMiddleware,
