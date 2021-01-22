@@ -345,7 +345,7 @@ export class Client {
     return [mutate, result] as [(variables: V, opt?: Options) => Promise<T>, MutateResult<T>]
   }
 
-  useSubscribe = <T = any>(input: string, options: SubscriptionOption<T> = {}) => {
+  useSubscription = <T = any>(input: string, options: SubscriptionOption<T> = {}) => {
     const { variables = {}, operationName = '', initialQuery = '', onUpdate } = options
 
     const unmounted = useRef(false)
