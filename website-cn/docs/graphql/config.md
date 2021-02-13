@@ -47,4 +47,4 @@ const client = new Client({
 - query
 - useQuery
 - useMutation
-- useSubscribe
+- useSubscription

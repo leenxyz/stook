@@ -7,7 +7,7 @@ import {
   useQuery,
   useMutation,
   fetcher,
-  useSubscribe,
+  useSubscription,
   fromSubscription,
   applyMiddleware,
   Client,
@@ -105,7 +105,7 @@ const GET_NOTICE = gql`
 `;
 
 const SubApp = () => {
-  const { data = {} } = client.useSubscribe(SUB, {
+  const { data = {} } = client.useSubscription(SUB, {
     initialQuery: {
       query: GET_NOTICE,
     },

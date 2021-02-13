@@ -8,7 +8,7 @@ import {
   useQuery,
   useMutation,
   fetcher,
-  useSubscribe,
+  useSubscription,
   fromSubscription,
   applyMiddleware,
   Client,
