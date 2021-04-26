@@ -12,7 +12,7 @@ npm i stook-devtools
 
 ## Documentation
 
-https://stook.now.sh/docs/devtools/intro
+https://stook.vercel.app/docs/devtools/intro
 
 ## License
 

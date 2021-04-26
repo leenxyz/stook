@@ -1,27 +1,27 @@
+/** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'Stook',
   tagline: 'A minimalist design state management library for React',
   url: 'https://your-docusaurus-test-site.com',
   baseUrl: '/',
-  url: 'https://stook-cn.now.sh', // Your website URL
+  onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'forsigner', // Usually your GitHub org/user name.
-  projectName: 'stook.github.io',
+  projectName: 'stook',
   themeConfig: {
-    image: 'img/logo.png',
-    prism: {
-      theme: require('prism-react-renderer/themes/github'),
-      darkTheme: require('prism-react-renderer/themes/dracula'),
-    },
     navbar: {
       title: 'Stook',
-      logo: {
-        alt: 'Logo',
-        src: '/img/logo.png',
-      },
-      links: [
-        { to: '/docs/stook/quick-start', label: 'Docs', position: 'right' },
+      items: [
+        {
+          type: 'doc',
+          docId: 'stook/intro',
+          position: 'left',
+          label: 'Docs',
+        },
+
         { to: '/ecosystem', label: 'Ecosystem', position: 'right' },
+
         {
           href: 'https://www.github.com/forsigner/stook',
           label: 'GitHub',
@@ -75,27 +75,19 @@ module.exports = {
       copyright: `Copyright © ${new Date().getFullYear()} forsigner.`,
     },
   },
-  themes: ['@docusaurus/theme-live-codeblock'],
-
-  plugins: [
-    [
-      '@docusaurus/plugin-ideal-image',
-      {
-        quality: 70,
-        max: 1030, // max resized image's size.
-        min: 640, // min resized image's size. if original is lower, use that size.
-        steps: 2, // the max number of images generated between min and max (inclusive)
-      },
-    ],
-  ],
   presets: [
     [
       '@docusaurus/preset-classic',
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
+          // Please change this to your repo.
           editUrl: 'https://github.com/facebook/docusaurus/edit/master/website/',
-          remarkPlugins: [require('./src/plugins/remark-npm2yarn')],
+        },
+        blog: {
+          showReadingTime: true,
+          // Please change this to your repo.
+          editUrl: 'https://github.com/facebook/docusaurus/edit/master/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

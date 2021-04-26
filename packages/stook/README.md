@@ -6,7 +6,7 @@ A minimalist design state management library for React.
 
 ## Documentation
 
-The documentation site of stook is hosted at  [https://stook-cn.now.sh](https://stook-cn.now.sh).
+The documentation site of stook is hosted at  [https://stook.vercel.app](https://stook.vercel.app).
 
 ## Quick start
 

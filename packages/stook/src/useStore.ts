@@ -11,7 +11,7 @@ import { emitStoreInit } from './emitter'
  *
  * @param key unique store key (唯一key)
  * @param initialValue  initial value, can not override, use first useStore to init
- * @see https://stook-cn.now.sh/docs/stook/use-store
+ * @see https://stook.vercel.app/docs/stook/use-store
  *
  * 需要注意的是，如果调用多个相同key的 useStore, 第一个被调用的 useStore 的 initialValue 才是有效的 initialValue
  */

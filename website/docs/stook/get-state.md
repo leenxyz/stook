@@ -4,7 +4,7 @@ title: getState
 sidebar_label: getState
 ---
 
-在某些创景，你可能需要更灵活的读取 state，这时你可以使用 `getState`，比如下面两种场景：
+在某些场景，你可能需要更灵活的读取 state，这时你可以使用 `getState`，比如下面两种场景：
 
 - 在组件外读取 state
 - 在组件内读取 state，却不订阅其更新

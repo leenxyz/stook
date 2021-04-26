@@ -12,7 +12,7 @@ npm i stook-rest
 
 ## Documentation
 
-https://stook.now.sh/docs/rest/intro
+https://stook.vercel.app/docs/rest/intro
 
 ## License
 

@@ -12,7 +12,7 @@ npm i stook-graphql
 
 ## Documentation
 
-https://stook.now.sh/docs/graphql/intro
+https://stook.vercel.app/docs/graphql/intro
 
 ## License
 
