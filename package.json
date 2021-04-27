@@ -12,7 +12,7 @@
     "format": "prettier --write \"packages/**/src/**/*.{ts,tsx}\"",
     "test": "lerna run --parallel --stream test",
     "test:watch": "lerna run --parallel --stream test:watch",
-    "build": "lerna run --parallel --stream build",
+    "build": "lerna run --stream build",
     "coveralls": "jest --coverage && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage",
     "publish": "lerna publish --force-publish=*"
   },
