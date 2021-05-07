@@ -15,6 +15,7 @@ export * from './types'
 export * from './fetcher'
 export {
   Client,
+  client,
   query,
   useQuery,
   useMutation,
