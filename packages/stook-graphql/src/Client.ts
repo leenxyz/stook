@@ -353,6 +353,8 @@ export class Client {
     const initialState = { loading: true } as SubscribeResult<T>
     const [result, setState] = useState(initialState)
 
+    let unsubscribe: SubscribeResult<any>['unsubscribe'] = () => {}
+
     function update(nextState: SubscribeResult<T>) {
       setState(nextState)
       onUpdate && onUpdate(nextState)
@@ -389,7 +391,7 @@ export class Client {
         ${input}
       `
 
-      this.subscriptionClient
+      const subResult = this.subscriptionClient
         .request({
           query: node,
           variables,
@@ -418,6 +420,8 @@ export class Client {
             console.log('completed')
           },
         })
+
+      unsubscribe = subResult.unsubscribe
     }
 
     useEffect(() => {
@@ -432,7 +436,7 @@ export class Client {
       // eslint-disable-next-line
     }, [])
 
-    return result
+    return { ...result, unsubscribe }
   }
 
   fromSubscription = <T = any>(input: string, options: FromSubscriptionOption = {}) => {

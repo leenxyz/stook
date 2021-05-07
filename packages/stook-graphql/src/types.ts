@@ -70,7 +70,9 @@ export interface QueryResult<T> extends Result<T> {
 
 export interface MutateResult<T> extends Result<T> {}
 
-export interface SubscribeResult<T> extends Result<T> {}
+export interface SubscribeResult<T> extends Result<T> {
+  unsubscribe: () => void
+}
 
 export interface GraphqlOptions {
   endpoint: string
