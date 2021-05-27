@@ -1,0 +1,31 @@
+{
+  "name": "stook-localstorage",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "forsigner",
+  "main": "dist/index.js",
+  "module": "dist/stook-localstorage.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/forsigner/stook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/forsigner/stook/issues"
+  },
+  "homepage": "https://github.com/forsigner/stook#README",
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/react": "^17.0.8",
+    "stook": "^1.1.0"
+  }
+}
