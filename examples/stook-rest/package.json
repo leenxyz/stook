@@ -1,6 +1,6 @@
 {
   "name": "stook-rest-example",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -12,9 +12,9 @@
     "koa-compose": "^4.1.0",
     "react-app-polyfill": "^2.0.0",
     "redux": "^4.0.5",
-    "stook": "^1.0.0",
-    "stook-devtools": "^1.0.0",
-    "stook-rest": "^1.0.0"
+    "stook": "^1.1.0",
+    "stook-devtools": "^1.1.0",
+    "stook-rest": "^1.1.0"
   },
   "devDependencies": {
     "@types/koa-compose": "^3.2.5",
