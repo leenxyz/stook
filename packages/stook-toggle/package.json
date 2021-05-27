@@ -1,0 +1,22 @@
+{
+  "name": "stook-toggle",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "forsigner",
+  "main": "dist/index.js",
+  "module": "dist/stook-toggle.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint"
+  },
+  "devDependencies": {
+    "stook": "^1.0.0",
+    "typescript": "^3.7.2"
+  }
+}
