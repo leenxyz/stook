@@ -5,11 +5,16 @@ export class devtools {
   static init() {
     // init REDUX_DEVTOOLS_EXTENSION
     const INITIAL_STOOK_REDUCER = (state = 0) => state
-    const store = createStore(
-      combineReducers({ INITIAL_STOOK_REDUCER }),
-      (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
-        (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
-    )
+
+    const args: any[] = []
+    if (typeof window !== 'undefined') {
+      args.push(
+        (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
+          (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
+      )
+    }
+
+    const store = createStore(combineReducers({ INITIAL_STOOK_REDUCER }), ...args)
 
     const reducers = {} as any
 
@@ -28,7 +33,7 @@ export class devtools {
 
     onStoreInit(key => {
       const reducers = createReducers(key)
-      const newReducer:any = combineReducers(reducers)
+      const newReducer: any = combineReducers(reducers)
       store.replaceReducer(newReducer)
     })
 
