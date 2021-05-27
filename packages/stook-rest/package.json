@@ -17,32 +17,19 @@
     "test:cov": "tsdx test --coverage",
     "lint": "tsdx lint"
   },
-  "prettier": {
-    "printWidth": 100,
-    "tabWidth": 2,
-    "semi": false,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
   "bugs": {
     "url": "https://github.com/forsigner/stook/issues"
   },
   "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-rest",
-  "peerDependencies": {
-    "react": ">=16"
-  },
   "devDependencies": {
-    "@testing-library/react-hooks": "^5.1.2",
+    "@testing-library/react-hooks": "^7.0.0",
     "@types/koa-compose": "^3.2.5",
-    "react-test-renderer": "^17.0.2",
-    "stook": "^1.0.0",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "react-test-renderer": "^17.0.2"
   },
   "dependencies": {
     "@peajs/request": "^0.6.0",
     "koa-compose": "^4.1.0",
-    "react-fast-compare": "^3.2.0"
+    "react-fast-compare": "^3.2.0",
+    "stook": "^1.0.0"
   }
 }
