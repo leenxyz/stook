@@ -1,6 +1,6 @@
 {
   "name": "stook-localstorage",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -26,6 +26,6 @@
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@types/react": "^17.0.8",
-    "stook": "^1.1.0"
+    "stook": "^1.1.1"
   }
 }
