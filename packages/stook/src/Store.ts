@@ -25,6 +25,7 @@ export class Store<S = any> {
 
     const immerState = produce(this.state, draft => {
       const fnValue = value(draft)
+      if (fnValue === draft) return // do nothing
 
       // use function return value
       if (fnValue && typeof fnValue === 'object') {
@@ -37,7 +38,7 @@ export class Store<S = any> {
       nextState = immerState
     }
 
-    return nextState
+    return { ...nextState }
   }
 
   setState = (key: any, value: any): any => {
@@ -50,4 +51,3 @@ export class Store<S = any> {
     return nextState
   }
 }
-

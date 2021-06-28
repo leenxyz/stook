@@ -5,28 +5,34 @@ interface Data {
   nextState: any
 }
 
-export const emitter = mitt()
+type Events = {
+  STORE_INITED: string
+  STORE_UPDATED: Data
+}
 
-export const STORE_INITED = 'STORE_INITED'
+enum EventKey {
+  STORE_INITED = 'STORE_INITED',
+  STORE_UPDATED = 'STORE_UPDATED',
+}
 
-export const STORE_UPDATED = 'STORE_UPDATED'
+export const emitter = mitt<Events>()
 
 export function emitStoreInit(key: any) {
-  emitter.emit(STORE_INITED, key)
+  emitter.emit(EventKey.STORE_INITED, key)
 }
 
 export function emitStoreUpdate(data: Data) {
-  emitter.emit(STORE_UPDATED, data)
+  emitter.emit(EventKey.STORE_UPDATED, data)
 }
 
 export function onStoreInit(cb: (data: string) => void) {
-  emitter.on(STORE_INITED, key => {
+  emitter.on(EventKey.STORE_INITED, key => {
     cb(key)
   })
 }
 
 export function onStoreUpdate(cb: (data: Data) => void) {
-  emitter.on(STORE_UPDATED, data => {
+  emitter.on(EventKey.STORE_UPDATED, data => {
     cb(data)
   })
 }
