@@ -16,7 +16,6 @@
     "lint": "tsdx lint"
   },
   "devDependencies": {
-    "stook": "^1.1.1",
-    "typescript": "^4.3.4"
+    "stook": "^1.1.1"
   }
 }
