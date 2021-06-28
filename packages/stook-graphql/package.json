@@ -25,21 +25,21 @@
     "graphql": "^15.4.0"
   },
   "devDependencies": {
-    "@testing-library/react-hooks": "^5.1.2",
+    "@testing-library/react-hooks": "^7.0.0",
     "@types/koa-compose": "^3.2.5",
-    "graphql": "^15.5.0",
+    "graphql": "^15.5.1",
     "react-test-renderer": "^17.0.2",
     "stook": "^1.1.1",
     "tsdx": "^0.14.1",
-    "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "tslib": "^2.3.0",
+    "typescript": "^4.3.4"
   },
   "dependencies": {
     "@peajs/graphql-client": "^0.6.0",
     "gql-tag": "^1.0.1",
-    "graphql-tag": "^2.11.0",
+    "graphql-tag": "^2.12.5",
     "koa-compose": "^4.1.0",
     "react-fast-compare": "^3.2.0",
-    "subscriptions-transport-ws": "^0.9.18"
+    "subscriptions-transport-ws": "^0.9.19"
   }
 }

@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "stook": "^1.1.1",
-    "typescript": "^4.3.2"
+    "typescript": "^4.3.4"
   }
 }
