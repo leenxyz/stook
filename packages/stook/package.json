@@ -1,6 +1,6 @@
 {
   "name": "stook",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A minimalist design state management library for React",
   "license": "MIT",
   "author": "forsigner",
@@ -22,8 +22,6 @@
     "url": "https://github.com/forsigner/stook/issues"
   },
   "homepage": "https://github.com/forsigner/stook",
-  "devDependencies": {
-  },
   "dependencies": {
     "immer": "^9.0.3",
     "mitt": "^3.0.0"

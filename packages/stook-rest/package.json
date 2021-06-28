@@ -1,6 +1,6 @@
 {
   "name": "stook-rest",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -28,6 +28,6 @@
     "@peajs/request": "^0.6.0",
     "koa-compose": "^4.1.0",
     "react-fast-compare": "^3.2.0",
-    "stook": "^1.1.1"
+    "stook": "^1.2.0"
   }
 }
