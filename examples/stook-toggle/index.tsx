@@ -1,15 +1,12 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { useToggle } from './src';
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+import { useToggle } from 'stook-toggle'
 
 const App = () => {
-  const [value1, toggle1] = useToggle('key1');
-  const [value2, toggle2] = useToggle('key2', true);
-  const [value3, toggle3] = useToggle('key3', ['none', 'block']);
-  const [value4, toggle4] = useToggle('key4', [
-    { name: 'foo' },
-    { name: 'bar' },
-  ]);
+  const [value1, toggle1] = useToggle('key1')
+  const [value2, toggle2] = useToggle('key2', true)
+  const [value3, toggle3] = useToggle('key3', ['none', 'block'])
+  const [value4, toggle4] = useToggle('key4', [{ name: 'foo' }, { name: 'bar' }])
   return (
     <>
       <section>
@@ -30,7 +27,7 @@ const App = () => {
         <button onClick={toggle4}>{JSON.stringify(value4, null, 2)}</button>
       </section>
     </>
-  );
-};
+  )
+}
 
-ReactDOM.render(<App></App>, document.getElementById('root'));
+ReactDOM.render(<App></App>, document.getElementById('root'))
