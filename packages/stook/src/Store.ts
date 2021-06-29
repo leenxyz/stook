@@ -12,18 +12,18 @@ export class Store<S = any> {
     this.state = value
   }
 
-  private getNextState(value: any): any {
+  private getNextState(state: S, value: any): any {
     let nextState: any
 
     // not function
     if (typeof value !== 'function') return value
 
     // can not use immer
-    if (typeof this.state !== 'object') return value(this.state)
+    if (typeof state !== 'object') return value(state)
 
     let useImmer = true
 
-    const immerState = produce(this.state, draft => {
+    const immerState = produce(state, draft => {
       const fnValue = value(draft)
       if (fnValue === draft) return // do nothing
 
@@ -38,11 +38,13 @@ export class Store<S = any> {
       nextState = immerState
     }
 
-    return { ...nextState }
+    return nextState
   }
 
-  setState = (key: any, value: any): any => {
-    const nextState = this.getNextState(value)
+  setState = (key: any, state: any, value: any): any => {
+    const nextState = this.getNextState(state, value)
+
+    this.state = nextState
 
     emitStoreUpdate({ key, nextState })
 

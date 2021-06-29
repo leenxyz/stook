@@ -3,6 +3,32 @@ import { useStore, mutate } from 'stook'
 import { produce, original } from 'immer'
 import styles from '../styles/Home.module.css'
 
+const Counter = () => {
+  const [value] = useStore('count')
+  return <div>count: {value.count}</div>
+}
+
+const List = () => {
+  const [list, setList] = useStore('list', [0])
+  return (
+    <div>
+      <div>len: {list.length}</div>
+      <button
+        onClick={() =>
+          // setList(v => {
+          //   v.push(1)
+          // })
+          mutate('list', v => {
+            v.push(2)
+          })
+        }
+      >
+        push
+      </button>
+    </div>
+  )
+}
+
 export default function Home() {
   const [value, setValue] = useStore('count', { count: 0 })
 
@@ -18,22 +44,23 @@ export default function Home() {
         <div>{value.count}</div>
         <button
           onClick={() => {
-            // setValue(v => ({ count: v.count + 1 }))
-            setValue(v => {
-              // v.count = v.count + 1
-              value.count += 1
-            })
+            setValue(v => ({ count: v.count + 1 }))
+            // setValue(v => {
+            //   v.count = v.count + 1
+            // })
             // setValue(v => v)
             // mutate('count', v => v)
-            mutate('count', v => {
-              // return { count: value.count + 1 }
-              // value.count = value.count + 1
-              // value.count += 1
-            })
+            // mutate('count', v => {
+            // return { count: v.count + 1 }
+            // v.count = v.count + 1
+            // v.count += 1
+            // })
           }}
         >
           +
         </button>
+        <Counter></Counter>
+        <List></List>
       </main>
     </div>
   )

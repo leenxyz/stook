@@ -40,7 +40,7 @@ export function useStore<S = any, K = string>(
 
   function act(key: any): Dispatch<Action<S>> {
     return (value: any) => {
-      return newStore.setState(key, value)
+      return newStore.setState(key, state, value)
     }
   }
 
