@@ -1,6 +1,6 @@
 {
   "name": "stook-graphql-example",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "private": true,
   "scripts": {
     "start": "umi dev",
@@ -24,7 +24,7 @@
   "dependencies": {
     "@ant-design/pro-layout": "^6.10.7",
     "@umijs/preset-react": "1.7.10",
-    "stook-graphql": "^1.2.1",
+    "stook-graphql": "^1.2.2",
     "umi": "^3.3.4"
   },
   "devDependencies": {
