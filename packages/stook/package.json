@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/forsigner/stook",
   "dependencies": {
-    "immer": "^9.0.3",
+    "immer": "^9.0.5",
     "mitt": "^3.0.0"
   }
 }

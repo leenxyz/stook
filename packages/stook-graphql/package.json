@@ -21,9 +21,6 @@
     "url": "https://github.com/forsigner/stook/issues"
   },
   "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-graphql",
-  "peerDependencies": {
-    "graphql": "^15.4.0"
-  },
   "devDependencies": {
     "@types/koa-compose": "^3.2.5",
     "graphql": "^15.5.1",
