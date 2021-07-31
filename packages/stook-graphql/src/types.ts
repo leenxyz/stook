@@ -1,3 +1,4 @@
+import type { Context } from './Client'
 export interface Variables {
   [key: string]: any
 }
@@ -102,14 +103,6 @@ export interface FromSubscriptionOption {
   variables?: Object
 }
 
-export interface Ctx {
-  headers: {
-    [key: string]: string
-  }
-  body: any
-  valid: boolean
-}
-
 export type NextFn = () => Promise<any>
 
-export type Middleware = (ctx: Ctx, next: NextFn) => any
+export type Middleware = (ctx: Context, next: NextFn) => any

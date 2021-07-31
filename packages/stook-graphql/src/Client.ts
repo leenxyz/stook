@@ -14,7 +14,6 @@ import {
   QueryResult,
   FetcherItem,
   Middleware,
-  Ctx,
   GraphqlOptions,
   MutateResult,
   Variables,
@@ -46,18 +45,18 @@ interface DepsCurrent {
 
 const NULL_AS: any = null
 
+export class Context {
+  headers: Record<string, string> = {}
+  body: any = undefined
+  valid: boolean = true
+}
+
 export class Client {
   graphqlOptions: GraphqlOptions
   middleware: Middleware[] = []
 
   graphqlClient: GraphQLClient = NULL_AS
   subscriptionClient: SubscriptionClient = NULL_AS
-
-  ctx: Ctx = {
-    body: undefined,
-    headers: {},
-    valid: true,
-  }
 
   constructor(opt: GraphqlOptions = { endpoint: '/graphql', headers: {} }) {
     const { endpoint, headers, subscriptionsEndpoint } = opt
@@ -91,8 +90,7 @@ export class Client {
   }
 
   query = async <T = any>(input: string, options: Options = {}): Promise<T> => {
-    // TODO: 需初始化
-    this.ctx.valid = true
+    const context = new Context()
     const { variables = {}, endpoint } = options
 
     const opt: any = {}
@@ -100,7 +98,7 @@ export class Client {
       opt.headers = options.headers
     }
 
-    const action = async (ctx: Ctx) => {
+    const action = async (ctx: Context) => {
       const queryOpt = {
         ...opt,
         headers: { ...(opt.headers || {}), ...(ctx.headers || {}) },
@@ -115,15 +113,15 @@ export class Client {
     }
 
     // TODO: get req headers
-    await compose([...this.middleware])(this.ctx)
+    await compose([...this.middleware])(context)
 
     // call requerst
-    await compose([...this.middleware, action])(this.ctx)
+    await compose([...this.middleware, action])(context)
 
-    if (!this.ctx.valid) {
-      throw this.ctx.body
+    if (!context.valid) {
+      throw context.body
     }
-    return this.ctx.body as T
+    return context.body as T
   }
 
   useQuery = <T = any, V = Variables>(input: string, options: Options<T, V> = {}) => {
@@ -146,6 +144,7 @@ export class Client {
       const key = opt.key ?? fetcherName
       try {
         if (fetcher.get(key)) fetcher.get(key).called = true
+
         const resData = await this.query<T>(input, opt || {})
 
         const nextState = produce(result, (draft: any) => {
@@ -160,6 +159,9 @@ export class Client {
         update(nextState)
         return resData
       } catch (error) {
+        if (input.includes('ownedTeams')) {
+          console.log('errro', error)
+        }
         update({ loading: false, error } as QueryResult<T>)
         // throw error
       }
@@ -353,6 +355,8 @@ export class Client {
     const initialState = { loading: true } as SubscribeResult<T>
     const [result, setState] = useState(initialState)
 
+    const context = new Context()
+
     let unsubscribe: SubscribeResult<any>['unsubscribe'] = () => {}
 
     function update(nextState: SubscribeResult<T>) {
@@ -399,21 +403,21 @@ export class Client {
         })
         .subscribe({
           next: ({ data }) => {
-            const action = async (ctx: Ctx) => {
+            const action = async (ctx: Context) => {
               ctx.body = data
             }
-            compose([...this.middleware, action])(this.ctx).then(() => {
-              update({ loading: false, data: this.ctx.body } as SubscribeResult<T>)
+            compose([...this.middleware, action])(context).then(() => {
+              update({ loading: false, data: context.body } as SubscribeResult<T>)
             })
           },
-          error: error => {
-            const action = async (ctx: Ctx) => {
+          error: (error) => {
+            const action = async (ctx: Context) => {
               ctx.body = error
               ctx.valid = false
             }
 
-            compose([...this.middleware, action])(this.ctx).then(() => {
-              update({ loading: false, error: this.ctx.body } as SubscribeResult<T>)
+            compose([...this.middleware, action])(context).then(() => {
+              update({ loading: false, error: context.body } as SubscribeResult<T>)
             })
           },
           complete() {
