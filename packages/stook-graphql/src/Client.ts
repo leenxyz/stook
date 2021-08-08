@@ -159,9 +159,6 @@ export class Client {
         update(nextState)
         return resData
       } catch (error) {
-        if (input.includes('ownedTeams')) {
-          console.log('errro', error)
-        }
         update({ loading: false, error } as QueryResult<T>)
         // throw error
       }
