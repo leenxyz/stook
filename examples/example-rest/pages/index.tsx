@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react'
-
-import { config, useFetch } from '../src'
+import { config, useFetch } from 'stook-rest'
 
 config({
   baseURL: 'https://jsonplaceholder.typicode.com',
 })
-
 
 const TodoItem = () => {
   const { loading, data: todo } = useFetch('/todos/1')
@@ -30,9 +27,11 @@ const ReuseTodoItem = () => {
   )
 }
 
-export default () => (
-  <div>
-    <TodoItem></TodoItem>
-    <ReuseTodoItem></ReuseTodoItem>
-  </div>
-)
+export default function Page() {
+  return (
+    <div>
+      <TodoItem></TodoItem>
+      <ReuseTodoItem></ReuseTodoItem>
+    </div>
+  )
+}

@@ -1,12 +1,10 @@
-import React from 'react'
-
-import { config, useUpdate } from '../src'
+import { config, useUpdate } from 'stook-rest'
 
 config({
   baseURL: 'https://jsonplaceholder.typicode.com',
 })
 
-export default () => {
+export default function Page() {
   const [addTodo, { loading, called, data, error }] = useUpdate('/todos')
 
   return (

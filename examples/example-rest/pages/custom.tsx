@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from 'react'
-
-import { config, useFetch } from '../src'
-// import { config, useFetch } from 'stook-rest'
+import { config, useFetch } from 'stook-rest'
 
 config({
   baseURL: 'https://jsonplaceholder.typicode.com',
@@ -16,7 +13,7 @@ interface Todo {
 const useFetchTodos = () => {
   const { loading, data: todos = [], error } = useFetch<Todo[]>('/todos')
   const count = todos.length
-  const completedCount = todos.filter(i => i.completed).length
+  const completedCount = todos.filter((i) => i.completed).length
   return { loading, todos, count, completedCount, error }
 }
 
@@ -46,9 +43,11 @@ const ReuseTodoList = () => {
   )
 }
 
-export default () => (
-  <div style={{ display: 'flex' }}>
-    <TodoList></TodoList>
-    <ReuseTodoList></ReuseTodoList>
-  </div>
-)
+export default function Page() {
+  return (
+    <div style={{ display: 'flex' }}>
+      <TodoList></TodoList>
+      <ReuseTodoList></ReuseTodoList>
+    </div>
+  )
+}
