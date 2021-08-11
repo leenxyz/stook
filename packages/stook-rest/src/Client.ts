@@ -14,7 +14,6 @@ import {
   FetcherItem,
   Update,
   UpdateResult,
-  Ctx,
   Middleware,
   RestOptions,
 } from './types'
@@ -65,6 +64,12 @@ function getMethod(url: string, options: Options = {}) {
   return method
 }
 
+/**
+ * unique key for cache
+ * @param url api url
+ * @param options
+ * @returns
+ */
 function getFetcherName(url: string, options: Options = {}) {
   if (options.key) return options.key
   const method = getMethod(url, options)
@@ -72,15 +77,15 @@ function getFetcherName(url: string, options: Options = {}) {
   return `${method} ${url}`
 }
 
+export class Context {
+  headers: Record<string, string> = {}
+  body: any = undefined
+  valid: boolean = true
+}
+
 export class Client {
   restOptions: RestOptions
   middleware: Middleware[] = []
-
-  ctx: Ctx = {
-    body: undefined,
-    headers: {},
-    valid: true,
-  }
 
   constructor(config: RestOptions) {
     this.restOptions = config
@@ -95,12 +100,13 @@ export class Client {
   }
 
   fetch = async <T = any>(url: string, options: RequestOptions = {}): Promise<T> => {
-    const action = async (ctx: Ctx) => {
+    const context = new Context()
+    const action = async (ctx: Context) => {
       const { baseURL, headers } = this.restOptions
       const reqURL = getReqURL(url, baseURL)
 
       // merge global headers, interceptor headers,fetch headers
-      options.headers = { ...headers, ...this.ctx.headers, ...options.headers } as any
+      options.headers = { ...headers, ...ctx.headers, ...options.headers } as any
 
       try {
         ctx.body = await request(reqURL, options)
@@ -111,13 +117,13 @@ export class Client {
       }
     }
 
-    await compose([...this.middleware, action])(this.ctx)
+    await compose([...this.middleware, action])(context)
 
-    if (!this.ctx.valid) throw this.ctx.body
-    return this.ctx.body
+    if (!context.valid) throw context.body
+    return context.body
   }
 
-  useFetch = <T extends any>(url: string, options: Options<T> = {}) => {
+  useFetch = <T = any>(url: string, options: Options<T> = {}) => {
     const isUnmouted = useUnmounted()
     const { initialData: data, onUpdate } = options
     const initialState = { loading: true, data } as FetchResult<T>

@@ -1,7 +1,7 @@
 import { Options as RequestOptions } from '@peajs/request'
+import type { Context } from './Client'
 
 export type Update<T> = (updateOptions?: RequestOptions) => Promise<UpdateResult<T>>
-
 
 export type Deps = ReadonlyArray<any>
 
@@ -44,12 +44,4 @@ export interface HooksResult<T> extends FetchResult<T> {
   refetch: Refetch
 }
 
-export interface Ctx {
-  headers: {
-    [key: string]: string
-  }
-  body: any
-  valid: boolean
-}
-
-export type Middleware = (ctx: Ctx, next: () => Promise<any>) => any
+export type Middleware = (ctx: Context, next: () => Promise<any>) => any
