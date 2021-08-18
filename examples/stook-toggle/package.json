@@ -1,6 +1,6 @@
 {
   "name": "stook-toggle-example",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "main": "index.js",
   "license": "MIT",
@@ -9,8 +9,8 @@
     "build": "echo"
   },
   "dependencies": {
-    "stook": "^1.4.0",
-    "stook-toggle": "^1.4.0"
+    "stook": "^1.5.0",
+    "stook-toggle": "^1.5.0"
   },
   "devDependencies": {
     "@types/react-json-tree": "^0.13.0",
