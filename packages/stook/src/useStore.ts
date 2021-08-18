@@ -4,6 +4,11 @@ import { Store } from './Store'
 import { Dispatch, Action, keyType } from './types'
 import { emitStoreInit } from './emitter'
 
+const isBrowser =
+  typeof window === 'object' && typeof document === 'object' && document.nodeType === 9
+
+const useSafeLayoutEffect = isBrowser ? useLayoutEffect : useEffect
+
 /**
  * Returns a stateful value, similar to useState, but need a key;
  *
@@ -31,7 +36,7 @@ export function useStore<S = any, K = string>(
   /**
    * push setState sync
    */
-  useLayoutEffect(() => {
+  useSafeLayoutEffect(() => {
     setters.push(set)
     emitStoreInit(key)
   }, [])
