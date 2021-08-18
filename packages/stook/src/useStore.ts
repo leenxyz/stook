@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import { Storage } from './Storage'
 import { Store } from './Store'
 import { Dispatch, Action, keyType } from './types'
@@ -28,7 +28,10 @@ export function useStore<S = any, K = string>(
   const [state, set] = useState(initialState)
   const { setters } = newStore
 
-  useMemo(() => {
+  /**
+   * push setState sync
+   */
+  useLayoutEffect(() => {
     setters.push(set)
     emitStoreInit(key)
   }, [])
