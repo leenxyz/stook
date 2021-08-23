@@ -1,6 +1,6 @@
 {
   "name": "basic",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "next": "^11.0.1",
-    "stook": "^1.5.0"
+    "stook": "^1.5.1"
   },
   "devDependencies": {
     "eslint": "^7.29.0",
