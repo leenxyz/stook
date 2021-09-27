@@ -19,9 +19,9 @@
     "lint": "tsdx lint"
   },
   "bugs": {
-    "url": "https://github.com/forsigner/stook/issues"
+    "url": "https://github.com/motere/stook/issues"
   },
-  "homepage": "https://github.com/forsigner/stook",
+  "homepage": "https://github.com/motere/stook",
   "dependencies": {
     "immer": "^9.0.5",
     "mitt": "^3.0.0"

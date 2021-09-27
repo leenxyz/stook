@@ -64,14 +64,14 @@ const list = [
   {
     name: 'stook-rest',
     intro: 'React Hooks to Restful Api',
-    github: 'https://github.com/forsigner/stook/blob/master/packages/stook-rest/README.md',
+    github: 'https://github.com/motere/stook/blob/master/packages/stook-rest/README.md',
     author: 'forsigner',
     tag: ['graphql', 'stook', 'useQuery'],
   },
   {
     name: 'stook-graphql',
     intro: 'React Hooks to query GraphQL',
-    github: 'https://github.com/forsigner/stook/blob/master/packages/stook-graphql/README.md',
+    github: 'https://github.com/motere/stook/blob/master/packages/stook-graphql/README.md',
     author: 'stook',
     tag: ['graphql', 'stook', 'useQuery'],
   },

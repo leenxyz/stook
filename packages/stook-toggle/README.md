@@ -8,4 +8,4 @@ npm i stook-toggle
 
 ## License
 
-[MIT License](https://github.com/forsigner/stook-toggle/blob/master/LICENSE)
+[MIT License](https://github.com/motere/stook-toggle/blob/master/LICENSE)

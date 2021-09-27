@@ -17,12 +17,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/forsigner/stook.git"
+    "url": "git+ssh://git@github.com/motere/stook.git"
   },
   "bugs": {
-    "url": "https://github.com/forsigner/stook/issues"
+    "url": "https://github.com/motere/stook/issues"
   },
-  "homepage": "https://github.com/forsigner/stook#README",
+  "homepage": "https://github.com/motere/stook#README",
   "devDependencies": {
     "stook": "^1.6.0"
   }

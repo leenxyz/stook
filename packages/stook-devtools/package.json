@@ -15,9 +15,9 @@
     "test": "tsdx test --env=jsdom"
   },
   "bugs": {
-    "url": "https://github.com/forsigner/stook/issues"
+    "url": "https://github.com/motere/stook/issues"
   },
-  "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-devtools",
+  "homepage": "https://github.com/motere/stook/tree/master/packages/stook-devtools",
   "devDependencies": {
     "stook": "^1.6.0"
   },
