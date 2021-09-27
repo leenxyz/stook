@@ -79,7 +79,8 @@ function getFetcherName(url: string, options: Options = {}) {
 
 export class Context {
   headers: Record<string, string> = {}
-  body: any = undefined
+  body: any = {}
+  query: any = {}
   valid: boolean = true
 }
 
@@ -107,6 +108,12 @@ export class Client {
 
       // merge global headers, interceptor headers,fetch headers
       options.headers = { ...headers, ...ctx.headers, ...options.headers } as any
+
+      if (['PATCH', 'POST', 'PUT'].includes(options.method || '')) {
+        options.body = { ...ctx.body, ...((options.body as any) || {}) }
+      }
+
+      options.query = { ...ctx.query, ...(options.query || {}) }
 
       try {
         ctx.body = await request(reqURL, options)
