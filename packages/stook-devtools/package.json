@@ -1,6 +1,6 @@
 {
   "name": "stook-devtools",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/motere/stook/tree/master/packages/stook-devtools",
   "devDependencies": {
-    "stook": "^1.6.0"
+    "stook": "^1.6.1"
   },
   "dependencies": {
     "redux": "^4.1.0"
