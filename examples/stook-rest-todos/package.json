@@ -1,6 +1,6 @@
 {
   "name": "stook-rest-todos",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "private": true,
   "dependencies": {
     "@types/classnames": "^2.2.11",
@@ -9,9 +9,9 @@
     "react-scripts": "4.0.3",
     "redux": "^4.0.5",
     "stamen": "^1.12.0",
-    "stook": "^1.5.1",
-    "stook-devtools": "^1.5.1",
-    "stook-rest": "^1.5.1",
+    "stook": "^1.6.0",
+    "stook-devtools": "^1.6.0",
+    "stook-rest": "^1.6.0",
     "todomvc-app-css": "^2.4.0"
   },
   "scripts": {
