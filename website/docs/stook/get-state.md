@@ -51,7 +51,7 @@ export function submitUser() {
 ```jsx
 import React from 'react'
 import { useStore } from 'stook'
-import { getState } from './user.service.ts'
+import { submitUser } from './user.service.ts'
 
 export const UserForm = () => {
   const [name, setName] = useStore('[UserForm]', 'initial name')
