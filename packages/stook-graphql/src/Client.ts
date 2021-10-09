@@ -133,7 +133,7 @@ export class Client {
     const [result, setState] = useStore(fetcherName, initialState)
 
     //是否应该立刻开始发送请求
-    const [shoudStart, setShouldStart] = useState(!lazy)
+    const [shouldStart, setShouldStart] = useState(!lazy)
 
     const update = (nextState: QueryResult<T>) => {
       setState(nextState)
@@ -233,7 +233,7 @@ export class Client {
 
       // if resolve, 说明已经拿到最终的 variables
       const shouldFetch =
-        varRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted() && shoudStart
+        varRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted() && shouldStart
 
       if (shouldFetch) {
         // store variables to fetcher
@@ -259,7 +259,7 @@ export class Client {
       }
 
       // eslint-disable-next-line
-    }, [varRef.current, shoudStart])
+    }, [varRef.current, shouldStart])
 
     /**
      * handle deps
