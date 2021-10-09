@@ -5,8 +5,20 @@ config({
 })
 
 const TodoItem = () => {
-  const { loading, data: todo } = useFetch('/todos/1')
-  if (loading) return <div>loading....</div>
+  const {
+    loading,
+    data: todo,
+    start,
+  } = useFetch('/todos/1', {
+    lazy: true,
+  })
+  if (loading)
+    return (
+      <div>
+        <button onClick={() => start()}>start</button>
+        <div>loading....</div>
+      </div>
+    )
 
   return (
     <div>
@@ -31,7 +43,7 @@ export default function Page() {
   return (
     <div>
       <TodoItem></TodoItem>
-      <ReuseTodoItem></ReuseTodoItem>
+      {/* <ReuseTodoItem></ReuseTodoItem> */}
     </div>
   )
 }
