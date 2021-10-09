@@ -1,6 +1,6 @@
 {
   "name": "stook",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "A minimalist design state management library for React",
   "license": "MIT",
   "author": "forsigner",
