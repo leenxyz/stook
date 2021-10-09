@@ -9,13 +9,17 @@ export interface Options<T = any> extends RequestOptions {
   key?: string
   deps?: Deps
   initialData?: T
+  lazy?: boolean
   onUpdate?(result: Result<T>): any
 }
 
 export type Refetch = <T>(options?: Options) => Promise<T>
 
+export type Start = <T>() => Promise<T>
+
 export interface FetcherItem<T = any> {
   refetch: Refetch
+  start: Start
   result: Result<T>
   called: boolean // is request called
 }
@@ -41,6 +45,7 @@ export interface RestOptions {
 }
 
 export interface HooksResult<T> extends FetchResult<T> {
+  start: Start
   refetch: Refetch
 }
 

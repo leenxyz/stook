@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { request, Options as RequestOptions } from '@peajs/request'
 import { useEffect } from 'react'
 import { useStore, Storage } from 'stook'
@@ -18,6 +18,7 @@ import {
   RestOptions,
 } from './types'
 import { useUnmount, useUnmounted, getDepsMaps, isResolve, getArg } from './utils'
+import { Start } from '.'
 
 interface ArgsCurrent {
   resolve: boolean
@@ -132,11 +133,14 @@ export class Client {
 
   useFetch = <T = any>(url: string, options: Options<T> = {}) => {
     const isUnmouted = useUnmounted()
-    const { initialData: data, onUpdate } = options
+    const { initialData: data, onUpdate, lazy = false } = options
     const initialState = { loading: true, data } as FetchResult<T>
     const deps = getDeps(options)
     const fetcherName = getFetcherName(url, options)
     const [result, setState] = useStore(fetcherName, initialState)
+
+    //是否应该立刻开始发送请求
+    const [shouldStart, setShouldStart] = useState(!lazy)
 
     const update = (nextState: Partial<FetchResult<T>>) => {
       setState(nextState as FetchResult<T>)
@@ -197,6 +201,11 @@ export class Client {
       return options
     }
 
+    // TODO: 要确保 args resolve
+    const start: Start = (): any => {
+      setShouldStart(true)
+    }
+
     useEffect(() => {
       // store refetch fn to fetcher
       if (!fetcher.get(fetcherName)) {
@@ -205,13 +214,13 @@ export class Client {
 
       // if resolve, 说明已经拿到最终的 args
       const shouldFetch =
-        argsRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted()
+        argsRef.current.resolve && !fetcher.get(fetcherName).called && !isUnmouted() && shouldStart
 
       if (shouldFetch) {
         const opt = getOpt(options)
         makeFetch(opt)
       }
-    }, [argsRef.current])
+    }, [argsRef.current, shouldStart])
 
     /**
      * handle deps
@@ -246,7 +255,9 @@ export class Client {
       }
     })
 
-    return { ...result, refetch } as HooksResult<T>
+    const called = fetcher.get(fetcherName) && fetcher.get(fetcherName).called
+
+    return { ...result, refetch, start, called } as HooksResult<T>
   }
 
   useUpdate = <T = any>(url: string, options: RequestOptions = {}) => {
