@@ -202,7 +202,10 @@ export class Client {
     }
 
     // TODO: 要确保 args resolve
-    const start: Start = (): any => {
+    const start: Start = (opt): any => {
+      if (opt?.params) argsRef.current.params = opt?.params
+      if (opt?.query) argsRef.current.query = opt?.query
+      if (opt?.body) argsRef.current.body = opt?.body
       setShouldStart(true)
     }
 

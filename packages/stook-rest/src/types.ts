@@ -15,7 +15,7 @@ export interface Options<T = any> extends RequestOptions {
 
 export type Refetch = <T>(options?: Options) => Promise<T>
 
-export type Start = <T>() => Promise<T>
+export type Start = <T>(options?: Options) => Promise<T>
 
 export interface FetcherItem<T = any> {
   refetch: Refetch
