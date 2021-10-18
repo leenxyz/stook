@@ -15,7 +15,7 @@ const TodoItem = () => {
   if (loading)
     return (
       <div>
-        <button onClick={() => start()}>start</button>
+        <button onClick={() => start({ query: { foo: 'bar' } })}>start</button>
         <div>loading....</div>
       </div>
     )
