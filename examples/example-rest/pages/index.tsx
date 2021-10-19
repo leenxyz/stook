@@ -7,16 +7,20 @@ config({
 const TodoItem = () => {
   const {
     loading,
+    called,
     data: todo,
     start,
   } = useFetch('/todos/1', {
     lazy: true,
   })
+
+  console.log('loading:', loading, 'called:', called)
+
   if (loading)
     return (
       <div>
         <button onClick={() => start({ query: { foo: 'bar' } })}>start</button>
-        <div>loading....</div>
+        {loading && called && <div>loading....</div>}
       </div>
     )
 
