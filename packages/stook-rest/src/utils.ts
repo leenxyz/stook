@@ -1,4 +1,3 @@
-import { Options, Deps } from './types'
 import { useRef, useCallback, EffectCallback, useEffect } from 'react'
 
 export function isFalsy(value: any) {
@@ -28,23 +27,6 @@ export const getArg = (arg: any) => {
   } catch (error) {
     return false
   }
-}
-
-export const getDeps = (options?: Options): Deps => {
-  if (options && Array.isArray(options.deps)) return options.deps
-  return []
-}
-
-/**
- * transfrom deps to object
- * ['a', 'b', 'c'] => {0: 'a', 1: 'b', 2: 'c'}
- * @param deps
- */
-export const getDepsMaps = (deps: Deps) => {
-  return deps.reduce((result, cur, i) => {
-    result[i] = cur
-    return result
-  }, {} as { [key: string]: any })
 }
 
 export function useUnmounted(): () => boolean {

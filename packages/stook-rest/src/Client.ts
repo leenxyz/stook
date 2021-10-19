@@ -3,21 +3,19 @@ import { request, Options as RequestOptions } from '@peajs/request'
 import { useEffect } from 'react'
 import { useStore, Storage } from 'stook'
 import compose from 'koa-compose'
-import isEqual from 'react-fast-compare'
 import { fetcher } from './fetcher'
 import {
   FetchResult,
   Refetch,
   Options,
   HooksResult,
-  Deps,
   FetcherItem,
   Update,
   UpdateResult,
   Middleware,
   RestOptions,
 } from './types'
-import { useUnmount, useUnmounted, getDepsMaps, isResolve, getArg } from './utils'
+import { useUnmount, useUnmounted, isResolve, getArg } from './utils'
 import { Start } from '.'
 
 interface ArgsCurrent {
@@ -25,11 +23,6 @@ interface ArgsCurrent {
   params: any
   query: any
   body: any
-}
-
-interface DepsCurrent {
-  value: any
-  resolve: boolean
 }
 
 /**
@@ -51,11 +44,6 @@ function getReqURL(url: string, baseURL: string) {
 
 function last<T>(arr: T[]): T {
   return arr[arr.length - 1]
-}
-
-function getDeps(options: Options): Deps {
-  if (Array.isArray(options.deps)) return options.deps
-  return []
 }
 
 function getMethod(url: string, options: Options = {}) {
@@ -134,8 +122,7 @@ export class Client {
   useFetch = <T = any>(url: string, options: Options<T> = {}) => {
     const isUnmouted = useUnmounted()
     const { initialData: data, onUpdate, lazy = false } = options
-    const initialState = { loading: true, data } as FetchResult<T>
-    const deps = getDeps(options)
+    const initialState = { loading: true, called: false, data } as FetchResult<T>
     const fetcherName = getFetcherName(url, options)
     const [result, setState] = useStore(fetcherName, initialState)
 
@@ -149,19 +136,20 @@ export class Client {
 
     const makeFetch = async (opt?: Options) => {
       try {
+        update({ loading: true, called: true })
         fetcher.get(fetcherName).called = true
         const data: T = await this.fetch(url, opt || {})
 
-        update({ loading: false, data })
+        update({ loading: false, data, called: true })
         return data
       } catch (error) {
-        update({ loading: false, error })
+        update({ loading: false, error, called: true })
         throw error
       }
     }
 
     const refetch: Refetch = async <P = any>(opt?: Options): Promise<P> => {
-      update({ loading: true })
+      update({ loading: true, called: true })
       const refetchedData: any = await makeFetch(opt)
       return refetchedData as P
     }
@@ -225,24 +213,6 @@ export class Client {
       }
     }, [argsRef.current, shouldStart])
 
-    /**
-     * handle deps
-     */
-    const depsMaps = getDepsMaps(deps)
-    const depsRef = useRef<DepsCurrent>({ value: depsMaps, resolve: false })
-
-    if (!isEqual(depsRef.current.value, depsMaps)) {
-      depsRef.current = { value: depsMaps, resolve: true }
-    }
-
-    useEffect(() => {
-      if (depsRef.current.resolve) {
-        update({ loading: true } as FetchResult<T>)
-        const opt = getOpt(options)
-        makeFetch(opt)
-      }
-    }, [depsRef.current])
-
     // when unmount
     useUnmount(() => {
       // 全部 unmount，设置 called false
@@ -254,13 +224,11 @@ export class Client {
         fetcher.get(fetcherName).called = false
 
         // TODO: 要为true ? 还是 undefined 好
-        update({ loading: true } as any)
+        update({ loading: true, called: false } as any)
       }
     })
 
-    const called = fetcher.get(fetcherName) && fetcher.get(fetcherName).called
-
-    return { ...result, refetch, start, called } as HooksResult<T>
+    return { ...result, refetch, start } as HooksResult<T>
   }
 
   useUpdate = <T = any>(url: string, options: RequestOptions = {}) => {

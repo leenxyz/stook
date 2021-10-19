@@ -3,11 +3,8 @@ import type { Context } from './Client'
 
 export type Update<T> = (updateOptions?: RequestOptions) => Promise<UpdateResult<T>>
 
-export type Deps = ReadonlyArray<any>
-
 export interface Options<T = any> extends RequestOptions {
   key?: string
-  deps?: Deps
   initialData?: T
   lazy?: boolean
   onUpdate?(result: Result<T>): any
