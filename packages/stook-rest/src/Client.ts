@@ -71,6 +71,8 @@ export class Context {
   body: any = {}
   query: any = {}
   valid: boolean = true
+  url: string = ''
+  method: string = ''
 }
 
 export class Client {
@@ -94,6 +96,9 @@ export class Client {
     const action = async (ctx: Context) => {
       const { baseURL, headers } = this.restOptions
       const reqURL = getReqURL(url, baseURL)
+
+      ctx.url = reqURL
+      ctx.method = options.method || ''
 
       // merge global headers, interceptor headers,fetch headers
       options.headers = { ...headers, ...ctx.headers, ...options.headers } as any

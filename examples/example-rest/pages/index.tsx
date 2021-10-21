@@ -1,7 +1,13 @@
-import { config, useFetch } from 'stook-rest'
+import { config, useFetch, applyMiddleware } from 'stook-rest'
 
 config({
   baseURL: 'https://jsonplaceholder.typicode.com',
+})
+
+applyMiddleware(async (ctx, next) => {
+  await next()
+  ctx.valid = false
+  console.log('ctx', ctx)
 })
 
 const TodoItem = () => {
@@ -10,11 +16,12 @@ const TodoItem = () => {
     called,
     data: todo,
     start,
+    error,
   } = useFetch('/todos/1', {
-    lazy: true,
+    // lazy: true,
   })
 
-  console.log('loading:', loading, 'called:', called)
+  console.log('loading:', loading, 'called:', called, 'error:', error)
 
   if (loading)
     return (
