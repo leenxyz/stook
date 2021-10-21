@@ -1,6 +1,6 @@
 {
   "name": "stook-localstorage",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/motere/stook#README",
   "devDependencies": {
-    "stook": "^1.9.0"
+    "stook": "^1.10.0"
   }
 }
