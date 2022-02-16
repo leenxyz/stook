@@ -32,6 +32,6 @@
     "graphql-tag": "^2.12.5",
     "koa-compose": "^4.1.0",
     "react-fast-compare": "^3.2.0",
-    "subscriptions-transport-ws": "^0.9.19"
+    "subscriptions-transport-ws": "^0.11.0"
   }
 }

@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/motere/stook",
   "dependencies": {
-    "immer": "^9.0.5",
+    "immer": "^9.0.12",
     "mitt": "^3.0.0"
   }
 }
