@@ -1,10 +1,10 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect, useRef } from 'react'
-import { useStore, Storage } from 'stook'
-import gql from 'graphql-tag'
+import { useStore, Storage, mutate } from 'stook'
 import compose from 'koa-compose'
 import { produce } from 'immer'
 import { GraphQLClient } from '@peajs/graphql-client'
-import { SubscriptionClient } from 'subscriptions-transport-ws'
+import { createClient, Client as SubscriptionClient } from 'graphql-ws'
 import isEqual from 'react-fast-compare'
 
 import { fetcher } from './fetcher'
@@ -19,8 +19,6 @@ import {
   Variables,
   SubscribeResult,
   SubscriptionOption,
-  FromSubscriptionOption,
-  Observer,
   Start,
 } from './types'
 import {
@@ -46,6 +44,7 @@ interface DepsCurrent {
 const NULL_AS: any = null
 
 export class Context {
+  constructor(public input: string) {}
   headers: Record<string, string> = {}
   body: any = undefined
   valid: boolean = true
@@ -66,9 +65,9 @@ export class Client {
     } as any)
 
     if (subscriptionsEndpoint) {
-      this.subscriptionClient = new SubscriptionClient(subscriptionsEndpoint, {
-        reconnect: true,
-      })
+      // this.subscriptionClient = new SubscriptionClient(subscriptionsEndpoint, {
+      //   reconnect: true,
+      // })
     }
   }
 
@@ -78,9 +77,10 @@ export class Client {
     const { endpoint, headers, subscriptionsEndpoint } = opt
     this.graphqlClient = new GraphQLClient(endpoint, { headers } as any)
 
-    if (subscriptionsEndpoint) {
-      this.subscriptionClient = new SubscriptionClient(subscriptionsEndpoint, {
-        reconnect: true,
+    // fix ssr bug
+    if (subscriptionsEndpoint && typeof window !== 'undefined') {
+      this.subscriptionClient = createClient({
+        url: subscriptionsEndpoint,
       })
     }
   }
@@ -90,7 +90,7 @@ export class Client {
   }
 
   query = async <T = any>(input: string, options: Options = {}): Promise<T> => {
-    const context = new Context()
+    const context = new Context(input)
     const { variables = {}, endpoint } = options
 
     const opt: any = {}
@@ -135,12 +135,23 @@ export class Client {
     //是否应该立刻开始发送请求
     const [shouldStart, setShouldStart] = useState(!lazy)
 
-    const update = (nextState: QueryResult<T>) => {
-      setState(nextState)
-      onUpdate && onUpdate(nextState)
+    const isMounted = useRef(false)
+    useEffect(() => {
+      isMounted.current = true
+    }, [])
+
+    const update = (nextState: QueryResult<T>, isRefetch = false) => {
+      if (isMounted.current) {
+        if (isRefetch) {
+          mutate(fetcherName, nextState)
+        } else {
+          setState(nextState)
+        }
+        onUpdate && onUpdate(nextState)
+      }
     }
 
-    const makeFetch = async (opt: RefetchOptions<T, V> = {}): Promise<any> => {
+    const makeFetch = async (opt: RefetchOptions<T, V> = {}, _ = false): Promise<any> => {
       const key = opt.key ?? fetcherName
       try {
         if (fetcher.get(key)) fetcher.get(key).called = true
@@ -156,10 +167,10 @@ export class Client {
           }
         })
 
-        update(nextState)
+        update(nextState, true)
         return resData
       } catch (error) {
-        update({ loading: false, error } as QueryResult<T>)
+        update({ loading: false, error } as QueryResult<T>, true)
         // throw error
       }
     }
@@ -176,11 +187,11 @@ export class Client {
         showLoading = false
       }
 
-      if (showLoading) {
+      if (showLoading && isMounted.current) {
         update({ loading: true } as QueryResult<T>)
       }
 
-      function getRefechVariables(opt: RefetchOptions<T, V> = {}): any {
+      function getRefetchVariables(opt: RefetchOptions<T, V> = {}): any {
         const fetcherVariables: any = fetcher.get(key).variables
 
         // TODO: handle any
@@ -195,12 +206,12 @@ export class Client {
         return opt.variables
       }
 
-      opt.variables = getRefechVariables(opt)
+      opt.variables = getRefetchVariables(opt)
 
       // store variables to fetcher
       fetcher.get(key).variables = opt.variables
 
-      const data: T = (await makeFetch(opt)) as any
+      const data: T = (await makeFetch(opt, true)) as any
       return data
     }
 
@@ -305,6 +316,7 @@ export class Client {
         fetcher.get(fetcherName).called = false
 
         // TODO: 要为true ? 还是 undefined 好
+
         update({ loading: true } as any)
       }
     })
@@ -328,10 +340,10 @@ export class Client {
     const makeFetch = async (opt: Options = {}): Promise<any> => {
       try {
         const data = await this.query<T>(input, { ...options, ...opt })
-        update({ loading: false, called: true, data } as MutateResult<T>)
+        update(({ loading: false, called: true, data } as unknown) as MutateResult<T>)
         return data
       } catch (error) {
-        update({ loading: false, called: true, error } as MutateResult<T>)
+        update(({ loading: false, called: true, error } as unknown) as MutateResult<T>)
         // throw error
       }
     }
@@ -352,9 +364,9 @@ export class Client {
     const initialState = { loading: true } as SubscribeResult<T>
     const [result, setState] = useState(initialState)
 
-    const context = new Context()
+    const context = new Context(input)
 
-    let unsubscribe: SubscribeResult<any>['unsubscribe'] = () => {}
+    let unsubscribe: () => void = () => {}
 
     function update(nextState: SubscribeResult<T>) {
       setState(nextState)
@@ -377,10 +389,10 @@ export class Client {
         let data = await this.query<T>(initialQuery.query, {
           variables: initialQuery.variables || {},
         })
-        updateInitialQuery({ loading: false, data } as SubscribeResult<T>)
+        updateInitialQuery(({ loading: false, data } as unknown) as SubscribeResult<T>)
         return data
       } catch (error) {
-        updateInitialQuery({ loading: false, error } as SubscribeResult<T>)
+        updateInitialQuery(({ loading: false, error } as unknown) as SubscribeResult<T>)
         return error
       }
     }
@@ -388,17 +400,13 @@ export class Client {
     const initSubscribe = async () => {
       if (unmounted.current) return
 
-      const node = gql`
-        ${input}
-      `
-
-      const subResult = this.subscriptionClient
-        .request({
-          query: node,
-          variables,
+      unsubscribe = this.subscriptionClient.subscribe(
+        {
+          query: input,
+          variables: variables as any,
           operationName: getOperationName(input) || operationName,
-        })
-        .subscribe({
+        },
+        {
           next: ({ data }) => {
             const action = async (ctx: Context) => {
               ctx.body = data
@@ -407,7 +415,7 @@ export class Client {
               update({ loading: false, data: context.body } as SubscribeResult<T>)
             })
           },
-          error: (error) => {
+          error: error => {
             const action = async (ctx: Context) => {
               ctx.body = error
               ctx.valid = false
@@ -418,57 +426,22 @@ export class Client {
             })
           },
           complete() {
-            console.log('completed')
+            //
           },
-        })
-
-      unsubscribe = subResult.unsubscribe
+        },
+      )
     }
 
     useEffect(() => {
       if (initialQuery) initQuery()
 
-      // TODO: 参照小程序
       initSubscribe()
       return () => {
         unmounted.current = true
+        unsubscribe()
       }
-
-      // eslint-disable-next-line
     }, [])
 
     return { ...result, unsubscribe }
-  }
-
-  fromSubscription = <T = any>(input: string, options: FromSubscriptionOption = {}) => {
-    const { variables = {} } = options
-
-    if (!this.subscriptionClient) {
-      throw new Error('require subscriptionsEndpoint config')
-    }
-
-    return {
-      subscribe: (observer: Observer<T>) => {
-        const ob = {} as Observer<T>
-
-        if (observer.next) {
-          ob.next = (data: T) => {
-            if (observer.next) observer.next(data)
-          }
-        }
-
-        if (observer.error) ob.error = observer.error
-        if (observer.error) ob.complete = observer.complete
-
-        return this.subscriptionClient
-          .request({
-            query: gql`
-              ${input}
-            `,
-            variables,
-          })
-          .subscribe(ob as any) // TODO:
-      },
-    }
   }
 }
