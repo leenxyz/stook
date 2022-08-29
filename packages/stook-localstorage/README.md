@@ -74,4 +74,4 @@ const data = getLocalStorage('USER');
 
 ## License
 
-[MIT License](https://github.com/motere/stook-localstorage/blob/master/LICENSE)
+[MIT License](https://github.com/forsigner/stook-localstorage/blob/master/LICENSE)

@@ -16,4 +16,4 @@ https://stook.vercel.app/docs/graphql/intro
 
 ## License
 
-[MIT License](https://github.com/motere/stook/blob/master/LICENSE)
+[MIT License](https://github.com/forsigner/stook/blob/master/LICENSE)

@@ -23,7 +23,7 @@ module.exports = {
         { to: '/ecosystem', label: 'Ecosystem', position: 'right' },
 
         {
-          href: 'https://www.github.com/motere/stook',
+          href: 'https://www.github.com/forsigner/stook',
           label: 'GitHub',
           position: 'right',
         },
@@ -58,7 +58,7 @@ module.exports = {
             },
             {
               label: 'Feedback',
-              to: 'https://github.com/motere/stook/issues',
+              to: 'https://github.com/forsigner/stook/issues',
             },
           ],
         },
@@ -67,7 +67,7 @@ module.exports = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/motere/stook',
+              href: 'https://github.com/forsigner/stook',
             },
           ],
         },

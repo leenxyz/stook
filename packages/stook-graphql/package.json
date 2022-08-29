@@ -18,9 +18,9 @@
     "lint": "tsdx lint"
   },
   "bugs": {
-    "url": "https://github.com/motere/stook/issues"
+    "url": "https://github.com/forsigner/stook/issues"
   },
-  "homepage": "https://github.com/motere/stook/tree/master/packages/stook-graphql",
+  "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-graphql",
   "devDependencies": {
     "@types/koa-compose": "^3.2.5",
     "graphql": "^15.5.1",
