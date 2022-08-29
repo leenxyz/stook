@@ -126,12 +126,12 @@ export class Client {
 
   useFetch = <T = any>(url: string, options: Options<T> = {}) => {
     const isUnmouted = useUnmounted()
-    const { initialData: data, onUpdate, lazy = false } = options
+    const { initialData: data, key, onUpdate, lazy = false } = options
     const initialState = { loading: true, called: false, data } as FetchResult<T>
-    const fetcherName = getFetcherName(url, options)
+    const fetcherName = key || getFetcherName(url, options)
     const [result, setState] = useStore(fetcherName, initialState)
 
-    //是否应该立刻开始发送请求
+    // 是否应该立刻开始发送请求
     const [shouldStart, setShouldStart] = useState(!lazy)
 
     const update = (nextState: Partial<FetchResult<T>>) => {
