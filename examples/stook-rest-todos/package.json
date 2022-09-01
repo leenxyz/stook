@@ -8,7 +8,6 @@
     "classnames": "^2.2.6",
     "react-scripts": "4.0.3",
     "redux": "^4.0.5",
-    "stamen": "^1.12.0",
     "stook": "^1.12.0",
     "stook-devtools": "^1.12.0",
     "stook-rest": "^1.12.0",
