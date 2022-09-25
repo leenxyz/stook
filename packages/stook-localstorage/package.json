@@ -1,6 +1,6 @@
 {
   "name": "stook-localstorage",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/forsigner/stook#README",
   "devDependencies": {
-    "stook": "^1.12.0"
+    "stook": "^1.13.0"
   }
 }

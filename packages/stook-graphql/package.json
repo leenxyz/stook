@@ -1,6 +1,6 @@
 {
   "name": "stook-graphql",
-  "version": "1.12.0",
+  "version": "1.13.0",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -24,7 +24,7 @@
   "devDependencies": {
     "@types/koa-compose": "^3.2.5",
     "graphql": "^15.5.1",
-    "stook": "^1.12.0"
+    "stook": "^1.13.0"
   },
   "dependencies": {
     "@peajs/graphql-client": "^0.6.0",
