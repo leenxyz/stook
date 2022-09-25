@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useStore, Storage, mutate } from 'stook'
 import compose from 'koa-compose'
 import { produce } from 'immer'
@@ -58,17 +57,11 @@ export class Client {
   subscriptionClient: SubscriptionClient = NULL_AS
 
   constructor(opt: GraphqlOptions = { endpoint: '/graphql', headers: {} }) {
-    const { endpoint, headers, subscriptionsEndpoint } = opt
+    const { endpoint, headers } = opt
     this.graphqlOptions = opt
     this.graphqlClient = new GraphQLClient(endpoint, {
       headers,
     } as any)
-
-    if (subscriptionsEndpoint) {
-      // this.subscriptionClient = new SubscriptionClient(subscriptionsEndpoint, {
-      //   reconnect: true,
-      // })
-    }
   }
 
   config = (opt: GraphqlOptions = { endpoint: '/graphql', headers: {} }) => {
@@ -81,7 +74,12 @@ export class Client {
     if (subscriptionsEndpoint && typeof window !== 'undefined') {
       this.subscriptionClient = createClient({
         url: subscriptionsEndpoint,
+        // keepAlive: 
       })
+
+      // this.subscriptionClient.on('ping', () => {
+      //   //
+      // })
     }
   }
 
@@ -156,7 +154,7 @@ export class Client {
       try {
         if (fetcher.get(key)) fetcher.get(key).called = true
 
-        const resData = await this.query<T>(input, opt || {})
+        const resData = await this.query<T>(input, (opt as any) || {})
 
         const nextState = produce(result, (draft: any) => {
           draft.loading = false
@@ -209,7 +207,7 @@ export class Client {
       opt.variables = getRefetchVariables(opt)
 
       // store variables to fetcher
-      fetcher.get(key).variables = opt.variables
+      fetcher.get(key).variables = opt.variables || {}
 
       const data: T = (await makeFetch(opt, true)) as any
       return data
@@ -340,17 +338,17 @@ export class Client {
     const makeFetch = async (opt: Options = {}): Promise<any> => {
       try {
         const data = await this.query<T>(input, { ...options, ...opt })
-        update(({ loading: false, called: true, data } as unknown) as MutateResult<T>)
+        update({ loading: false, called: true, data } as unknown as MutateResult<T>)
         return data
       } catch (error) {
-        update(({ loading: false, called: true, error } as unknown) as MutateResult<T>)
+        update({ loading: false, called: true, error } as unknown as MutateResult<T>)
         // throw error
       }
     }
 
     const mutate = async (variables: V, opt: Options = {}): Promise<T> => {
       update({ loading: true } as MutateResult<T>)
-      return (await makeFetch({ ...opt, variables })) as T
+      return (await makeFetch({ ...opt, variables } as any)) as T
     }
 
     return [mutate, result] as [(variables: V, opt?: Options) => Promise<T>, MutateResult<T>]
@@ -359,14 +357,14 @@ export class Client {
   useSubscription = <T = any>(input: string, options: SubscriptionOption<T> = {}) => {
     const { variables = {}, operationName = '', initialQuery = '', onUpdate } = options
 
-    const unmounted = useRef(false)
+    const isMounted = useIsMounted()
 
     const initialState = { loading: true } as SubscribeResult<T>
     const [result, setState] = useState(initialState)
 
     const context = new Context(input)
 
-    let unsubscribe: () => void = () => {}
+    let unsubscribe: () => void = null as any
 
     function update(nextState: SubscribeResult<T>) {
       setState(nextState)
@@ -382,23 +380,22 @@ export class Client {
 
     const initQuery = async () => {
       if (!initialQuery) return
-
-      if (unmounted.current) return
+      if (!isMounted()) return
 
       try {
         let data = await this.query<T>(initialQuery.query, {
           variables: initialQuery.variables || {},
         })
-        updateInitialQuery(({ loading: false, data } as unknown) as SubscribeResult<T>)
+        updateInitialQuery({ loading: false, data } as unknown as SubscribeResult<T>)
         return data
       } catch (error) {
-        updateInitialQuery(({ loading: false, error } as unknown) as SubscribeResult<T>)
+        updateInitialQuery({ loading: false, error } as unknown as SubscribeResult<T>)
         return error
       }
     }
 
     const initSubscribe = async () => {
-      if (unmounted.current) return
+      if (!isMounted()) return
 
       unsubscribe = this.subscriptionClient.subscribe(
         {
@@ -415,7 +412,7 @@ export class Client {
               update({ loading: false, data: context.body } as SubscribeResult<T>)
             })
           },
-          error: error => {
+          error: (error) => {
             const action = async (ctx: Context) => {
               ctx.body = error
               ctx.valid = false
@@ -437,11 +434,23 @@ export class Client {
 
       initSubscribe()
       return () => {
-        unmounted.current = true
-        unsubscribe()
+        if (isMounted() && unsubscribe) {
+          unsubscribe()
+        }
       }
     }, [])
 
     return { ...result, unsubscribe }
   }
+}
+
+function useIsMounted() {
+  const isMountedRef = useRef(true)
+  const isMounted = useCallback(() => isMountedRef.current, [])
+
+  useEffect(() => {
+    return () => void (isMountedRef.current = false)
+  }, [])
+
+  return isMounted
 }
