@@ -4,8 +4,16 @@
   "commit": false,
   "fixed": [],
   "linked": [],
-  "access": "restricted",
-  "baseBranch": "main",
+  "access": "public",
+  "baseBranch": "master",
   "updateInternalDependencies": "patch",
-  "ignore": []
+  "ignore": [
+    "basic",
+    "example-rest",
+    "stook-graphql-example",
+    "example-stook-localstorage",
+    "stook-rest-todos",
+    "stook-todomvc",
+    "website"
+  ]
 }
