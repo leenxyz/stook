@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { request, Options as RequestOptions } from '@peajs/request'
+import { request, Options as RequestOptions } from '@boter/request'
 import { useEffect } from 'react'
 import { useStore, Storage } from 'stook'
 import compose from 'koa-compose'

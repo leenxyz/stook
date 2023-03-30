@@ -1,4 +1,4 @@
-import { Options as RequestOptions } from '@peajs/request'
+import { Options as RequestOptions } from '@boter/request'
 import type { Context } from './Client'
 
 export type Update<T> = (updateOptions?: RequestOptions) => Promise<UpdateResult<T>>
