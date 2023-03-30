@@ -12,21 +12,26 @@ function getLocalValue(key: string) {
 }
 
 export function useLocalStorage<S = any>(key: string, initialState?: S): [S, Dispatch<Action<S>>] {
-  const [state, setState] = useStore<any>(key, !!initialState || getLocalValue(key))
+  const [state, setState] = useStore<any>(key, initialState)
 
   const setItem = (newValue: any) => {
-    setState(newValue)
-    const storageValue = typeof newValue === 'object' ? JSON.stringify(newValue) : newValue
-    window.localStorage.setItem(key, storageValue)
+    const nextValue = setState(newValue)
+    const storageValue = typeof nextValue === 'object' ? JSON.stringify(nextValue) : nextValue
+    window.localStorage.setItem(key, storageValue as any)
   }
 
   // init storage
   useEffect(() => {
-    const localValue: any = window.localStorage.getItem(key)
-    if (typeof initialState !== 'undefined' && initialState !== localValue) {
-      const storageValue =
-        typeof initialState === 'object' ? JSON.stringify(initialState) : initialState
-      window.localStorage.setItem(key, storageValue as any)
+    const localValue = getLocalValue(key)
+
+    // 如果 localStorage 有值，优先使用 localStorage 的值
+    if (localValue) {
+      setState(localValue)
+    } else {
+      if (initialState) {
+        setState(initialState)
+        window.localStorage.setItem(key, JSON.stringify(initialState))
+      }
     }
   }, [])
 
@@ -44,7 +49,8 @@ export function getLocalStorage<S = any>(key: string): S {
 }
 
 export function mutateLocalStorage<S = any>(key: string, newValue: S) {
-  mutate(key, newValue)
-  const storageValue: any = typeof newValue === 'object' ? JSON.stringify(newValue) : newValue
+  const nextValue = mutate(key, newValue)
+  const storageValue: any = typeof nextValue === 'object' ? JSON.stringify(nextValue) : nextValue
+
   window.localStorage.setItem(key, storageValue)
 }
