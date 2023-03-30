@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useStore, Storage, mutate } from 'stook'
 import compose from 'koa-compose'
 import { produce } from 'immer'
-import { GraphQLClient } from '@peajs/graphql-client'
+import { GraphQLClient } from '@boter/graphql-client'
 import { createClient, Client as SubscriptionClient } from 'graphql-ws'
 import isEqual from 'react-fast-compare'
 
@@ -74,7 +74,7 @@ export class Client {
     if (subscriptionsEndpoint && typeof window !== 'undefined') {
       this.subscriptionClient = createClient({
         url: subscriptionsEndpoint,
-        // keepAlive: 
+        // keepAlive:
       })
 
       // this.subscriptionClient.on('ping', () => {
@@ -126,6 +126,7 @@ export class Client {
     const isUnmouted = useUnmounted()
     const { initialData: data, onUpdate, lazy = false, pollInterval } = options
     const fetcherName = options.key || input
+
     const initialState = { loading: true, data } as QueryResult<T>
     const deps = getDeps(options)
     const [result, setState] = useStore(fetcherName, initialState)

@@ -1,37 +1,11 @@
 {
-  "include": [
-    "src",
-    "types"
-  ],
   "compilerOptions": {
-    "module": "esnext",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "importHelpers": true,
-    "declaration": true,
-    "sourceMap": true,
-    "rootDir": "./src",
-    "strict": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "baseUrl": "./",
-    "paths": {
-      "*": [
-        "src/*",
-        "node_modules/*"
-      ]
-    },
-    "jsx": "react",
-    "esModuleInterop": true
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true
   }
 }
