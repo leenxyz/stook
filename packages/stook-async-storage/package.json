@@ -1,0 +1,62 @@
+{
+  "name": "stook-async-storage",
+  "version": "1.16.0",
+  "description": "",
+  "author": "forsigner",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "scripts": {
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "type-check": "tsc",
+    "test": "jest --coverage --passWithNoTests",
+    "test:watch": "jest --watch"
+  },
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/forsigner/stook/issues"
+  },
+  "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-graphql",
+  "dependencies": {
+    "stook": "^1.16.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@types/is-promise": "^2.2.0",
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.11",
+    "@types/react-test-renderer": "^18.0.0",
+    "babel-loader": "^9.1.2",
+    "jest": "^29.5.0",
+    "react-test-renderer": "^18.2.0",
+    "ts-jest": "^29.0.5",
+    "graphql": "^16.6.0",
+    "tsup": "^6.7.0",
+    "typescript": "^5.0.3"
+  },
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "treeshake": true,
+    "sourcemap": true,
+    "minify": false,
+    "clean": true,
+    "dts": true,
+    "splitting": false,
+    "format": [
+      "cjs",
+      "esm"
+    ],
+    "external": [
+      "react",
+      "stook"
+    ]
+  }
+}
