@@ -27,7 +27,7 @@
   "devDependencies": {
     "@umijs/test": "^3.4.22",
     "lint-staged": "^10.0.7",
-    "stook-localstorage": "^1.16.0",
+    "stook-localstorage": "^1.17.0",
     "yorkie": "^2.0.0"
   },
   "version": "1.15.0"

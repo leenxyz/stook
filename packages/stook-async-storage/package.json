@@ -1,6 +1,6 @@
 {
   "name": "stook-async-storage",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/forsigner/stook/tree/master/packages/stook-graphql",
   "dependencies": {
-    "stook": "^1.16.0"
+    "stook": "^1.17.0"
   },
   "devDependencies": {
     "@babel/core": "^7.21.3",

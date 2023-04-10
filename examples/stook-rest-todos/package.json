@@ -8,9 +8,9 @@
     "classnames": "^2.2.6",
     "react-scripts": "4.0.3",
     "redux": "^4.0.5",
-    "stook": "^1.16.0",
-    "stook-devtools": "^1.16.0",
-    "stook-rest": "^1.16.0",
+    "stook": "^1.17.0",
+    "stook-devtools": "^1.17.0",
+    "stook-rest": "^1.17.0",
     "todomvc-app-css": "^2.4.0"
   },
   "scripts": {

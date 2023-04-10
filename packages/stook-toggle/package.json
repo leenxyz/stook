@@ -1,6 +1,6 @@
 {
   "name": "stook-toggle",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "license": "MIT",
   "author": "forsigner",
   "main": "dist/index.js",
@@ -16,6 +16,6 @@
     "lint": "tsdx lint"
   },
   "devDependencies": {
-    "stook": "^1.16.0"
+    "stook": "^1.17.0"
   }
 }
